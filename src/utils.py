@@ -5,9 +5,8 @@ def camera_matrix(photo, point):
         photo : background photo class
         point : 3D point is space
     """
-    theta = np.array([np.deg2rad(photo.tilt),-np.deg2rad(photo.direction),np.pi]) # the orientation of the camera [pitch, yaw, roll]. default look in z-direction 
-    c = photo.loc_pic
-    a = point # the 3D position of a point A that is to be projected
+    theta = np.array([np.deg2rad(photo.tilt),np.pi-np.deg2rad(photo.direction),np.pi*0]) # the orientation of the camera [pitch, yaw, roll]. default look in z-direction 
+    c = photo.location
     
     f = photo.focal_length # focal length [m]
     shape = photo.shape
@@ -16,7 +15,6 @@ def camera_matrix(photo, point):
 
     m_x = 1/((np.tan(hfov/2)*f)/(shape[1]/2))
     m_y = 1/((np.tan(vfov/2)*f)/(shape[0]/2))
-    
     
     a_x = f * m_x; a_y = f * m_y
     
@@ -32,9 +30,8 @@ def camera_matrix(photo, point):
                   [0,np.sin(theta[0]),np.cos(theta[0])]])
     
     R = R_z @ R_y @ R_x
-    t = c
     
-    C_N  = np.column_stack((R,t)) # camera matrix
+    C_N  = R @ np.column_stack((np.identity(3),-c)) # camera matrix 
     
     
     K = np.array([[a_x, 0, shape[1]/2],
@@ -92,19 +89,152 @@ def transform_coordinates(long_list, lat_list, input_crs_str = "EPSG:4326", outp
 
     return trans_cords
 
-from PIL import Image
+def generate_visual_impact(pic, turb):
+    radius = turb.radius
+    height = turb.height
+    wind_dir = turb.wind_dir
+    loc_turb = turb.location
+
+    point1 = np.array([np.cos(wind_dir)*radius, height+radius, np.sin(wind_dir)*radius])+loc_turb
+    point2 = -np.array([np.cos(wind_dir)*radius, -height-radius, np.sin(wind_dir)*radius])+loc_turb
+    point3 = -np.array([np.cos(wind_dir)*radius, 0, np.sin(wind_dir)*radius])+loc_turb
+    point4 = np.array([np.cos(wind_dir)*radius, 0, np.sin(wind_dir)*radius])+loc_turb
+
+    p_list = [point1, point2, point3, point4]
+    pa = []
+    for p in p_list:
+        q = camera_matrix(pic, p)
+        if True:
+            draw = ImageDraw.Draw(pic.im)
+            draw.rectangle(((q[0],q[1]),(q[0]+5,q[1]+5)),fill = "red")
+        pa.append([q[0],q[1]])
+
+    pc = np.array(pa).reshape(4,2)
+    pc[:,0] -= np.amin(pc[:,0])
+    pc[:,1] -= np.amin(pc[:,1])
+
+    pb = [(0, 0), (turb.shape[1], 0), (turb.shape[1], turb.shape[0]), (0, turb.shape[0])]
+
+    pd = list(pa)
+    for i in range(len(pa)):
+        pa[i] = [pc[i,0],pc[i,1]]
+        
+
+    coeffs = find_coeffs(pa, pb)
+
+    width, height = turb.im.size 
+    turb.im = turb.im.transform((int(np.amax(np.array(pa).reshape(4,2)[:,0])),int(np.amax(np.array(pa).reshape(4,2)[:,1]))), method=Image.Transform.PERSPECTIVE,data=coeffs)
+    vis_impact_im = pic.im.copy() 
+    vis_impact_im.paste(turb.im, box=[np.amin(np.array(pd).reshape(4,2)[:,0]).astype(int),np.amin(np.array(pd).reshape(4,2)[:,1]).astype(int)], mask = turb.im)
+
+    return vis_impact_im
+
+def object_to_image(file_path, elevation = 0, azimuth = 0):
+
+    file_name_without_extension = os.path.splitext(os.path.basename(file_path))[0]
+
+    V, F = [], []
+    with open(file_path) as f:
+        for line in f.readlines():
+            if line.startswith('#'):
+                continue
+            values = line.split()
+            if not values:
+                continue
+            if values[0] == 'v':
+                V.append([float(x) for x in values[1:4]])
+            elif values[0] == 'f' :
+                F.append([int(x.split("/", 1)[0]) for x in values[1:4]])
+    V, F = np.array(V), np.array(F)-1
+    V = (V-(V.max(0)+V.min(0))/2) / max(V.max(0)-V.min(0))
+
+    fig = plt.figure(figsize=(6,6))
+    ax = fig.add_axes([0,0,1,1], xlim=[-1,+1], ylim=[-1,+1], aspect=1, frameon=False)
+    ax = fig.add_subplot(111, projection="3d")
+    plt.axis('off')
+    ax.view_init(elev=elevation, azim=azimuth)
+    plt.grid(visible=None)
+    ax.plot_trisurf(V[:, 0], V[:,1], F, V[:, 2], linewidth=0, antialiased=True, closed=True, color = "w")
+    limits = np.array([getattr(ax, f"get_{axis}lim")() for axis in "xyz"])
+    ax.set_box_aspect(np.ptp(limits, axis=1))
+    plt.savefig(f"../temp/{file_name_without_extension}.png", dpi=300, transparent=True)
+    plt.close() # prevent plot from showing
+
+    pil_image = Image.open(f"../temp/{file_name_without_extension}.png")
+    pil_image = pil_image.crop((5, 5, pil_image.size[0]-5, pil_image.size[1]-5))
+    np_array = np.array(pil_image)
+    blank_px = [255, 255, 255, 0]
+    mask = np_array != blank_px
+    coords = np.argwhere(mask)
+    x0, y0, z0 = coords.min(axis=0)
+    x1, y1, z1 = coords.max(axis=0) + 1
+    cropped_box = np_array[x0:x1, y0:y1, z0:z1]
+    pil_image = Image.fromarray(cropped_box, 'RGBA')
+    pil_image.save(f"../temp/{file_name_without_extension}.png")
+    return pil_image
+
+def pull_street_view_image(api_key, longitude, latitude, fov = 90, heading = 0, pitch = 0, width = 800, height = 800):
+# URL of the image you want to load
+    image_url = f"https://maps.googleapis.com/maps/api/streetview?size=800x800&location={latitude},{longitude}&fov={fov}&heading={heading}&pitch={pitch}&key={api_key}"
+
+    try:
+        # Send an HTTP GET request to fetch the image
+        response = requests.get(image_url)
+        
+        # Check if the request was successful (HTTP status code 200)
+        if response.status_code == 200:
+            # Get the image data as bytes
+            image_data = response.content
+            
+            # Create a Pillow Image object from the image data
+            img = Image.open(BytesIO(image_data))
+            
+        else:
+            print(f"Failed to retrieve the image. Status code: {response.status_code}")
+
+    except Exception as e:
+        print(f"An errorr occurred: {str(e)}")
+
+    img.save(f"../temp/site_img.png")
+
+    return img
+
+def adjust_image(image_path, brightness, contrast):
+
+    # Load the image using PIL.
+    if isinstance(image_path, str):
+        image = Image.open(image_path)
+    else:
+        image = image_path
+
+    # Apply the brightness and contrast adjustments to the image.
+    enhancer = ImageEnhance.Brightness(image)
+    image = enhancer.enhance(brightness)
+
+    enhancer = ImageEnhance.Contrast(image)
+    image = enhancer.enhance(contrast)
+
+    # Save or display the adjusted image.
+    image.save(f'../temp/obj2png.png')
+    # display(image)
+
+from PIL import Image, ImageDraw, ImageEnhance
 import numpy as np
 import pyproj
 from pyproj import Geod
+import os
+import matplotlib.pyplot as plt
+import requests
+from io import BytesIO
 
 
 class Photo():
-    def __init__(self, file, hfov, tilt, direction, loc_pic, focal_length):
+    def __init__(self, file, hfov, tilt, direction, location, focal_length):
         self.im = Image.open(file, mode = "r").convert('RGBA')
         self.hfov = hfov
         self.tilt = tilt
         self.direction = direction
-        self.loc_pic = loc_pic
+        self.location = location
         self.shape = np.shape(self.im)
         self.vfov = hfov/self.shape[1] * self.shape[0]
         self.hfov_range = [direction-hfov/2, direction+hfov/2]
@@ -112,12 +242,11 @@ class Photo():
         self.focal_length = focal_length
         
 class Turbine():
-    def __init__(self, file, height, loc_turb, wind_dir):
+    def __init__(self, file, fov, height, location, wind_dir):
         self.im = Image.open(file, mode = "r").convert('RGBA')
         self.height = height
-        self.loc_turb = loc_turb
+        self.location = location
         self.shape = np.shape(self.im)
-        self.width = 90/self.shape[0] * self.shape[1] # hard code 90 deg. Fix later
+        self.width = fov/self.shape[0] * self.shape[1]
         self.radius = height/(2*self.shape[0]/self.shape[1]-1)
         self.wind_dir = wind_dir
- 
