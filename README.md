@@ -7,8 +7,8 @@
 
 
 ### Notes:
-To build the Jupyter book use: jupyter-book build mybookname (jupyter-book build --all mybookname)
-To push the changes to Github: ghp-import -n -p -f _build/html
+*- To build the Jupyter book use:* jupyter-book build DTU\ Special\ Course/ --path-output jupyter-book/ --config DTU\ Special\ Course/jupyter-book/_config.yml
+*- To push the changes to Github:* ghp-import -n -p -f _build/html
 
 - Use scoped-style
 - pyproject.toml (dependencies)
