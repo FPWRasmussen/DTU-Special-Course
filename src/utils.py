@@ -1,50 +1,87 @@
-
-def camera_matrix_old(photo, point):
+def intrinsic_parameters(f, shape, fov):
     """
     INPUT:
-        photo : background photo class
-        point : 3D point is space
+        f : float
+            focal length
+        shape : array_like
+            shape of image [pixels]
+        fov : array_like
+            horizontal and vertical field-of-view
+    OUTPUT:
+        K : ndarray (3, 3)
+                camera calibration matrix
     """
-    theta = np.array([np.pi, np.deg2rad(photo.tilt), -np.deg2rad(photo.direction)]) # the orientation of the camera [pitch, yaw, roll]. default look in z-direction 
-    c = photo.location
-    
-    f = photo.focal_length # focal length [m]
-    shape = photo.shape
-    hfov = np.deg2rad(photo.hfov)
-    vfov = np.deg2rad(photo.vfov)
-
+    hfov = np.deg2rad(fov[0]) # horizontal field of view
+    vfov = np.deg2rad(fov[1]) # vertical field of view
     m_x = 1/((np.tan(hfov/2)*f)/(shape[1]/2))
     m_y = 1/((np.tan(vfov/2)*f)/(shape[0]/2))
-    
     a_x = f * m_x; a_y = f * m_y
 
-    R_x = np.array([[1,0,0],
-                [0, np.cos(theta[0]), -np.sin(theta[0])],
-                [0,np.sin(theta[0]),np.cos(theta[0])]])
+    K = np.array([[a_x, 0, shape[1]/2], 
+                [0, a_y, shape[0]/2], 
+                [0, 0, 1]])
     
+    return K
+
+def rotation_matrix(theta, order = "ZYX"):
+    """
+    INPUT:
+        theta : array_like (3, 1)
+            Euler angles [rad]
+    OUTPUT:
+        R : ndarray (3, 3)
+            rotation matrix
+    """
+    R_x = np.array([[1,0,0],
+                    [0, np.cos(theta[0]), -np.sin(theta[0])],
+                    [0,np.sin(theta[0]),np.cos(theta[0])]])
     R_y = np.array([[np.cos(theta[1]),0,np.sin(theta[1])],
                     [0,1,0],
                     [-np.sin(theta[1]),0,np.cos(theta[1])]])
-    
     R_z = np.array([[np.cos(theta[2]),-np.sin(theta[2]),0],
-                      [np.sin(theta[2]), np.cos(theta[2]),0],
-                      [0,0,1]])
+                    [np.sin(theta[2]), np.cos(theta[2]),0],
+                    [0,0,1]])
     
-    R = R_x @ R_y @ R_z 
-    
-    C_N  = R @ np.column_stack((np.identity(3),-c)) # camera matrix 
-    
-    
-    K = np.array([[a_x, 0, shape[1]/2],
-                  [0, a_y, shape[0]/2],
-                  [0, 0, 1]])
-    # print(f, m_x, m_y, a_x, a_y, K)
-    P = np.hstack((point,1))
-    
-    p = K @ C_N @ P
-    p = p / p[2]
+    # if order.upper() == "ZYX":
+    #     R = R_z @ R_y @ R_x
+    # elif order.upper() == "XYZ":
+    #     R = R_x @ R_y @ R_z
 
-    return p
+    R = np.eye(3) # init R
+
+    for axis in order.upper():
+        if axis == 'X':
+            R = R @ R_x
+        elif axis == 'Y':
+            R = R @ R_y
+        elif axis == 'Z':
+            R = R @ R_z
+
+    return R
+
+def extrinsic_parameters(R, n):
+    """
+    INPUT:
+        R : array_like (3, 3)
+            rotation matrix
+        n : array_like
+            camera origin
+    OUTPUT:
+        C_N : ndarray (3, 4)
+            normalized camera matrix 
+    """
+    C_N = R @ np.column_stack((np.identity(3),-n)) # normalized camera matrix 
+    return C_N
+
+def camera_matrix(K, C_N):
+    P = K @ C_N
+    return P
+
+def image_plane(P, point_coordinate):
+    point_coordinate = np.append(point_coordinate, 1)
+    res = P @ point_coordinate
+    u, v = (res/res[2])[:2]
+    return u, v
 
 def find_coeffs(pa, pb): # https://stackoverflow.com/questions/14177744/how-does-perspective-transformation-work-in-pil
     matrix = []
@@ -59,103 +96,9 @@ def find_coeffs(pa, pb): # https://stackoverflow.com/questions/14177744/how-does
     return np.array(res).reshape(8)
 
 def generate_visual_impact_old(pic, turb):
-    radius = turb.radius
-    height = turb.height
-    wind_dir = turb.wind_dir
-    loc_turb = turb.location
-    direction = pic.direction
-
-    angle, distance = calc_angle_dist(pic.coord, turb.coord)
-
-    # point1 = np.array([np.cos(wind_dir)*radius, height+radius, np.sin(wind_dir)*radius])+loc_turb
-    # point2 = -np.array([np.cos(wind_dir)*radius, -height-radius, np.sin(wind_dir)*radius])+loc_turb
-    # point3 = -np.array([np.cos(wind_dir)*radius, 0, np.sin(wind_dir)*radius])+loc_turb
-    # point4 = np.array([np.cos(wind_dir)*radius, 0, np.sin(wind_dir)*radius])+loc_turb
-
-    angle_diff = np.deg2rad(direction)
-
-    point1 = np.array([np.cos(angle_diff)*radius, np.sin(angle_diff)*radius, height+radius])+loc_turb
-    point2 = -np.array([np.cos(angle_diff)*radius, np.sin(angle_diff)*radius, -height-radius])+loc_turb
-    point3 = -np.array([np.cos(angle_diff)*radius, np.sin(angle_diff)*radius, 0])+loc_turb
-    point4 = np.array([np.cos(angle_diff)*radius, np.sin(angle_diff)*radius, 0])+loc_turb
-
-    p_list = [point1, point2, point3, point4]
-    pa = []
-    for p in p_list:
-        q = camera_matrix(pic, p, angle)
-        if True:
-            draw = ImageDraw.Draw(pic.im)
-            draw.rectangle(((q[0],q[1]),(q[0]+5,q[1]+5)),fill = "red")
-        pa.append([q[0],q[1]])
-
-    pc = np.array(pa).reshape(4,2)
-    pc[:,0] -= np.amin(pc[:,0])
-    pc[:,1] -= np.amin(pc[:,1])
-
-    pb = [(0, 0), (turb.shape[1], 0), (turb.shape[1], turb.shape[0]), (0, turb.shape[0])]
-
-    pd = list(pa)
-    for i in range(len(pa)):
-        pa[i] = [pc[i,0],pc[i,1]]
-        
-    print(pa, pb)
-    coeffs = find_coeffs(pa, pb)
-
-
-    width, height = turb.im.size 
-    turb.im = turb.im.transform((int(np.amax(np.array(pa).reshape(4,2)[:,0])),int(np.amax(np.array(pa).reshape(4,2)[:,1]))), method=Image.Transform.PERSPECTIVE,data=coeffs)
-    vis_impact_im = pic.im.copy() 
-    vis_impact_im.paste(turb.im, box=[np.amin(np.array(pd).reshape(4,2)[:,0]).astype(int),np.amin(np.array(pd).reshape(4,2)[:,1]).astype(int)], mask = turb.im)
-
-    return vis_impact_im
-
-def camera_matrix(photo, point): # spyder
-    """
-    INPUT:
-        photo : background photo class
-        point : 3D point is space
-    """
-    theta = np.array([np.deg2rad(photo.tilt),-np.deg2rad(photo.direction), np.pi]) # the orientation of the camera [pitch, yaw, roll]. default look in z-direction 
-    c = photo.location # camera location
-    a = point# the 3D position of a point A that is to be projected
     
-    f = photo.focal_length # focal length [m]
-    shape = photo.shape
-    hfov = np.deg2rad(photo.hfov)
-    vfov = np.deg2rad(photo.vfov)
 
-    m_x = 1/((np.tan(hfov/2)*f)/(shape[1]/2))
-    m_y = 1/((np.tan(vfov/2)*f)/(shape[0]/2))
-    
-    
-    a_x = f * m_x; a_y = f * m_y
-    
-    R_z = np.array([[np.cos(theta[2]),-np.sin(theta[2]),0],
-                      [np.sin(theta[2]), np.cos(theta[2]),0],
-                      [0,0,1]])
-    
-    R_y = np.array([[np.cos(theta[1]),0,np.sin(theta[1])],
-                      [0,1,0],
-                      [-np.sin(theta[1]),0,np.cos(theta[1])]])
-    R_x = np.array([[1,0,0],
-                  [0, np.cos(theta[0]), -np.sin(theta[0])],
-                  [0,np.sin(theta[0]),np.cos(theta[0])]])
-    
-    R = R_z @ R_y @ R_x
-    
-    # C_N  = np.column_stack((R,c)) # camera matrix
-    C_N  = R @ np.column_stack((np.identity(3),-c)) # camera matrix
-    
-    K = np.array([[a_x, 0, shape[1]/2],
-                  [0, a_y, shape[0]/2],
-                  [0, 0, 1]])
-    # print(f, m_x, m_y, a_x, a_y, K)
-    P = np.hstack((point,1))
-    
-    p = K @ C_N @ P
-    p = p / p[2]
-
-    return p
+    return
 
 def calc_angle_dist(location1, location2):
     angle,angle2,distance = Geod(ellps='WGS84').inv(location1[0], location1[1], location2[0] ,location2[1]) # N = 0, E = 90, W = -90, S = 180/-180
