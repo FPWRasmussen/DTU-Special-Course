@@ -83,6 +83,11 @@ def image_plane(P, point_coordinate):
     u, v = (res/res[2])[:2]
     return u, v
 
+def object_frame_boundaries(object_position, scale_factor : float):
+    perp_vector = np.array([-object_position[1], object_position[0]])
+    perp_vector = perp_vector / (np.linalg.norm(perp_vector) / scale_factor)
+    return object_position + perp_vector, object_position - perp_vector
+
 def find_coeffs(pa, pb): # https://stackoverflow.com/questions/14177744/how-does-perspective-transformation-work-in-pil
     matrix = []
     for p1, p2 in zip(pa, pb):
@@ -95,10 +100,72 @@ def find_coeffs(pa, pb): # https://stackoverflow.com/questions/14177744/how-does
     res = np.dot(np.linalg.inv(A.T * A) * A.T, B)
     return np.array(res).reshape(8)
 
-def generate_visual_impact_old(pic, turb):
-    
+def generate_visual_impact(pic_class, turb_class, debug = True):
 
-    return
+    shape = pic_class.shape
+    f = pic_class.focal_length
+    fov = pic_class.fov
+    radius = turb_class.radius
+    turbine_origin = turb_class.location
+    camera_origin = pic_class.location
+    height = turb_class.height
+    theta = pic_class.theta
+
+    K = intrinsic_parameters(f, shape, fov)
+    R = rotation_matrix(theta, order = "xzy")
+    C_N = extrinsic_parameters(R, camera_origin)
+    P = camera_matrix(K, C_N)
+
+    # calculate turbine direction
+    # e_y = np.array([0, 1])
+    # angle_vector = (turbine_origin - camera_origin)[:2]
+    # direction = np.arccos((e_y @ angle_vector)/(np.linalg.norm(angle_vector)))
+    # print(np.rad2deg(direction))
+
+    # point1 = np.array([-np.sin(direction)*radius, np.cos(direction)*radius, 0]) + turbine_origin
+    # point2 = np.array([np.sin(direction)*radius, -np.cos(direction)*radius, 0]) + turbine_origin
+    # point3= np.array([-np.sin(direction)*radius, np.cos(direction)*radius, height+radius]) + turbine_origin
+    # point4 = np.array([np.sin(direction)*radius, -np.cos(direction)*radius, height+radius]) + turbine_origin
+
+    # point1 = np.array([-np.cos(direction)*radius, -np.sin(direction)*radius, 0]) + turbine_origin
+    # point2 = np.array([np.cos(direction)*radius, np.sin(direction)*radius, 0]) + turbine_origin
+    # point3= np.array([-np.cos(direction)*radius, -np.sin(direction)*radius, height+radius]) + turbine_origin
+    # point4 = np.array([np.cos(direction)*radius, np.sin(direction)*radius, height+radius]) + turbine_origin
+
+    perp1, perp2 = object_frame_boundaries(turbine_origin[:-1]-camera_origin[:-1], radius)
+    point1 = np.append(perp1, 0) + np.append(camera_origin[:-1], 0) + np.array([0,0,turbine_origin[2]])
+    point2 = np.append(perp2, 0) + np.append(camera_origin[:-1], 0) + np.array([0,0,turbine_origin[2]])
+    point3= np.append(perp1, height) + np.append(camera_origin[:-1], 0) + np.array([0,0,turbine_origin[2]])
+    point4 = np.append(perp2, height) + np.append(camera_origin[:-1], 0) + np.array([0,0,turbine_origin[2]])
+
+    p_list = [point1, point2, point3, point4]
+
+    draw = ImageDraw.Draw(pic_class.im)
+    pa = []
+    for i, p in enumerate(p_list):
+        u, v = image_plane(P, p)
+        colors = ["red", "green", "blue", "yellow"]
+        if debug:
+            draw.rectangle(((u,v),(u+5,v+5)),fill = colors[i])
+        pa.append([u,v])
+
+    pc = np.array(pa).reshape(4,2)
+    print(pc)
+    pc[:,0] -= np.amin(pc[:,0])
+    pc[:,1] -= np.amin(pc[:,1])
+
+    pb = [(turb_class.shape[1], turb_class.shape[0]), (0, turb_class.shape[0]),  (turb_class.shape[1], 0), (0, 0)]
+
+    pd = list(pa)
+    for i in range(len(pa)):
+        pa[i] = [pc[i,0],pc[i,1]]
+        
+    coeffs = find_coeffs(pa, pb)
+
+    turb_class.im = turb_class.im.transform((int(np.amax(np.array(pa).reshape(4,2)[:,0])),int(np.amax(np.array(pa).reshape(4,2)[:,1]))), method=Image.Transform.PERSPECTIVE,data=coeffs)
+    pic_class.im.paste(turb_class.im, box=[np.amin(np.array(pd).reshape(4,2)[:,0]).astype(int),np.amin(np.array(pd).reshape(4,2)[:,1]).astype(int)], mask = turb_class.im)
+
+    return pic_class.im
 
 def calc_angle_dist(location1, location2):
     angle,angle2,distance = Geod(ellps='WGS84').inv(location1[0], location1[1], location2[0] ,location2[1]) # N = 0, E = 90, W = -90, S = 180/-180
@@ -131,7 +198,6 @@ def transform_coordinates(long_list, lat_list, input_crs_str = "EPSG:4326", outp
             trans_cords[j, i, 1] = y
 
     return trans_cords
-
 
 def object_to_image(file_path, elevation = 0, azimuth = 0):
     # OLD CODE
@@ -177,8 +243,8 @@ def object_to_image(file_path, elevation = 0, azimuth = 0):
 
 def pull_street_view_image(api_key, longitude, latitude, fov = 90, heading = 0, pitch = 0, width = 800, height = 800):
 # URL of the image you want to load
+    pitch = 90 - pitch # correct for reference frame
     image_url = f"https://maps.googleapis.com/maps/api/streetview?size=800x800&location={latitude},{longitude}&fov={fov}&heading={heading}&pitch={pitch}&key={api_key}"
-
     try:
         # Send an HTTP GET request to fetch the image
         response = requests.get(image_url)
@@ -307,17 +373,19 @@ import inspect
 
 
 class Photo():
-    def __init__(self, file, hfov, tilt, direction, coord, location, focal_length):
+    def __init__(self, file, fov, theta, coord, location, focal_length):
         self.im = Image.open(file, mode = "r").convert('RGBA')
-        self.hfov = hfov
-        self.tilt = tilt
-        self.direction = direction
+        self.hfov = fov[0]
+        self.theta = theta
+        self.tilt = theta[0]
+        self.direction = theta[2]
         self.coord = coord
         self.location = location
         self.shape = np.shape(self.im)
-        self.vfov = hfov/self.shape[1] * self.shape[0]
-        self.hfov_range = [direction-hfov/2, direction+hfov/2]
-        self.vfov_range = [tilt-self.vfov/2, tilt+self.vfov//2]
+        self.vfov = fov[1]
+        self.fov = fov
+        self.hfov_range = [self.direction-self.hfov/2, self.direction+self.hfov/2]
+        self.vfov_range = [self.tilt-self.vfov/2, self.tilt+self.vfov//2]
         self.focal_length = focal_length
         
 class Turbine():
@@ -327,6 +395,6 @@ class Turbine():
         self.coord = coord
         self.location = location
         self.shape = np.shape(self.im)
-        self.width = fov/self.shape[0] * self.shape[1]
-        self.radius = height/(2*self.shape[0]/self.shape[1]-1)
+        self.width = fov[0]/self.shape[0] * self.shape[1]
+        self.radius = height/(2*self.shape[0]/self.shape[1])
         self.wind_dir = wind_dir
