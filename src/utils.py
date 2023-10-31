@@ -1,3 +1,15 @@
+from PIL import Image, ImageDraw, ImageEnhance
+import numpy as np
+import pyproj
+from pyproj import Geod
+import os
+import matplotlib.pyplot as plt
+import requests
+from io import BytesIO
+from subprocess import check_output
+import inspect
+from IPython.display import display
+
 def intrinsic_parameters(f, shape, fov):
     """
     INPUT:
@@ -199,49 +211,7 @@ def transform_coordinates(long_list, lat_list, input_crs_str = "EPSG:4326", outp
 
     return trans_cords
 
-def object_to_image(file_path, elevation = 0, azimuth = 0):
-    # OLD CODE
-    V, F = [], []
-    with open(file_path) as f:
-        for line in f.readlines():
-            if line.startswith('#'):
-                continue
-            values = line.split()
-            if not values:
-                continue
-            if values[0] == 'v':
-                V.append([float(x) for x in values[1:4]])
-            elif values[0] == 'f' :
-                F.append([int(x.split("/", 1)[0]) for x in values[1:4]])
-    V, F = np.array(V), np.array(F)-1
-    V = (V-(V.max(0)+V.min(0))/2) / max(V.max(0)-V.min(0))
-
-    fig = plt.figure(figsize=(6,6))
-    ax = fig.add_axes([0,0,1,1], xlim=[-1,+1], ylim=[-1,+1], aspect=1, frameon=False)
-    ax = fig.add_subplot(111, projection="3d")
-    plt.axis('off')
-    ax.view_init(elev=elevation, azim=azimuth)
-    plt.grid(visible=None)
-    ax.plot_trisurf(V[:, 0], V[:,1], F, V[:, 2], linewidth=0, antialiased=True, closed=True, color = "w")
-    limits = np.array([getattr(ax, f"get_{axis}lim")() for axis in "xyz"])
-    ax.set_box_aspect(np.ptp(limits, axis=1))
-    plt.savefig(f"../temp/obj2png.png", dpi=100, transparent=True)
-    plt.close() # prevent plot from showing
-
-    pil_image = Image.open(f"../temp/obj2png.png")
-    pil_image = pil_image.crop((5, 5, pil_image.size[0]-5, pil_image.size[1]-5))
-    np_array = np.array(pil_image)
-    blank_px = [255, 255, 255, 0]
-    mask = np_array != blank_px
-    coords = np.argwhere(mask)
-    x0, y0, z0 = coords.min(axis=0)
-    x1, y1, z1 = coords.max(axis=0) + 1
-    cropped_box = np_array[x0:x1, y0:y1, z0:z1]
-    pil_image = Image.fromarray(cropped_box, 'RGBA')
-    pil_image.save(f"../temp/obj2png.png")
-    return pil_image
-
-def pull_street_view_image(api_key, longitude, latitude, fov = 90, heading = 0, pitch = 0, width = 800, height = 800):
+def pull_street_view_image(api_key, longitude, latitude, fov = 90, heading = 0, pitch = 90, width = 800, height = 800):
 # URL of the image you want to load
     pitch = 90 - pitch # correct for reference frame
     image_url = f"https://maps.googleapis.com/maps/api/streetview?size=800x800&location={latitude},{longitude}&fov={fov}&heading={heading}&pitch={pitch}&key={api_key}"
@@ -325,8 +295,8 @@ def plot_trisurface(file_path, elevation = 0, azimuth = 0, view_height = 0, tota
     plt.grid(visible=None)
     ax.view_init(elev=elevation, azim=azimuth)
 
-    tri = ax.plot_trisurf(V[:, 0], V[:,1], F, V[:, 2], linewidth=0, antialiased=False, closed=True)
-    tri.set(facecolor = "grey", edgecolor = "none")
+    tri = ax.plot_trisurf(V[:, 0], V[:,1], F, V[:, 2], linewidth=0.1, antialiased=True, closed=True)
+    tri.set(facecolor = "white", edgecolor = "gray")
 
     limits = np.array([getattr(ax, f"get_{axis}lim")() for axis in "xyz"])
     lower_bound = min(0, 2*view_height - total_height)
@@ -334,7 +304,7 @@ def plot_trisurface(file_path, elevation = 0, azimuth = 0, view_height = 0, tota
     limits[2,:] = [lower_bound, upper_bound]
     ax.set(zlim=limits[2,:], aspect="equal")
 
-    plt.savefig(f"../temp/obj2png.png", dpi=300, transparent=True)
+    plt.savefig(f"../temp/obj2png.png", dpi=600, transparent=True)
     if show_plot:
         plt.show()
     else:
@@ -358,18 +328,37 @@ def crop_image(file_path = "../temp/obj2png.png", display_image = True):
 
     return pil_image
 
+def object_to_image(file_path, elevation = 0, azimuth = 0, view_height = 0, total_height = 0, debug = False):
+    plot_trisurface(file_path, elevation = elevation, azimuth = azimuth, view_height = view_height, total_height = total_height, show_plot = debug)
+    pil_image = crop_image(file_path = "../temp/obj2png.png", display_image = debug)
+    pil_image = adjust_image(image_path = pil_image, brightness = 1, contrast = 1, display_image = debug)
+    return pil_image
 
+def solar_angles_to_vector(azimuth, altitude):
+    """
+    Convert solar azimuth and altitude angles to a 3D vector
 
-from PIL import Image, ImageDraw, ImageEnhance
-import numpy as np
-import pyproj
-from pyproj import Geod
-import os
-import matplotlib.pyplot as plt
-import requests
-from io import BytesIO
-from subprocess import check_output
-import inspect
+    Args:
+        azimuth (float): Solar azimuth angle in degrees
+        altitude (float): Solar altitude angle in degrees
+
+    Returns:
+        vec (np.ndarray): Normalized 3D vector representing sun direction from origin
+    """
+    # Convert to radians
+    azimuth_rad = np.radians(azimuth+90)
+    altitude_rad = np.radians(altitude)
+
+    # Calculate 3D vector components
+    x = -np.cos(azimuth_rad) * np.cos(altitude_rad)
+    y = np.sin(azimuth_rad) * np.cos(altitude_rad)
+    z = np.sin(altitude_rad)
+
+    # Normalize to unit vector
+    vec = np.array([x, y, z])
+    vec /= np.linalg.norm(vec)
+
+    return vec
 
 
 class Photo():
