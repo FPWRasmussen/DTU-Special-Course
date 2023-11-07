@@ -12,3 +12,6 @@
 
 - Use scoped-style
 - pyproject.toml (dependencies)
+
+
+python setup.py build_ext --inplace
