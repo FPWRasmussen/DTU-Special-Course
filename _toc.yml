@@ -1,8 +1,25 @@
-# Table of contents
-# Learn more at https://jupyterbook.org/customize/toc.html
-
 format: jb-book
 root: src/introduction
 chapters:
-- file: src/elevation_handler
-- file: src/3d_object_to_image
+- file: src/map/elevation_handler
+  title: Elevation Handler
+- file: src/visual/visual_impact
+  title: Visual Impact
+  sections:
+    - file: src/visual/3d_object_to_image
+      title: 3D Object to Image
+    - file: src/visual/camera_calibration
+      title: Camera Calibration
+- file: src/shadow/shadow_map
+  title: Shadow Map
+  sections:
+    - file: src/shadow/fast_voxel_traversal
+      title: Fast Voxel Traversal
+    - file: src/shadow/sun_calc
+      title: Solar Calculations
+    - file: src/shadow/rotor_point_cloud
+      title: Rotor Point Cloud
+    - file: src/shadow/multiprocessing
+      title: Multiprocessing
+- file: src/noise/atmospheric_attenuation
+  title: Atmospheric Attenuation

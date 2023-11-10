@@ -449,9 +449,8 @@ def download_elevation(map_boundaries):
                 long_str = "E"+str(int(np.floor(longitude))).zfill(3)
 
             output_name = f"{lat_str}{long_str}"
-            hgt_gz_file = "../temp/"+output_name+".hgt.gz"
-            hgt_file = '../temp/'+ output_name+ '.hgt'
-            # tif_file = '../temp/'+ output_name+ '.tif'
+            hgt_gz_file = "../../temp/"+output_name+".hgt.gz"
+            hgt_file = '../../temp/'+ output_name+ '.hgt'
 
             if os.path.exists(hgt_file):
                 # print("File exists!")
