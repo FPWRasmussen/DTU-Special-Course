@@ -7,7 +7,7 @@
 
 
 ### Notes:
-*- To build the Jupyter book use:* jupyter-book build DTU\ Special\ Course/ --path-output jupyter-book/ --config DTU\ Special\ Course/jupyter-book/_config.yml
+*- To build the Jupyter book use:* jupyter-book build DTU\ Special\ Course/ --path-output DTU\ Special\ Course/jupyter-book/ --config DTU\ Special\ Course/jupyter-book/_config.yml
 *- To push the changes to Github:* ghp-import -n -p -f _build/html
 
 - Use scoped-style
