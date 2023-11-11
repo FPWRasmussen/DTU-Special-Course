@@ -1,0 +1,1335 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>TEST NOTEBOOK &#8212; My sample book</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../../../../_static/styles/theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../../../../../../../_static/styles/bootstrap.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../../../../../../../_static/styles/pydata-sphinx-theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+
+  
+  <link href="../../../../../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../../../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../../../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794" />
+<link rel="preload" as="script" href="../../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794" />
+  <script src="../../../../../../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=ac02cc09edc035673794"></script>
+
+    <script data-url_root="../../../../../../../" id="documentation_options" src="../../../../../../../_static/documentation_options.js"></script>
+    <script src="../../../../../../../_static/jquery.js"></script>
+    <script src="../../../../../../../_static/underscore.js"></script>
+    <script src="../../../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../../../../../_static/doctools.js"></script>
+    <script src="../../../../../../../_static/clipboard.min.js"></script>
+    <script src="../../../../../../../_static/copybutton.js"></script>
+    <script src="../../../../../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../../../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../../../../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/src/test_notebook';</script>
+    <link rel="index" title="Index" href="../../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../../../../../../../src/introduction.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../../../../_static/logo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../../../../../../../_static/logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../../../../../src/introduction.html">
+                    Welcome to my program
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../src/map/elevation_handler.html">Elevation Handler</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../../../../src/visual/visual_impact.html">Visual Impact</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../src/visual/3d_object_to_image.html">3D Object to Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../src/visual/camera_calibration.html">Camera Calibration</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../../../../src/shadow/shadow_map.html">Shadow Map</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../src/shadow/fast_voxel_traversal.html">Fast Voxel Traversal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../src/shadow/sun_calc.html">Solar Calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../src/shadow/rotor_point_cloud.html">Rotor Point Cloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../src/shadow/multiprocessing.html">Multiprocessing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../src/noise/atmospheric_attenuation.html">Atmospheric Attenuation</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/FPWRasmussen/DTU-Special-Course/main?urlpath=lab/tree/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/src/test_notebook.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../../../../../../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/FPWRasmussen/DTU-Special-Course/blob/main/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/src/test_notebook.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onColab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../../../../../../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/FPWRasmussen/DTU-Special-Course" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/FPWRasmussen/DTU-Special-Course/issues/new?title=Issue%20on%20page%20%2Fjupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/src/test_notebook.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../../../../_sources/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/src/test_notebook.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>TEST NOTEBOOK</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="test-notebook">
+<h1>TEST NOTEBOOK<a class="headerlink" href="#test-notebook" title="Permalink to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">find_coeffs</span><span class="p">,</span> <span class="n">print_code</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">from</span> <span class="nn">subprocess</span> <span class="kn">import</span> <span class="n">check_output</span>
+<span class="kn">from</span> <span class="nn">IPython.core.display</span> <span class="kn">import</span> <span class="n">HTML</span>
+
+<span class="n">output</span> <span class="o">=</span> <span class="n">print_code</span><span class="p">(</span><span class="n">find_coeffs</span><span class="p">)</span>
+<span class="n">HTML</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">find_coeffs</span><span class="p">,</span> <span class="n">print_code</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">import</span> <span class="nn">inspect</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">from</span> <span class="nn">subprocess</span> <span class="kn">import</span> <span class="n">check_output</span>
+
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;utils&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">find_coeffs</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>def find_coeffs(pa, pb): # https://stackoverflow.com/questions/14177744/how-does-perspective-transformation-work-in-pil
+    matrix = []
+    for p1, p2 in zip(pa, pb):
+        matrix.append([p1[0], p1[1], 1, 0, 0, 0, -p2[0]*p1[0], -p2[0]*p1[1]])
+        matrix.append([0, 0, 0, p1[0], p1[1], 1, -p2[1]*p1[0], -p2[1]*p1[1]])
+
+    A = np.matrix(matrix, dtype=float)
+    B = np.array(pb).reshape(8)
+
+    res = np.dot(np.linalg.inv(A.T * A) * A.T, B)
+    return np.array(res).reshape(8)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">find_coeffs</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">from</span> <span class="nn">subprocess</span> <span class="kn">import</span> <span class="n">check_output</span>
+<span class="kn">from</span> <span class="nn">IPython.core.display</span> <span class="kn">import</span> <span class="n">HTML</span>
+
+<span class="n">output</span> <span class="o">=</span> <span class="n">check_output</span><span class="p">([</span><span class="s2">&quot;pygmentize&quot;</span><span class="p">,</span> <span class="s2">&quot;-f&quot;</span><span class="p">,</span> <span class="s2">&quot;html&quot;</span><span class="p">,</span> <span class="s2">&quot;-O&quot;</span><span class="p">,</span> <span class="s2">&quot;noclasses,lineanchors,linenos,style=native&quot;</span><span class="p">,</span> <span class="s2">&quot;-l&quot;</span><span class="p">,</span> <span class="s2">&quot;python&quot;</span><span class="p">],</span>
+                     <span class="nb">input</span><span class="o">=</span><span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">find_coeffs</span><span class="p">),</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span>
+
+<span class="c1"># Define a custom CSS class to align the code to the left</span>
+<span class="n">custom_css</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">&lt;style&gt;</span>
+<span class="s2">.code {</span>
+<span class="s2">    text-align: left;</span>
+<span class="s2">    background-color: black; /* Set the background color */</span>
+<span class="s2">    }</span>
+<span class="s2">&lt;/style&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="c1"># Embed the code block in a div with the custom CSS class</span>
+<span class="n">html_code</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="si">{</span><span class="n">custom_css</span><span class="si">}</span>
+<span class="s2">&lt;div class=&quot;code&quot;&gt;</span>
+<span class="si">{</span><span class="n">output</span><span class="si">}</span>
+<span class="s2">&lt;/div&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">HTML</span><span class="p">(</span><span class="n">html_code</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html">
+
+<style>
+.code {
+    text-align: left;
+    background-color: black; /* Set the background color */
+    }
+</style>
+
+<div class="code">
+<div class="highlight" style="background: #202020"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span style="color: #aaaaaa; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 1</span>
+<span style="color: #aaaaaa; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 2</span>
+<span style="color: #aaaaaa; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 3</span>
+<span style="color: #aaaaaa; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 4</span>
+<span style="color: #aaaaaa; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 5</span>
+<span style="color: #aaaaaa; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 6</span>
+<span style="color: #aaaaaa; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 7</span>
+<span style="color: #aaaaaa; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 8</span>
+<span style="color: #aaaaaa; background-color: transparent; padding-left: 5px; padding-right: 5px;"> 9</span>
+<span style="color: #aaaaaa; background-color: transparent; padding-left: 5px; padding-right: 5px;">10</span>
+<span style="color: #aaaaaa; background-color: transparent; padding-left: 5px; padding-right: 5px;">11</span></pre></div></td><td class="code"><div><pre style="line-height: 125%;"><span></span><a id="True-1" name="True-1"></a><span style="color: #6ebf26; font-weight: bold">def</span> <span style="color: #71adff">find_coeffs</span><span style="color: #d0d0d0">(pa,</span> <span style="color: #d0d0d0">pb):</span> <span style="color: #ababab; font-style: italic"># https://stackoverflow.com/questions/14177744/how-does-perspective-transformation-work-in-pil</span>
+<a id="True-2" name="True-2"></a>    <span style="color: #d0d0d0">matrix</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">[]</span>
+<a id="True-3" name="True-3"></a>    <span style="color: #6ebf26; font-weight: bold">for</span> <span style="color: #d0d0d0">p1,</span> <span style="color: #d0d0d0">p2</span> <span style="color: #6ebf26; font-weight: bold">in</span> <span style="color: #2fbccd">zip</span><span style="color: #d0d0d0">(pa,</span> <span style="color: #d0d0d0">pb):</span>
+<a id="True-4" name="True-4"></a>        <span style="color: #d0d0d0">matrix.append([p1[</span><span style="color: #51b2fd">0</span><span style="color: #d0d0d0">],</span> <span style="color: #d0d0d0">p1[</span><span style="color: #51b2fd">1</span><span style="color: #d0d0d0">],</span> <span style="color: #51b2fd">1</span><span style="color: #d0d0d0">,</span> <span style="color: #51b2fd">0</span><span style="color: #d0d0d0">,</span> <span style="color: #51b2fd">0</span><span style="color: #d0d0d0">,</span> <span style="color: #51b2fd">0</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">-p2[</span><span style="color: #51b2fd">0</span><span style="color: #d0d0d0">]*p1[</span><span style="color: #51b2fd">0</span><span style="color: #d0d0d0">],</span> <span style="color: #d0d0d0">-p2[</span><span style="color: #51b2fd">0</span><span style="color: #d0d0d0">]*p1[</span><span style="color: #51b2fd">1</span><span style="color: #d0d0d0">]])</span>
+<a id="True-5" name="True-5"></a>        <span style="color: #d0d0d0">matrix.append([</span><span style="color: #51b2fd">0</span><span style="color: #d0d0d0">,</span> <span style="color: #51b2fd">0</span><span style="color: #d0d0d0">,</span> <span style="color: #51b2fd">0</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">p1[</span><span style="color: #51b2fd">0</span><span style="color: #d0d0d0">],</span> <span style="color: #d0d0d0">p1[</span><span style="color: #51b2fd">1</span><span style="color: #d0d0d0">],</span> <span style="color: #51b2fd">1</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">-p2[</span><span style="color: #51b2fd">1</span><span style="color: #d0d0d0">]*p1[</span><span style="color: #51b2fd">0</span><span style="color: #d0d0d0">],</span> <span style="color: #d0d0d0">-p2[</span><span style="color: #51b2fd">1</span><span style="color: #d0d0d0">]*p1[</span><span style="color: #51b2fd">1</span><span style="color: #d0d0d0">]])</span>
+<a id="True-6" name="True-6"></a>
+<a id="True-7" name="True-7"></a>    <span style="color: #d0d0d0">A</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">np.matrix(matrix,</span> <span style="color: #d0d0d0">dtype=</span><span style="color: #2fbccd">float</span><span style="color: #d0d0d0">)</span>
+<a id="True-8" name="True-8"></a>    <span style="color: #d0d0d0">B</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">np.array(pb).reshape(</span><span style="color: #51b2fd">8</span><span style="color: #d0d0d0">)</span>
+<a id="True-9" name="True-9"></a>
+<a id="True-10" name="True-10"></a>    <span style="color: #d0d0d0">res</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">np.dot(np.linalg.inv(A.T</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">A)</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">A.T,</span> <span style="color: #d0d0d0">B)</span>
+<a id="True-11" name="True-11"></a>    <span style="color: #6ebf26; font-weight: bold">return</span> <span style="color: #d0d0d0">np.array(res).reshape(</span><span style="color: #51b2fd">8</span><span style="color: #d0d0d0">)</span>
+</pre></div></td></tr></table></div>
+
+</div>
+</div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="kn">import</span> <span class="n">Axes3D</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># Create some example data</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">X</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">Y</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+
+<span class="c1"># Set the view angles using view_init</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="n">azim</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">elev</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Set the view coordinates by adjusting the axis limits</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_zlim</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Plot the 3D surface</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../../../../../_images/70d20094a77bd775008861791e4affc4f956119347069803c070be0894f76a9c.png" src="../../../../../../../_images/70d20094a77bd775008861791e4affc4f956119347069803c070be0894f76a9c.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">generate_range</span><span class="p">(</span><span class="n">mean</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+    <span class="c1"># Calculate the lower and upper bounds for the range</span>
+    <span class="n">lower_bound</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">mean</span> <span class="o">-</span> <span class="n">height</span><span class="p">)</span>
+    <span class="n">upper_bound</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">height</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">mean</span><span class="p">)</span>
+    
+    <span class="c1"># Return the range as a tuple</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">)</span>
+
+<span class="n">mean_value</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span>
+<span class="n">height_value</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">result_range</span> <span class="o">=</span> <span class="n">generate_range</span><span class="p">(</span><span class="n">mean_value</span><span class="p">,</span> <span class="n">height_value</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result_range</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(-14, 10)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">subprocess</span> <span class="kn">import</span> <span class="n">check_output</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">HTML</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+
+<span class="k">def</span> <span class="nf">pygmentize_source_code</span><span class="p">(</span><span class="n">source_code</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;python&quot;</span><span class="p">):</span>
+    <span class="c1"># Define the Pygmentize command and arguments</span>
+    <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;pygmentize&quot;</span><span class="p">,</span> <span class="s2">&quot;-f&quot;</span><span class="p">,</span> <span class="s2">&quot;html&quot;</span><span class="p">,</span> <span class="s2">&quot;-O&quot;</span><span class="p">,</span> <span class="s2">&quot;noclasses, lineanchors,style=native&quot;</span><span class="p">,</span> <span class="s2">&quot;-l&quot;</span><span class="p">,</span> <span class="n">language</span><span class="p">]</span>
+
+    <span class="c1"># Get the HTML output using check_output</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">check_output</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="n">source_code</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Display the HTML using IPython.display</span>
+    <span class="k">return</span> <span class="n">HTML</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+
+<span class="c1"># Example usage:</span>
+<span class="c1"># def find_coeffs(x, y):</span>
+<span class="c1">#     return x + y</span>
+
+<span class="n">source_code</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getsource</span><span class="p">(</span><span class="n">find_coeffs</span><span class="p">)</span>
+<span class="n">html_output</span> <span class="o">=</span> <span class="n">pygmentize_source_code</span><span class="p">(</span><span class="n">source_code</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;python&quot;</span><span class="p">)</span>
+<span class="n">html_output</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class="highlight" style="background: #202020"><pre style="line-height: 125%;"><span></span><a id="True-1" name="True-1" href="#True-1"></a><span style="color: #6ebf26; font-weight: bold">def</span> <span style="color: #71adff">find_coeffs</span><span style="color: #d0d0d0">(pa,</span> <span style="color: #d0d0d0">pb):</span> <span style="color: #ababab; font-style: italic"># https://stackoverflow.com/questions/14177744/how-does-perspective-transformation-work-in-pil</span>
+<a id="True-2" name="True-2" href="#True-2"></a>    <span style="color: #d0d0d0">matrix</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">[]</span>
+<a id="True-3" name="True-3" href="#True-3"></a>    <span style="color: #6ebf26; font-weight: bold">for</span> <span style="color: #d0d0d0">p1,</span> <span style="color: #d0d0d0">p2</span> <span style="color: #6ebf26; font-weight: bold">in</span> <span style="color: #2fbccd">zip</span><span style="color: #d0d0d0">(pa,</span> <span style="color: #d0d0d0">pb):</span>
+<a id="True-4" name="True-4" href="#True-4"></a>        <span style="color: #d0d0d0">matrix.append([p1[</span><span style="color: #51b2fd">0</span><span style="color: #d0d0d0">],</span> <span style="color: #d0d0d0">p1[</span><span style="color: #51b2fd">1</span><span style="color: #d0d0d0">],</span> <span style="color: #51b2fd">1</span><span style="color: #d0d0d0">,</span> <span style="color: #51b2fd">0</span><span style="color: #d0d0d0">,</span> <span style="color: #51b2fd">0</span><span style="color: #d0d0d0">,</span> <span style="color: #51b2fd">0</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">-p2[</span><span style="color: #51b2fd">0</span><span style="color: #d0d0d0">]*p1[</span><span style="color: #51b2fd">0</span><span style="color: #d0d0d0">],</span> <span style="color: #d0d0d0">-p2[</span><span style="color: #51b2fd">0</span><span style="color: #d0d0d0">]*p1[</span><span style="color: #51b2fd">1</span><span style="color: #d0d0d0">]])</span>
+<a id="True-5" name="True-5" href="#True-5"></a>        <span style="color: #d0d0d0">matrix.append([</span><span style="color: #51b2fd">0</span><span style="color: #d0d0d0">,</span> <span style="color: #51b2fd">0</span><span style="color: #d0d0d0">,</span> <span style="color: #51b2fd">0</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">p1[</span><span style="color: #51b2fd">0</span><span style="color: #d0d0d0">],</span> <span style="color: #d0d0d0">p1[</span><span style="color: #51b2fd">1</span><span style="color: #d0d0d0">],</span> <span style="color: #51b2fd">1</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">-p2[</span><span style="color: #51b2fd">1</span><span style="color: #d0d0d0">]*p1[</span><span style="color: #51b2fd">0</span><span style="color: #d0d0d0">],</span> <span style="color: #d0d0d0">-p2[</span><span style="color: #51b2fd">1</span><span style="color: #d0d0d0">]*p1[</span><span style="color: #51b2fd">1</span><span style="color: #d0d0d0">]])</span>
+<a id="True-6" name="True-6" href="#True-6"></a>
+<a id="True-7" name="True-7" href="#True-7"></a>    <span style="color: #d0d0d0">A</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">np.matrix(matrix,</span> <span style="color: #d0d0d0">dtype=</span><span style="color: #2fbccd">float</span><span style="color: #d0d0d0">)</span>
+<a id="True-8" name="True-8" href="#True-8"></a>    <span style="color: #d0d0d0">B</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">np.array(pb).reshape(</span><span style="color: #51b2fd">8</span><span style="color: #d0d0d0">)</span>
+<a id="True-9" name="True-9" href="#True-9"></a>
+<a id="True-10" name="True-10" href="#True-10"></a>    <span style="color: #d0d0d0">res</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">np.dot(np.linalg.inv(A.T</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">A)</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">A.T,</span> <span style="color: #d0d0d0">B)</span>
+<a id="True-11" name="True-11" href="#True-11"></a>    <span style="color: #6ebf26; font-weight: bold">return</span> <span style="color: #d0d0d0">np.array(res).reshape(</span><span style="color: #51b2fd">8</span><span style="color: #d0d0d0">)</span>
+</pre></div>
+</div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="k">def</span> <span class="nf">calculate_points</span><span class="p">(</span><span class="n">direction</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">turbine_origin</span><span class="p">):</span>
+    <span class="n">angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span>  <span class="c1"># Convert direction to radians if necessary</span>
+    <span class="n">x_offset</span> <span class="o">=</span> <span class="n">radius</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+    <span class="n">y_offset</span> <span class="o">=</span> <span class="n">radius</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span>
+
+    <span class="n">point1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">turbine_origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">x_offset</span><span class="p">,</span> <span class="n">turbine_origin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">y_offset</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="n">point2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">turbine_origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">x_offset</span><span class="p">,</span> <span class="n">turbine_origin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">y_offset</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">point1</span><span class="p">,</span> <span class="n">point2</span>
+
+<span class="c1"># Example usage:</span>
+<span class="n">direction</span> <span class="o">=</span> <span class="mi">180</span>  <span class="c1"># Angle in degrees</span>
+<span class="n">radius</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># Radius</span>
+<span class="n">turbine_origin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>  <span class="c1"># Origin point</span>
+
+<span class="n">point1</span><span class="p">,</span> <span class="n">point2</span> <span class="o">=</span> <span class="n">calculate_points</span><span class="p">(</span><span class="n">direction</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">turbine_origin</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Point 1:&quot;</span><span class="p">,</span> <span class="n">point1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Point 2:&quot;</span><span class="p">,</span> <span class="n">point2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Point 1: [ 1.0000000e+01 -1.2246468e-15  0.0000000e+00]
+Point 2: [-1.0000000e+01  1.2246468e-15  0.0000000e+00]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">object_position</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># Replace with your own vector</span>
+<span class="n">scale_factor</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="k">def</span> <span class="nf">object_frame_boundaries</span><span class="p">(</span><span class="n">object_position</span><span class="p">,</span> <span class="n">scale_factor</span><span class="p">):</span>
+
+    <span class="n">object_position_normalized</span> <span class="o">=</span> <span class="n">object_position</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">object_position</span><span class="p">)</span>
+
+    <span class="c1"># Calculate two perpendicular vectors with a total length of 1</span>
+    <span class="n">perpendicular_vector1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">object_position_normalized</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">object_position_normalized</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+    <span class="n">perpendicular_vector2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">object_position_normalized</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="n">object_position_normalized</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+
+    <span class="c1"># Scale the perpendicular vectors to have a total length of scale_factor</span>
+    <span class="n">scale_factor</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">perpendicular_vector1</span><span class="p">)</span>
+    <span class="n">perpendicular_vector1</span> <span class="o">*=</span> <span class="n">scale_factor</span>
+    <span class="n">perpendicular_vector2</span> <span class="o">*=</span> <span class="n">scale_factor</span>
+
+    <span class="c1"># Calculate the end positions of the perpendicular vectors</span>
+    <span class="n">end_position1</span> <span class="o">=</span> <span class="n">object_position</span> <span class="o">+</span> <span class="n">perpendicular_vector1</span>
+    <span class="n">end_position2</span> <span class="o">=</span> <span class="n">object_position</span> <span class="o">+</span> <span class="n">perpendicular_vector2</span>
+    <span class="k">return</span> <span class="n">end_position1</span><span class="p">,</span> <span class="n">end_position2</span>
+
+<span class="n">end_position1</span><span class="p">,</span> <span class="n">end_position2</span> <span class="o">=</span> <span class="n">object_frame_boundaries</span><span class="p">(</span><span class="n">object_position</span><span class="p">,</span> <span class="n">scale_factor</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;End position of perpendicular vector 1:&quot;</span><span class="p">,</span> <span class="n">end_position1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;End position of perpendicular vector 2:&quot;</span><span class="p">,</span> <span class="n">end_position2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>End position of perpendicular vector 1: [ 1.70710678 -0.29289322]
+End position of perpendicular vector 2: [ 0.29289322 -1.70710678]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">object_position</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.0</span><span class="p">])</span>  <span class="c1"># Replace with your own vector</span>
+<span class="n">scale_factor</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="k">def</span> <span class="nf">object_frame_boundaries</span><span class="p">(</span><span class="n">object_position</span><span class="p">,</span> <span class="n">scale_factor</span><span class="p">):</span>
+    <span class="n">perp_vector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">object_position</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">object_position</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+    <span class="n">perp_vector</span> <span class="o">=</span> <span class="n">perp_vector</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">perp_vector</span><span class="p">)</span> <span class="o">/</span> <span class="n">scale_factor</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">object_position</span> <span class="o">+</span> <span class="n">perp_vector</span><span class="p">,</span> <span class="n">object_position</span> <span class="o">-</span> <span class="n">perp_vector</span>
+<span class="n">end_position1</span><span class="p">,</span> <span class="n">end_position2</span> <span class="o">=</span> <span class="n">object_frame_boundaries</span><span class="p">(</span><span class="n">object_position</span><span class="p">,</span> <span class="n">scale_factor</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;End position of perpendicular vector 1:&quot;</span><span class="p">,</span> <span class="n">end_position1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;End position of perpendicular vector 2:&quot;</span><span class="p">,</span> <span class="n">end_position2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>End position of perpendicular vector 1: [5.53553391 1.53553391]
+End position of perpendicular vector 2: [-1.53553391 -5.53553391]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cython_test</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="kn">import</span> <span class="nn">cython_test</span>
+
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;cython_test&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="k">def</span> <span class="nf">power_number</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">power</span><span class="p">):</span>
+
+    <span class="k">return</span> <span class="n">arr</span> <span class="o">**</span> <span class="n">power</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">power_number</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">2.2</span><span class="p">,</span> <span class="mi">23</span><span class="p">]),</span> <span class="mi">99</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[7.94045523e+033 6.47225718e+134]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;./cython&#39;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">power</span>
+
+
+<span class="n">power</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">2.2</span><span class="p">,</span> <span class="mi">23</span><span class="p">]),</span> <span class="mi">99</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([7.94045523e+033, 6.47225718e+134])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> line_profiler
+<span class="o">%</span><span class="k">lprun</span> -f solve_shadow_map solve_shadow_map(terrain_elevation_map, ray_vec, ray_point, grid_element_size)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>40.1 ns ± 0.0215 ns per loop (mean ± std. dev. of 7 runs, 10,000,000 loops each)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">rayBoxIntersection</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">direction</span><span class="p">,</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">):</span>
+  <span class="n">box</span> <span class="o">=</span> <span class="p">(</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">)</span>
+
+  <span class="n">flag</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="n">tmin</span> <span class="o">=</span> <span class="mi">0</span>
+
+  <span class="k">if</span> <span class="n">direction</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="n">tmin</span> <span class="o">=</span> <span class="p">(</span><span class="n">vmin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">direction</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">tmax</span> <span class="o">=</span> <span class="p">(</span><span class="n">vmax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">direction</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="n">tmin</span> <span class="o">=</span> <span class="p">(</span><span class="n">vmax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">direction</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">tmax</span> <span class="o">=</span> <span class="p">(</span><span class="n">vmin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">direction</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+  
+  <span class="k">if</span> <span class="p">(</span><span class="n">direction</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">):</span>
+    <span class="n">tYmin</span> <span class="o">=</span> <span class="p">(</span><span class="n">vmin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">direction</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">tYmax</span> <span class="o">=</span> <span class="p">(</span><span class="n">vmax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">direction</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="n">tYmin</span> <span class="o">=</span> <span class="p">(</span><span class="n">vmax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">direction</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">tYmax</span> <span class="o">=</span> <span class="p">(</span><span class="n">vmin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">direction</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">tmin</span> <span class="o">&gt;</span> <span class="n">tYmax</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">tYmin</span> <span class="o">&gt;</span> <span class="n">tmax</span><span class="p">):</span>
+    <span class="n">tmin</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="n">tmin</span><span class="p">)</span>
+  
+  <span class="k">if</span> <span class="n">tYmin</span> <span class="o">&gt;</span> <span class="n">tmin</span><span class="p">:</span>
+    <span class="n">tmin</span> <span class="o">=</span> <span class="n">tYmin</span>
+  
+  <span class="k">if</span> <span class="n">tYmax</span> <span class="o">&lt;</span> <span class="n">tmax</span><span class="p">:</span>
+    <span class="n">tmax</span> <span class="o">=</span> <span class="n">tYmax</span>
+  
+  <span class="k">if</span> <span class="n">direction</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="n">tZmin</span> <span class="o">=</span> <span class="p">(</span><span class="n">vmin</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">origin</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="n">direction</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">tZmax</span> <span class="o">=</span> <span class="p">(</span><span class="n">vmax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">origin</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="n">direction</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="n">tZmin</span> <span class="o">=</span> <span class="p">(</span><span class="n">vmax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">origin</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="n">direction</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">tZmax</span> <span class="o">=</span> <span class="p">(</span><span class="n">vmin</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">origin</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="n">direction</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+  
+  <span class="k">if</span> <span class="p">(</span><span class="n">tmin</span> <span class="o">&gt;</span> <span class="n">tZmax</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">tZmin</span> <span class="o">&gt;</span> <span class="n">tmax</span><span class="p">):</span>
+    <span class="n">tmin</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="n">tmin</span><span class="p">)</span>
+  
+  <span class="k">if</span> <span class="n">tZmin</span> <span class="o">&gt;</span> <span class="n">tmin</span><span class="p">:</span>
+    <span class="n">tmin</span> <span class="o">=</span> <span class="n">tZmin</span>
+  
+  <span class="k">if</span> <span class="n">tZmax</span> <span class="o">&lt;</span> <span class="n">tmax</span><span class="p">:</span>
+    <span class="n">tmax</span> <span class="o">=</span> <span class="n">tZmax</span>
+
+  <span class="n">flag</span> <span class="o">=</span> <span class="mi">1</span>
+  <span class="k">return</span> <span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="n">tmin</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">amanatidesWoo</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">direction</span><span class="p">,</span> <span class="n">grid3D</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+  <span class="n">flag</span><span class="p">,</span> <span class="n">tmin</span> <span class="o">=</span> <span class="n">rayBoxIntersection</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">direction</span><span class="p">,</span> <span class="n">grid3D</span><span class="p">[</span><span class="s1">&#39;minBound&#39;</span><span class="p">],</span> <span class="n">grid3D</span><span class="p">[</span><span class="s1">&#39;maxBound&#39;</span><span class="p">])</span>
+
+  <span class="k">if</span> <span class="n">flag</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The ray does not intersect the grid&#39;</span><span class="p">)</span>
+    <span class="k">pass</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">tmin</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+      <span class="n">tmin</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="n">start</span> <span class="o">=</span> <span class="n">origin</span> <span class="o">+</span> <span class="n">tmin</span> <span class="o">*</span> <span class="n">direction</span>
+    <span class="n">boxSize</span> <span class="o">=</span> <span class="n">grid3D</span><span class="p">[</span><span class="s1">&#39;maxBound&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">grid3D</span><span class="p">[</span><span class="s1">&#39;minBound&#39;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+      <span class="c1"># plot start[0], start[1], start[2]</span>
+      <span class="k">pass</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(((</span><span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">grid3D</span><span class="p">[</span><span class="s1">&#39;minBound&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">boxSize</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">grid3D</span><span class="p">[</span><span class="s1">&#39;nx&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(((</span><span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">grid3D</span><span class="p">[</span><span class="s1">&#39;minBound&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">boxSize</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">grid3D</span><span class="p">[</span><span class="s1">&#39;ny&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(((</span><span class="n">start</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">grid3D</span><span class="p">[</span><span class="s1">&#39;minBound&#39;</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="n">boxSize</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="n">grid3D</span><span class="p">[</span><span class="s1">&#39;nz&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="n">grid3D</span><span class="p">[</span><span class="s1">&#39;nx&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+      <span class="n">x</span> <span class="o">-=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">y</span> <span class="o">==</span> <span class="n">grid3D</span><span class="p">[</span><span class="s1">&#39;ny&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+      <span class="n">y</span> <span class="o">-=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">z</span> <span class="o">==</span> <span class="n">grid3D</span><span class="p">[</span><span class="s1">&#39;nz&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+      <span class="n">z</span> <span class="o">-=</span> <span class="mi">1</span>
+    
+    <span class="k">if</span> <span class="n">direction</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+      <span class="n">tVoxelX</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">grid3D</span><span class="p">[</span><span class="s1">&#39;nx&#39;</span><span class="p">]</span>
+      <span class="n">stepX</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">tVoxelX</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">grid3D</span><span class="p">[</span><span class="s1">&#39;nx&#39;</span><span class="p">]</span>
+      <span class="n">stepX</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    
+    <span class="k">if</span> <span class="n">direction</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+      <span class="n">tVoxelY</span> <span class="o">=</span> <span class="n">y</span> <span class="o">/</span> <span class="n">grid3D</span><span class="p">[</span><span class="s1">&#39;ny&#39;</span><span class="p">]</span>
+      <span class="n">stepY</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">tVoxelY</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">grid3D</span><span class="p">[</span><span class="s1">&#39;ny&#39;</span><span class="p">]</span>
+      <span class="n">stepY</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    
+    <span class="k">if</span> <span class="n">direction</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+      <span class="n">tVoxelZ</span> <span class="o">=</span> <span class="n">z</span> <span class="o">/</span> <span class="n">grid3D</span><span class="p">[</span><span class="s1">&#39;nz&#39;</span><span class="p">]</span>
+      <span class="n">stepZ</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">tVoxelZ</span> <span class="o">=</span> <span class="p">(</span><span class="n">z</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">grid3D</span><span class="p">[</span><span class="s1">&#39;nz&#39;</span><span class="p">]</span>
+      <span class="n">stepZ</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    
+    <span class="n">voxelMaxX</span> <span class="o">=</span> <span class="n">grid3D</span><span class="p">[</span><span class="s1">&#39;minBound&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">tVoxelX</span><span class="o">*</span><span class="n">boxSize</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">voxelMaxY</span> <span class="o">=</span> <span class="n">grid3D</span><span class="p">[</span><span class="s1">&#39;minBound&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">tVoxelY</span><span class="o">*</span><span class="n">boxSize</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">voxelMaxZ</span> <span class="o">=</span> <span class="n">grid3D</span><span class="p">[</span><span class="s1">&#39;minBound&#39;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">tVoxelZ</span><span class="o">*</span><span class="n">boxSize</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">tMaxX</span>     <span class="o">=</span> <span class="n">tmin</span> <span class="o">+</span> <span class="p">(</span><span class="n">voxelMaxX</span> <span class="o">-</span> <span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">direction</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">tMaxY</span>     <span class="o">=</span> <span class="n">tmin</span> <span class="o">+</span> <span class="p">(</span><span class="n">voxelMaxY</span> <span class="o">-</span> <span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">direction</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">tMaxZ</span>     <span class="o">=</span> <span class="n">tmin</span> <span class="o">+</span> <span class="p">(</span><span class="n">voxelMaxZ</span> <span class="o">-</span> <span class="n">start</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="n">direction</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    
+    <span class="n">voxelSizeX</span> <span class="o">=</span> <span class="n">boxSize</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">grid3D</span><span class="p">[</span><span class="s1">&#39;nx&#39;</span><span class="p">]</span>
+    <span class="n">voxelSizeY</span> <span class="o">=</span> <span class="n">boxSize</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">grid3D</span><span class="p">[</span><span class="s1">&#39;ny&#39;</span><span class="p">]</span>
+    <span class="n">voxelSizeZ</span> <span class="o">=</span> <span class="n">boxSize</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="n">grid3D</span><span class="p">[</span><span class="s1">&#39;nz&#39;</span><span class="p">]</span>        
+    
+    <span class="n">tDeltaX</span> <span class="o">=</span> <span class="n">voxelSizeX</span> <span class="o">/</span> <span class="nb">abs</span><span class="p">(</span><span class="n">direction</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">tDeltaY</span> <span class="o">=</span> <span class="n">voxelSizeY</span> <span class="o">/</span> <span class="nb">abs</span><span class="p">(</span><span class="n">direction</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">tDeltaZ</span> <span class="o">=</span> <span class="n">voxelSizeZ</span> <span class="o">/</span> <span class="nb">abs</span><span class="p">(</span><span class="n">direction</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+
+    <span class="k">while</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">grid3D</span><span class="p">[</span><span class="s1">&#39;nx&#39;</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">y</span> <span class="o">&lt;=</span> <span class="n">grid3D</span><span class="p">[</span><span class="s1">&#39;ny&#39;</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span><span class="n">y</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">z</span> <span class="o">&lt;=</span> <span class="n">grid3D</span><span class="p">[</span><span class="s1">&#39;nz&#39;</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span><span class="n">z</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">):</span>
+      <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Intersection: voxel = (</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">z</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+
+      <span class="c1"># Check if voxel (x, y, z) contains any intersection with the ray</span>
+      <span class="c1"># if {intersection}:</span>
+      <span class="c1">#      break</span>
+
+      <span class="k">if</span> <span class="n">tMaxX</span> <span class="o">&lt;</span> <span class="n">tMaxY</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">tMaxX</span> <span class="o">&lt;</span> <span class="n">tMaxZ</span><span class="p">:</span>
+          <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">stepX</span>
+          <span class="n">tMaxX</span> <span class="o">=</span> <span class="n">tMaxX</span> <span class="o">+</span> <span class="n">tDeltaX</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="n">z</span> <span class="o">=</span> <span class="n">z</span> <span class="o">+</span> <span class="n">stepZ</span>
+          <span class="n">tMaxZ</span> <span class="o">=</span> <span class="n">tMaxZ</span> <span class="o">+</span> <span class="n">tDeltaZ</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">tMaxY</span> <span class="o">&lt;</span> <span class="n">tMaxZ</span><span class="p">:</span>
+          <span class="n">y</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="n">stepY</span>
+          <span class="n">tMaxY</span> <span class="o">=</span> <span class="n">tMaxY</span> <span class="o">+</span> <span class="n">tDeltaY</span>
+        <span class="k">else</span><span class="p">:</span>
+          <span class="n">z</span> <span class="o">=</span> <span class="n">z</span> <span class="o">+</span> <span class="n">stepZ</span>
+          <span class="n">tMaxZ</span> <span class="o">=</span> <span class="n">tMaxZ</span> <span class="o">+</span> <span class="n">tDeltaZ</span>
+
+<span class="n">origin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">15</span><span class="p">])</span>
+<span class="n">direction</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">grid3D</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;minBound&quot;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span>
+          <span class="s2">&quot;maxBound&quot;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">]),</span>
+        <span class="s2">&quot;nx&quot;</span> <span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="s2">&quot;ny&quot;</span> <span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="s2">&quot;nz&quot;</span> <span class="p">:</span> <span class="mi">10</span><span class="p">}</span>
+<span class="c1"># visited_vox = amanatidesWoo(origin, direction, grid3D, verbose=True)</span>
+
+<span class="c1"># %load_ext line_profiler</span>
+<span class="o">%</span><span class="k">lprun</span> -f amanatidesWoo amanatidesWoo(origin, direction, grid3D, verbose=True)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Intersection: voxel = (6.0 6.0 10.0)
+Intersection: voxel = (6.0 6.0 9.0)
+Intersection: voxel = (6.0 6.0 8.0)
+Intersection: voxel = (6.0 6.0 7.0)
+Intersection: voxel = (6.0 6.0 6.0)
+Intersection: voxel = (6.0 6.0 5.0)
+Intersection: voxel = (6.0 7.0 5.0)
+Intersection: voxel = (7.0 7.0 5.0)
+Intersection: voxel = (7.0 7.0 4.0)
+Intersection: voxel = (7.0 7.0 3.0)
+Intersection: voxel = (7.0 7.0 2.0)
+Intersection: voxel = (7.0 7.0 1.0)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Timer unit: 1e-09 s
+
+Total time: 0.000581853 s
+File: /tmp/ipykernel_876/179161765.py
+Function: amanatidesWoo at line 55
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    55                                           def amanatidesWoo(origin, direction, grid3D, verbose=True):
+    56         1      22769.0  22769.0      3.9    flag, tmin = rayBoxIntersection(origin, direction, grid3D[&#39;minBound&#39;], grid3D[&#39;maxBound&#39;])
+    57                                           
+    58         1       1466.0   1466.0      0.3    if flag == 0:
+    59                                               print(&#39;The ray does not intersect the grid&#39;)
+    60                                               pass
+    61                                             else:
+    62         1       1467.0   1467.0      0.3      if tmin &lt; 0:
+    63                                                 tmin = 0
+    64                                               
+    65         1     288167.0 288167.0     49.5      start = origin + tmin * direction
+    66         1       3283.0   3283.0      0.6      boxSize = grid3D[&#39;maxBound&#39;] - grid3D[&#39;minBound&#39;]
+    67                                           
+    68         1       1397.0   1397.0      0.2      if verbose:
+    69                                                 # plot start[0], start[1], start[2]
+    70         1       1467.0   1467.0      0.3        pass
+    71                                           
+    72         1       6705.0   6705.0      1.2      x = np.floor(((start[0] - grid3D[&#39;minBound&#39;][0]) / boxSize[0]) * grid3D[&#39;nx&#39;]) + 1
+    73         1       2375.0   2375.0      0.4      y = np.floor(((start[1] - grid3D[&#39;minBound&#39;][1]) / boxSize[1]) * grid3D[&#39;ny&#39;]) + 1
+    74         1       2444.0   2444.0      0.4      z = np.floor(((start[2] - grid3D[&#39;minBound&#39;][2]) / boxSize[2]) * grid3D[&#39;nz&#39;]) + 1
+    75                                           
+    76         1       1467.0   1467.0      0.3      if x == grid3D[&#39;nx&#39;] + 1:
+    77                                                 x -= 1
+    78         1        978.0    978.0      0.2      if y == grid3D[&#39;ny&#39;] + 1:
+    79                                                 y -= 1
+    80         1        908.0    908.0      0.2      if z == grid3D[&#39;nz&#39;] + 1:
+    81         1       1397.0   1397.0      0.2        z -= 1
+    82                                               
+    83         1        908.0    908.0      0.2      if direction[0] &gt;= 0:
+    84         1       1397.0   1397.0      0.2        tVoxelX = x / grid3D[&#39;nx&#39;]
+    85         1       1397.0   1397.0      0.2        stepX = 1
+    86                                               else:
+    87                                                 tVoxelX = (x - 1) / grid3D[&#39;nx&#39;]
+    88                                                 stepX = -1
+    89                                               
+    90         1       1466.0   1466.0      0.3      if direction[1] &gt;= 0:
+    91         1       1397.0   1397.0      0.2        tVoxelY = y / grid3D[&#39;ny&#39;]
+    92         1       1397.0   1397.0      0.2        stepY = 1
+    93                                               else:
+    94                                                 tVoxelY = (y - 1) / grid3D[&#39;ny&#39;]
+    95                                                 stepY = -1
+    96                                               
+    97         1        978.0    978.0      0.2      if direction[2] &gt;= 0:
+    98                                                 tVoxelZ = z / grid3D[&#39;nz&#39;]
+    99                                                 stepZ = 1
+   100                                               else:
+   101         1       1466.0   1466.0      0.3        tVoxelZ = (z - 1) / grid3D[&#39;nz&#39;]
+   102         1       1467.0   1467.0      0.3        stepZ = -1
+   103                                               
+   104         1       1885.0   1885.0      0.3      voxelMaxX = grid3D[&#39;minBound&#39;][0] + tVoxelX*boxSize[0]
+   105         1       1467.0   1467.0      0.3      voxelMaxY = grid3D[&#39;minBound&#39;][1] + tVoxelY*boxSize[1]
+   106         1       1396.0   1396.0      0.2      voxelMaxZ = grid3D[&#39;minBound&#39;][2] + tVoxelZ*boxSize[2]
+   107         1       1886.0   1886.0      0.3      tMaxX     = tmin + (voxelMaxX - start[0]) / direction[0]
+   108         1       1467.0   1467.0      0.3      tMaxY     = tmin + (voxelMaxY - start[1]) / direction[1]
+   109         1       1397.0   1397.0      0.2      tMaxZ     = tmin + (voxelMaxZ - start[2]) / direction[2]
+   110                                               
+   111         1       1467.0   1467.0      0.3      voxelSizeX = boxSize[0] / grid3D[&#39;nx&#39;]
+   112         1       1466.0   1466.0      0.3      voxelSizeY = boxSize[1] / grid3D[&#39;ny&#39;]
+   113         1       1397.0   1397.0      0.2      voxelSizeZ = boxSize[2] / grid3D[&#39;nz&#39;]        
+   114                                               
+   115         1       2444.0   2444.0      0.4      tDeltaX = voxelSizeX / abs(direction[0])
+   116         1       1467.0   1467.0      0.3      tDeltaY = voxelSizeY / abs(direction[1])
+   117         1       1467.0   1467.0      0.3      tDeltaZ = voxelSizeZ / abs(direction[2])
+   118                                           
+   119        13      19069.0   1466.8      3.3      while (x &lt;= grid3D[&#39;nx&#39;]) and (x &gt;= 1) and (y &lt;= grid3D[&#39;ny&#39;]) and (y &gt;= 1) and (z &lt;= grid3D[&#39;nz&#39;]) and (z &gt;= 1):
+   120        12      14946.0   1245.5      2.6        if verbose:
+   121        12     118662.0   9888.5     20.4          print(f&#39;Intersection: voxel = ({x} {y} {z})&#39;)
+   122                                           
+   123                                                 # Check if voxel (x, y, z) contains any intersection with the ray
+   124                                                 # if {intersection}:
+   125                                                 #      break
+   126                                           
+   127        12      16133.0   1344.4      2.8        if tMaxX &lt; tMaxY:
+   128         1       1397.0   1397.0      0.2          if tMaxX &lt; tMaxZ:
+   129         1       1466.0   1466.0      0.3            x = x + stepX
+   130         1       1397.0   1397.0      0.2            tMaxX = tMaxX + tDeltaX
+   131                                                   else:
+   132                                                     z = z + stepZ
+   133                                                     tMaxZ = tMaxZ + tDeltaZ
+   134                                                 else:
+   135        11      13268.0   1206.2      2.3          if tMaxY &lt; tMaxZ:
+   136         1        978.0    978.0      0.2            y = y + stepY
+   137         1       1466.0   1466.0      0.3            tMaxY = tMaxY + tDeltaY
+   138                                                   else:
+   139        10      13340.0   1334.0      2.3            z = z + stepZ
+   140        10      12362.0   1236.2      2.1            tMaxZ = tMaxZ + tDeltaZ
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="kn">import</span> <span class="n">Axes3D</span>
+<span class="o">%</span><span class="k">matplotlib</span> widget
+<span class="k">def</span> <span class="nf">is_voxel_in_sphere</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">resolutions</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
+    <span class="c1"># Calculate the center of the voxel</span>
+    <span class="n">cx</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">resolutions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">resolutions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">cy</span> <span class="o">=</span> <span class="n">j</span> <span class="o">*</span> <span class="n">resolutions</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">resolutions</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">cz</span> <span class="o">=</span> <span class="n">k</span> <span class="o">*</span> <span class="n">resolutions</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">resolutions</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span>
+
+    <span class="c1"># Calculate the angle difference between the center of the voxel and the origin</span>
+    <span class="n">angle_diff</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">cy</span> <span class="o">-</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">cx</span> <span class="o">-</span> <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    
+    <span class="c1"># Calculate the distance from the origin to the voxel&#39;s center</span>
+    <span class="n">distance</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">cx</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">cy</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">origin</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">cz</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># Check if the distance is within the sphere&#39;s radius and the angle difference is within the specified range</span>
+    <span class="k">if</span> <span class="n">distance</span> <span class="o">&lt;=</span> <span class="n">radius</span> <span class="ow">and</span> <span class="n">angle_diff</span><span class="p">:</span> <span class="c1">#&lt;= theta / 2:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+<span class="c1"># Example usage</span>
+<span class="n">origin</span> <span class="o">=</span> <span class="p">(</span><span class="mf">4.5</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">)</span>
+<span class="n">radius</span> <span class="o">=</span> <span class="mf">1.1</span>
+<span class="n">angle</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span>  <span class="c1"># 90 degrees converted to radians</span>
+
+<span class="n">resolutions</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>  <span class="c1"># Voxel space resolutions for x, y, and z</span>
+
+<span class="c1"># Create an empty array to store voxel status (inside/outside the sphere)</span>
+<span class="n">voxel_status</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">11</span><span class="p">):</span>  <span class="c1"># Iterate through x-indices</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">11</span><span class="p">):</span>  <span class="c1"># Iterate through y-indices</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">11</span><span class="p">):</span>  <span class="c1"># Iterate through z-indices</span>
+            <span class="k">if</span> <span class="n">is_voxel_in_sphere</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">resolutions</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">angle</span><span class="p">):</span>
+                <span class="n">voxel_status</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="c1"># Plot the voxels inside the sphere</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+
+<span class="c1"># Extract the coordinates of the voxels inside the sphere</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">voxel_status</span><span class="p">)</span>
+
+<span class="c1"># Plot the voxels as red points</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Y&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="s1">&#39;Z&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "04df92ba70084cf18f2875ecf2c779ae", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="kn">import</span> <span class="n">Axes3D</span>
+
+<span class="k">def</span> <span class="nf">plot_circle_3d</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">azimuth_angle</span><span class="p">):</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Generate points on the circle</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">radius</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">origin</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">radius</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+
+    <span class="c1"># Rotate the circle around the y-axis</span>
+    <span class="n">rotation_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+        <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">azimuth_angle</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">azimuth_angle</span><span class="p">)],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">azimuth_angle</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">azimuth_angle</span><span class="p">)]</span>
+    <span class="p">])</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">rotated_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">rotation_matrix</span><span class="p">)</span>
+
+    <span class="c1"># Plot the circle</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rotated_points</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">rotated_points</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">rotated_points</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">])</span>
+
+    <span class="c1"># Set plot limits and labels</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">radius</span><span class="p">,</span> <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">radius</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">radius</span><span class="p">,</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">radius</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_zlim</span><span class="p">([</span><span class="n">origin</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">radius</span><span class="p">,</span> <span class="n">origin</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">radius</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Y&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="s1">&#39;Z&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Show the plot</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Example usage</span>
+<span class="n">origin</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">radius</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">azimuth_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span>
+
+<span class="n">plot_circle_3d</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">azimuth_angle</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "2648b6b2c13240d88ac63ef55f0a91fc", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">griddata</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="c1"># Define your original X, Y, and Z grids</span>
+<span class="c1"># Replace these with your actual data</span>
+<span class="n">original_X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">original_Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">original_X</span><span class="p">,</span> <span class="n">original_Y</span><span class="p">)</span>
+<span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">original_Y</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">original_X</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+
+<span class="c1"># Define the desired angle for the new orientation (in radians)</span>
+<span class="n">desired_angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">6</span>  <span class="c1"># 90 degrees (vertical) - you can change this</span>
+
+<span class="c1"># Calculate the rotation matrix</span>
+<span class="n">rotation_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">desired_angle</span><span class="p">),</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">desired_angle</span><span class="p">)],</span>
+                            <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">desired_angle</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">desired_angle</span><span class="p">)]])</span>
+
+<span class="c1"># Rotate the original X and Y grids</span>
+<span class="n">rotated_X</span><span class="p">,</span> <span class="n">rotated_Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">rotation_matrix</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">X</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">Y</span><span class="o">.</span><span class="n">flatten</span><span class="p">())))</span>
+
+<span class="c1"># Reshape the rotated grids back to their original shape</span>
+<span class="n">rotated_X</span> <span class="o">=</span> <span class="n">rotated_X</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">rotated_Y</span> <span class="o">=</span> <span class="n">rotated_Y</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">Y</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="c1"># Interpolate elevation values</span>
+<span class="n">new_Z</span> <span class="o">=</span> <span class="n">griddata</span><span class="p">((</span><span class="n">X</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">Y</span><span class="o">.</span><span class="n">flatten</span><span class="p">()),</span> <span class="n">Z</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="p">(</span><span class="n">rotated_X</span><span class="p">,</span> <span class="n">rotated_Y</span><span class="p">),</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">)</span>
+
+<span class="c1"># Plot the results</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="n">original_X</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">original_X</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">original_Y</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">original_Y</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Original Grid&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">new_Z</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="n">rotated_X</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">rotated_X</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">rotated_Y</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">rotated_Y</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Rotated and Interpolated Grid&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../../../../../_images/d06525a95fec5d5fd44fdd578552fb298bf1bebadecf5a50270535a9998a5d7f.png" src="../../../../../../../_images/d06525a95fec5d5fd44fdd578552fb298bf1bebadecf5a50270535a9998a5d7f.png" />
+</div>
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "FPWRasmussen/DTU-Special-Course",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/src"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Jupyter Book Community
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../../../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794"></script>
+<script src="../../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

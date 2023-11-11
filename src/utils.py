@@ -13,7 +13,6 @@ from IPython.display import display
 from datetime import datetime
 from scipy.interpolate import RectBivariateSpline, griddata
 import gzip
-import os
 
 
 def intrinsic_parameters(f, shape, fov):
