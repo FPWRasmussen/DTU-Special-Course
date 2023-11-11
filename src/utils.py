@@ -238,11 +238,11 @@ def pull_street_view_image(api_key, longitude, latitude, fov = 90, heading = 0, 
     except Exception as e:
         print(f"An errorr occurred: {str(e)}")
 
-    img.save(f"../temp/site_img.png")
+    img.save(f"../../temp/site_img.png")
 
     return img
 
-def adjust_image(image_path = "../temp/obj2png.png", brightness = 1, contrast = 1, display_image = True):
+def adjust_image(image_path = "../../temp/obj2png.png", brightness = 1, contrast = 1, display_image = True):
     # Load the image using PIL.
     if isinstance(image_path, str):
         image = Image.open(image_path)
@@ -257,7 +257,7 @@ def adjust_image(image_path = "../temp/obj2png.png", brightness = 1, contrast = 
     image = enhancer.enhance(contrast)
 
     # Save or display the adjusted image.
-    image.save("../temp/obj2png.png")
+    image.save("../../temp/obj2png.png")
     if display_image:
         display(image)
     return image
@@ -309,13 +309,13 @@ def plot_trisurface(file_path, elevation = 0, azimuth = 0, view_height = 0, tota
     limits[2,:] = [lower_bound, upper_bound]
     ax.set(zlim=limits[2,:], aspect="equal")
 
-    plt.savefig(f"../temp/obj2png.png", dpi=600, transparent=True)
+    plt.savefig(f"../../temp/obj2png.png", dpi=600, transparent=True)
     if show_plot:
         plt.show()
     else:
         plt.close() # prevent plot from showing
 
-def crop_image(file_path = "../temp/obj2png.png", display_image = True):
+def crop_image(file_path = "../../temp/obj2png.png", display_image = True):
     pil_image = Image.open(file_path)
     pil_image = pil_image.crop((5, 5, pil_image.size[0]-5, pil_image.size[1]-5))
     np_array = np.array(pil_image)
@@ -335,7 +335,7 @@ def crop_image(file_path = "../temp/obj2png.png", display_image = True):
 
 def object_to_image(file_path, elevation = 0, azimuth = 0, view_height = 0, total_height = 0, debug = False):
     plot_trisurface(file_path, elevation = elevation, azimuth = azimuth, view_height = view_height, total_height = total_height, show_plot = debug)
-    pil_image = crop_image(file_path = "../temp/obj2png.png", display_image = debug)
+    pil_image = crop_image(file_path = "../../temp/obj2png.png", display_image = debug)
     pil_image = adjust_image(image_path = pil_image, brightness = 1, contrast = 1, display_image = debug)
     return pil_image
 
@@ -550,7 +550,14 @@ def transform_coordinates(long_list, lat_list, input_crs_str = "EPSG:4326", outp
 
     transformer = pyproj.Transformer.from_crs(input_crs, output_crs, always_xy=True)
 
-    trans_cords = np.empty([len(lat_list),len(long_list), 2])
+    # trans_cords = np.empty([len(lat_list),len(long_list), 2])
+
+    if isinstance(long_list, (int, float)):
+        trans_cords = np.empty((1, 1, 2))
+        long_list = [long_list]
+        lat_list = [lat_list]
+    elif isinstance(long_list, (np.ndarray, list)):
+        trans_cords = np.empty((len(lat_list), len(long_list), 2))
 
     for i, lon in enumerate(long_list):
         for j, lat in enumerate(lat_list):
