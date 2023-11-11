@@ -14,3 +14,4 @@ dependencies:
   - urllib3>=1.26.16
   - ipython>=8.15.0
   - cartopy>=0.21.1
+  - ipympl>=0.9.3
