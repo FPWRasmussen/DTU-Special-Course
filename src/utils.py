@@ -13,6 +13,9 @@ from IPython.display import display
 from datetime import datetime
 from scipy.interpolate import RectBivariateSpline, griddata
 import gzip
+from pathlib import Path
+
+ROOT_DIR = Path(os.path.abspath(__file__)).parent.parent
 
 
 def intrinsic_parameters(f, shape, fov):
@@ -238,11 +241,12 @@ def pull_street_view_image(api_key, longitude, latitude, fov = 90, heading = 0, 
     except Exception as e:
         print(f"An errorr occurred: {str(e)}")
 
-    img.save(f"../../temp/site_img.png")
+    # img.save(f"../../temp/site_img.png")
+    img.save(Path.joinpath(ROOT_DIR, "temp/site_img.png"))
 
     return img
 
-def adjust_image(image_path = "../../temp/obj2png.png", brightness = 1, contrast = 1, display_image = True):
+def adjust_image(image_path, brightness = 1, contrast = 1, display_image = True):
     # Load the image using PIL.
     if isinstance(image_path, str):
         image = Image.open(image_path)
@@ -257,7 +261,8 @@ def adjust_image(image_path = "../../temp/obj2png.png", brightness = 1, contrast
     image = enhancer.enhance(contrast)
 
     # Save or display the adjusted image.
-    image.save("../../temp/obj2png.png")
+    # image.save("../../temp/obj2png.png")
+    image.save(Path.joinpath(ROOT_DIR, "temp/obj2png.png"))
     if display_image:
         display(image)
     return image
@@ -309,13 +314,14 @@ def plot_trisurface(file_path, elevation = 0, azimuth = 0, view_height = 0, tota
     limits[2,:] = [lower_bound, upper_bound]
     ax.set(zlim=limits[2,:], aspect="equal")
 
-    plt.savefig(f"../../temp/obj2png.png", dpi=600, transparent=True)
+    # plt.savefig(f"../../temp/obj2png.png", dpi=600, transparent=True)
+    plt.savefig(Path.joinpath(ROOT_DIR, "temp/obj2png.png"), dpi=600, transparent=True)
     if show_plot:
         plt.show()
     else:
         plt.close() # prevent plot from showing
 
-def crop_image(file_path = "../../temp/obj2png.png", display_image = True):
+def crop_image(file_path, display_image = True):
     pil_image = Image.open(file_path)
     pil_image = pil_image.crop((5, 5, pil_image.size[0]-5, pil_image.size[1]-5))
     np_array = np.array(pil_image)
@@ -335,7 +341,7 @@ def crop_image(file_path = "../../temp/obj2png.png", display_image = True):
 
 def object_to_image(file_path, elevation = 0, azimuth = 0, view_height = 0, total_height = 0, debug = False):
     plot_trisurface(file_path, elevation = elevation, azimuth = azimuth, view_height = view_height, total_height = total_height, show_plot = debug)
-    pil_image = crop_image(file_path = "../../temp/obj2png.png", display_image = debug)
+    pil_image = crop_image(file_path = Path.joinpath(ROOT_DIR, "temp/obj2png.png"), display_image = debug)
     pil_image = adjust_image(image_path = pil_image, brightness = 1, contrast = 1, display_image = debug)
     return pil_image
 
@@ -448,8 +454,11 @@ def download_elevation(map_boundaries):
                 long_str = "E"+str(int(np.floor(longitude))).zfill(3)
 
             output_name = f"{lat_str}{long_str}"
-            hgt_gz_file = "../../temp/"+output_name+".hgt.gz"
-            hgt_file = '../../temp/'+ output_name+ '.hgt'
+            # hgt_gz_file = "../../temp/"+output_name+".hgt.gz"
+            # hgt_file = '../../temp/'+ output_name+ '.hgt'
+
+            hgt_gz_file = Path.joinpath(ROOT_DIR, "temp/"+output_name+".hgt.gz")
+            hgt_file = Path.joinpath(ROOT_DIR, "temp/"+output_name+".hgt")
 
             if os.path.exists(hgt_file):
                 # print("File exists!")
@@ -633,110 +642,6 @@ def generate_voxel_map(map_boundaries, shape):
         voxel_map[:, :, i] = map_array > elev
     return X, Y, voxel_map, map_array
 
-def solve_shadow_map_old(ray_point, ray_vec, grid_element_size, terrain_voxel_map, verbose=True):
-    terrain_voxel_map_shape = terrain_voxel_map.shape
-    temp_shadow_map = np.zeros(terrain_voxel_map_shape[0:2], dtype=bool)
-    cum_shadow_map = np.zeros(terrain_voxel_map_shape[0:2], dtype=int)
-
-    terrain_max_elevation = terrain_voxel_map_shape[2] - 1
-
-    # for z in range(terrain_voxel_map_shape[2]):
-    #     if np.any(terrain_voxel_map[:, :, z]):
-    #         terrain_max_elevation = z
-    # terrain_max_elevation *= grid_element_size[2]
-    print("lol")
-    for i in range(ray_vec.shape[0]):
-        ray = ray_vec[i, :]
-
-        for j in range(ray_point.shape[0]):
-            point = ray_point[j, :]
-            if terrain_max_elevation < point[2]:  # optimize for elevation
-                x0, y0, z0 = point
-                A, B, C = ray
-                t = (terrain_max_elevation - z0) / C
-                x = x0 + A * t
-                y = y0 + B * t
-                point = np.array([x, y, terrain_max_elevation])
-
-            cur_vox = np.floor(point / grid_element_size).astype(int)
-
-            # if new start is out of bounds
-            if cur_vox[0] >= terrain_voxel_map_shape[0] or cur_vox[0] < 0:
-                continue
-            elif cur_vox[1] >= terrain_voxel_map_shape[1] or cur_vox[1] < 0:
-                continue
-            elif cur_vox[2] >= terrain_voxel_map_shape[2] or cur_vox[2] < 0:
-                continue
-            
-            boxSize = terrain_voxel_map_shape * grid_element_size
-
-            step = np.ones(3)
-            tVoxel = np.empty(3)
-
-            if ray[0] >= 0:
-                tVoxel[0] = (cur_vox[0] + 1) / terrain_voxel_map_shape[0]
-            else:
-                tVoxel[0] = cur_vox[0] / terrain_voxel_map_shape[0]
-                step[0] = -1
-
-            if ray[1] >= 0:
-                tVoxel[1] = (cur_vox[1] + 1) / terrain_voxel_map_shape[1]
-            else:
-                tVoxel[1] = cur_vox[1] / terrain_voxel_map_shape[1]
-                step[1] = -1
-
-            if ray[2] >= 0:
-                tVoxel[2] = (cur_vox[2] + 1) / terrain_voxel_map_shape[2]
-            else:
-                tVoxel[2] = cur_vox[2] / terrain_voxel_map_shape[2]
-                step[2] = -1
-
-            voxelMax = tVoxel * boxSize
-            tMax = (voxelMax - point) / ray
-            voxelSize = boxSize / terrain_voxel_map_shape
-            tDelta = voxelSize / abs(ray)
-
-            while True:
-                if verbose:
-                    print(f"Intersection: voxel = ({cur_vox[0]}, {cur_vox[1]}, {cur_vox[2]})")
-                if tMax[0] < tMax[1]:
-                    if tMax[0] < tMax[2]:
-                        cur_vox[0] += step[0]
-                        if (cur_vox[0] >= terrain_voxel_map_shape[0]) or (cur_vox[0] < 0):
-                            break
-                        elif terrain_voxel_map[cur_vox[0], cur_vox[1], cur_vox[2]]:
-                            temp_shadow_map[cur_vox[1], cur_vox[0]] = True
-                            break
-                        tMax[0] += tDelta[0]
-                    else:
-                        cur_vox[2] += step[2]
-                        if cur_vox[2] >= terrain_voxel_map_shape[2] or (cur_vox[2] < 0):
-                            break
-                        elif terrain_voxel_map[cur_vox[0], cur_vox[1], cur_vox[2]]:
-                            temp_shadow_map[cur_vox[1], cur_vox[0]] = True
-                            break
-                        tMax[2] += tDelta[2]
-                else:
-                    if tMax[1] < tMax[2]:
-                        cur_vox[1] += step[1]
-                        if cur_vox[1] >= terrain_voxel_map_shape[1] or (cur_vox[1] < 0):
-                            break
-                        elif terrain_voxel_map[cur_vox[0], cur_vox[1], cur_vox[2]]:
-                            temp_shadow_map[cur_vox[1], cur_vox[0]] = True
-                            break
-                        tMax[1] += tDelta[1]
-                    else:
-                        cur_vox[2] += step[2]
-                        if cur_vox[2] >= terrain_voxel_map_shape[2] or (cur_vox[2] < 0):
-                            break
-                        if terrain_voxel_map[cur_vox[0], cur_vox[1], cur_vox[2]]:
-                            temp_shadow_map[cur_vox[1], cur_vox[0]] = True
-                            break
-                        tMax[2] += tDelta[2]
-            cum_shadow_map[temp_shadow_map] += 1
-            temp_shadow_map = np.zeros(terrain_voxel_map_shape[0:2], dtype=bool)
-    return cum_shadow_map
-
 def solve_shadow_map(ray_point, ray_vec, grid3D, terrain_voxel_map):
     terrain_voxel_map_shape = terrain_voxel_map.shape
     temp_shadow_map = np.zeros(terrain_voxel_map_shape[0:2], dtype=bool)
@@ -859,3 +764,122 @@ class Turbine():
         self.width = fov[0]/self.shape[0] * self.shape[1]
         self.radius = height/(2*self.shape[0]/self.shape[1])
         self.wind_dir = wind_dir
+
+
+class ElevationHandler:
+    def __init__(self, map_boundaries, map_shape):
+        """
+        Input:
+            map_boudaries : array_like
+                boundaries of map using WGS84 coordinates. 
+                    Example: [longitude_min, longitude_max, latitude_min, latitude_max]
+            map_size : array_like
+                size of output map in pixels. 
+                    Example: [ncol, nrow]
+        """
+        self.map_boundaries = map_boundaries
+        self.map_shape = map_shape
+        self.long_min = np.minimum(map_boundaries[0], map_boundaries[1])
+        self.long_max = np.maximum(map_boundaries[0], map_boundaries[1])
+        self.lat_min = np.minimum(map_boundaries[2], map_boundaries[3])
+        self.lat_max = np.maximum(map_boundaries[2], map_boundaries[3])
+        self.full_map_long_range = np.arange(np.floor(self.long_min), np.ceil(self.long_max), 1)
+        self.full_map_lat_range = np.arange(np.floor(self.lat_min), np.ceil(self.lat_max), 1)
+        self.full_map_boundaries = [np.floor(self.long_min), np.ceil(self.long_max), np.floor(self.lat_min), np.ceil(self.lat_max)]
+        self.full_map = self.download_elevation()
+        self.map_array = self.generate_scaled_subarray()
+        self.long_range = np.linspace(self.long_min, self.long_max, self.map_shape[1])
+        self.lat_range = np.linspace(self.lat_min, self.lat_max, self.map_shape[0])
+
+    def download_elevation(self):
+        self.full_map = np.zeros([len(self.full_map_lat_range)*3601, len(self.full_map_long_range)*3601]) # init full_map
+        for i, latitude in enumerate(self.full_map_lat_range):
+            for j, longitude in enumerate(self.full_map_long_range):
+                if latitude < 0:
+                    lat_str = "S"+str(int(np.floor(-latitude))).zfill(2)
+                else:
+                    lat_str = "N"+str(int(np.floor(latitude))).zfill(2)
+                    
+                if longitude < 0:
+                    long_str = "W"+str(int(np.floor(-longitude))).zfill(3)
+                else:
+                    long_str = "E"+str(int(np.floor(longitude))).zfill(3)
+
+                output_name = f"{lat_str}{long_str}"
+                hgt_gz_file = Path.joinpath(ROOT_DIR, "temp/"+output_name+".hgt.gz")
+                hgt_file = Path.joinpath(ROOT_DIR, "temp/"+output_name+".hgt")
+
+                if os.path.exists(hgt_file):
+                    # print("File exists!")
+                    pass
+                else:
+                    print("File does not exist.")
+
+                    url = f"https://s3.amazonaws.com/elevation-tiles-prod/skadi/{lat_str}/{output_name}"+".hgt.gz"
+                    
+                    urllib.request.urlretrieve(url, hgt_gz_file)
+
+                    with gzip.open(hgt_gz_file, 'rb') as f_in:
+                        with open(hgt_file, 'wb') as f_out:
+                            f_out.write(f_in.read())
+                    os.remove(hgt_gz_file)
+                
+                with open(hgt_file, 'rb') as f:
+                    data = np.frombuffer(f.read(), np.dtype('>i2')).reshape((3601, 3601))
+                    data = np.flip(data, axis=0)
+
+                self.full_map[i*3601:(i+1)*3601, j*3601:(j+1)*3601] = data
+        return self.full_map
+    
+    def generate_scaled_subarray(self):
+        x_old = np.linspace(self.full_map_boundaries[0], self.full_map_boundaries[1], self.full_map.shape[1])
+        y_old = np.linspace(self.full_map_boundaries[2], self.full_map_boundaries[3], self.full_map.shape[0])
+
+        interp_spline = RectBivariateSpline(x_old, y_old, self.full_map)
+            
+        x_new = np.linspace(self.map_boundaries[0], self.map_boundaries[1], self.map_shape[1])
+        y_new = np.linspace(self.map_boundaries[2], self.map_boundaries[3], self.map_shape[0])
+
+        self.scaled_subarray = interp_spline(x_new, y_new)
+        return self.scaled_subarray
+
+    # def transform_coordinates(self, long_list, lat_list, input_crs_str="EPSG:4326", output_crs_str="EPSG:3035"):
+    #     input_crs = pyproj.CRS(input_crs_str)  # WGS84
+    #     output_crs = pyproj.CRS(output_crs_str)
+
+    #     transformer = pyproj.Transformer.from_crs(input_crs, output_crs, always_xy=True)
+
+    #     # trans_cords = np.empty([len(lat_list),len(long_list), 2])
+
+    #     if isinstance(long_list, (int, float)):
+    #         trans_cords = np.empty((1, 1, 2))
+    #         long_list = [long_list]
+    #         lat_list = [lat_list]
+    #     elif isinstance(long_list, (np.ndarray, list)):
+    #         trans_cords = np.empty((len(lat_list), len(long_list), 2))
+
+    #     for i, lon in enumerate(long_list):
+    #         for j, lat in enumerate(lat_list):
+    #             x, y = transformer.transform(lon, lat)
+    #             trans_cords[j, i, 0] = x
+    #             trans_cords[j, i, 1] = y
+
+    #     return trans_cords
+    
+def test_dir():
+    return os.path.dirname(os.path.abspath(__file__))
+
+if __name__ == "__main__":
+    # map_boundaries = [10.0, 10.5, 55.0, 55.5] 56.105203790189, 9.684975881254704
+    map_boundaries = [9.0, 10, 56.00, 57.0]
+    CUR_DIR = os.getcwd()
+    map_size = [1000, 1000]
+    elevation_handler = ElevationHandler(map_boundaries, map_size)
+
+    plt.figure()
+    plt.contourf(elevation_handler.map_array, cmap = "terrain")
+    plt.show(block = False)
+
+    plt.figure()
+    plt.contourf(elevation_handler.full_map, cmap = "terrain")
+    plt.show(block = True)
