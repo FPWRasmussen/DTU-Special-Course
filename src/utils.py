@@ -14,9 +14,19 @@ from datetime import datetime
 from scipy.interpolate import RectBivariateSpline, griddata
 import gzip
 from pathlib import Path
+import json
+import pandas as pd
+import cartopy.geodesic as cgeo
 
 ROOT_DIR = Path(os.path.abspath(__file__)).parent.parent
 
+def import_point_source_data(file_name):
+    input_folder = Path.joinpath(ROOT_DIR, "inputs")
+    file_path = Path.joinpath(input_folder, file_name)
+    with open(file_path, 'r') as file:
+        point_source_data = json.load(file)
+    df = pd.DataFrame(point_source_data)
+    return df
 
 def intrinsic_parameters(f, shape, fov):
     """
@@ -561,12 +571,19 @@ def transform_coordinates(long_list, lat_list, input_crs_str = "EPSG:4326", outp
 
     # trans_cords = np.empty([len(lat_list),len(long_list), 2])
 
-    if isinstance(long_list, (int, float)):
+    # if isinstance(long_list, (int, float, np.int64, np.float32)):
+    #     trans_cords = np.empty((1, 1, 2))
+    #     long_list = [long_list]
+    #     lat_list = [lat_list]
+    # elif isinstance(long_list, (np.ndarray, list)):
+    #     
+
+    if hasattr(long_list, "__len__"):
+        trans_cords = np.empty((len(lat_list), len(long_list), 2))
+    else:
         trans_cords = np.empty((1, 1, 2))
         long_list = [long_list]
         lat_list = [lat_list]
-    elif isinstance(long_list, (np.ndarray, list)):
-        trans_cords = np.empty((len(lat_list), len(long_list), 2))
 
     for i, lon in enumerate(long_list):
         for j, lat in enumerate(lat_list):
@@ -737,6 +754,349 @@ def solve_shadow_map(ray_point, ray_vec, grid3D, terrain_voxel_map):
             temp_shadow_map = np.zeros(terrain_voxel_map_shape[0:2], dtype=bool)
     return cum_shadow_map
 
+def calcAgr(f, dp, G, hs, hr):
+    """
+    Input:
+        f : float
+            frequency [Hz]
+        dp : numpy.ndarray
+            source-to-receiver distance array, in metres, projected onto the ground planes [m]
+        G : float
+            ground factor for source / receiver
+        hs : float
+            height of source above ground [m]
+        hr : float
+            height of receiver above ground [m]
+    Output:
+        A : numpy.ndarray
+            ground attenuation contributions array [dB]
+    """
+    def calcA(f, dp, G, h):
+        if f == 63:
+            A = -1.5
+        elif f == 125:
+            aPrime = 1.5 + 3.0 * np.exp(-0.12*(h - 5)**2) * (1 - np.exp(-dp/50)) + 5.7 * np.exp(-0.09 * h**2) * (1 - np.exp(-2.8 * 10**(-6) * dp**2))
+            A = -1.5 + G * aPrime
+        elif f == 250:
+            bPrime = 1.5 + 8.6 * np.exp(-0.09*h**2) * (1 - np.exp(-dp/50))
+            A = -1.5 + G * bPrime
+        elif f == 500:
+            cPrime = 1.5 + 14.0 * np.exp(-0.46*h**2) * (1 - np.exp(-dp/50))
+            A = -1.5 + G * cPrime
+        elif f == 1000:
+            dPrime = 1.5 + 5.0 * np.exp(-0.9*h**2) * (1 - np.exp(-dp/50))
+            A = -1.5 + G * dPrime
+        elif f in (2000, 4000, 8000):
+            A = -1.5*(1 - G)
+        else:
+            print("Invalid nominal midband frequency!")
+            A = np.zeros(dp)
+        return A
+
+    def calcAm(f, dp, G, hs, hr):
+        """
+        Input:
+            f : float
+                frequency [Hz]
+            dp : numpy.ndarray
+                source-to-receiver distance array, in metres, projected onto the ground planes [m]
+            hs : float
+                height of source above ground [m]
+            hr: float
+                height of receiver above ground [m]
+        Output:
+            Am : numpy.ndarray
+                ground attenuation contributions for middle region array [dB]
+        """
+        q = np.where(dp <= 30 * (hs + hr), 0, 1 - (30 * (hs + hr))/dp)
+
+        if f == 63:
+            Am = -3 * q
+        elif f in (125, 250, 500, 1000, 2000, 4000, 8000):
+            Am = -3 * q * (1 - G)
+        else:
+            print("Invalid nominal midband frequency!")
+            Am = np.zeros(dp)
+        return Am
+
+    As = calcA(f, dp, G, hs)
+    Ar = calcA(f, dp, G, hr)
+    Am = calcAm(f, dp, G, hs, hr)
+
+    return As + Ar + Am
+
+def calc_direct_path(elevation_handler, point_source_data):
+    # Extract necessary data from elevation_handler and point_source_data
+    map_array, long_range, lat_range = elevation_handler.map_array, elevation_handler.long_range, elevation_handler.lat_range
+    longitude, latitude, source_height = point_source_data.longitude, point_source_data.latitude, point_source_data.h
+
+    # Create mesh grid
+    X, Y = np.meshgrid(long_range, lat_range)
+
+    # Transform coordinates to target CRS
+    trans_cords = transform_coordinates(long_range, lat_range, input_crs_str="EPSG:4326", output_crs_str="EPSG:3035")
+
+    # Flatten arrays for easier processing
+    map_array_flat, trans_long_flat, trans_lat_flat = map_array.flatten(), trans_cords[:, :, 0].flatten(), trans_cords[:, :, 1].flatten()
+
+    # Initialize arrays
+    d = np.empty(map_array_flat.shape)
+    trans_point_source = np.empty(3)
+
+    # Interpolate elevation at source point
+    elevation_source = griddata((X.flatten(), Y.flatten()), map_array_flat, (longitude, latitude), method='linear')
+
+    # Transform source point to target CRS
+    trans_point_source[:2] = transform_coordinates(longitude, latitude, input_crs_str="EPSG:4326", output_crs_str="EPSG:3035")
+    trans_point_source[2] = source_height + elevation_source
+
+    # Calculate direct path distances
+    for i in range(len(trans_long_flat)):
+        SR_direct_vector = trans_point_source - np.array([trans_long_flat[i], trans_lat_flat[i], map_array_flat[i]])
+        d[i] = np.sqrt((SR_direct_vector * SR_direct_vector).sum(axis=0))
+
+    # Reshape the result to match the original map_array shape
+    d = d.reshape(map_array.shape)
+
+    return d
+
+def calc_diffraction(source_height, receiver_height, terrain_x, terrain_y):
+    def diffraction_recursion(terrain_x, terrain_y, xt_new, yt_new, start_i, ylp, diffraction_index):
+        def calculate_line(xt, ylp):
+            slope = (ylp[-1] - ylp[0]) / (xt[-1] - xt[0])
+            intercept = ylp[0] - slope * xt[0]
+            yl = slope * xt + intercept
+            return yl
+
+        # Calculate line profile
+        yl = calculate_line(xt_new, ylp)
+        diff = (yl - yt_new)
+
+        # Check if the line collides with terrain
+        if np.any(diff < -1e-5):
+            yi_peak = np.argmin(diff) + start_i
+            yimax = np.argmin(diff)  # Splitting index
+            diffraction_index.append([terrain_x[yi_peak], terrain_y[yi_peak]])
+
+            # Recursively process the left side of the splitting point
+            xt0, yt0 = xt_new[:yimax], yt_new[:yimax]
+            if len(xt0) > 2:
+                ylp0 = calculate_line(xt0, [yl[0], yt_new[yimax]])
+                diffraction_recursion(terrain_x, terrain_y, xt0, yt0, start_i, ylp0, diffraction_index)
+
+            # Recursively process the right side of the splitting point
+            xt1, yt1 = xt_new[yimax + 1:], yt_new[yimax + 1:]
+            if len(xt1) > 2:
+                start_i += yimax + 1
+                ylp1 = calculate_line(xt1, [yt_new[yimax], yl[-1]])
+                diffraction_recursion(terrain_x, terrain_y, xt1, yt1, start_i, ylp1, diffraction_index)
+
+    # Initialize variables
+    diffraction_index = [[0, terrain_y[0] + source_height]]
+    ylp = [terrain_y[0] + source_height, terrain_y[-1] + receiver_height]
+    xt_new, yt_new = terrain_x, terrain_y
+    start_i = 0
+
+    # Perform recursion to identify diffraction points
+    diffraction_recursion(terrain_x, terrain_y, xt_new, yt_new, start_i, ylp, diffraction_index)
+
+    # Sort and append the final point
+    diffraction_index = np.array(diffraction_index)
+    diffraction_index = diffraction_index[np.argsort(diffraction_index[:, 0])]
+    diffraction_index = np.vstack((diffraction_index, np.array([terrain_x[-1], terrain_y[-1] + receiver_height])))
+
+    return diffraction_index
+
+def get_linecut(map_array, X, Y, start_point, end_point):
+    def get_row_col(point, meshgrid_X, meshgrid_Y):
+        if meshgrid_X.min() <= point[0] <= meshgrid_X.max() and meshgrid_Y.min() <= point[1] <= meshgrid_Y.max():
+            pass
+        else:
+            raise ValueError('The input center is not within the given scope.')
+        center_coord_row_col = np.unravel_index(np.argmin(np.abs(meshgrid_Y - point[1]) + np.abs(meshgrid_X - point[0])), meshgrid_Y.shape)
+        return center_coord_row_col
+
+    # Calculate row and column indices for start and end points
+    start_row_col, end_row_col = get_row_col(start_point, X, Y), get_row_col(end_point, X, Y)
+    start_row, start_col = np.asarray(start_row_col).astype(float)
+    end_row, end_col = np.asarray(end_row_col).astype(float)
+
+    # Calculate Euclidean distance between start and end points
+    distance = np.sqrt((start_point[0] - end_point[0])**2 + (start_point[1] - end_point[1])**2)
+
+    # Determine the number of points for linecut
+    num_points = int(np.sqrt((start_row_col[0] - end_row_col[0])**2 + (start_row_col[1] - end_row_col[1])**2))
+    if num_points < 2:
+        num_points = 2
+
+    # Generate interpolated row and column indices
+    interpolated_row = (start_row + np.linspace(0, end_row - start_row, num_points)).astype(int)
+    interpolated_col = (start_col + np.linspace(0, end_col - start_col, num_points)).astype(int)
+
+    # Generate distances along the linecut
+    distances = np.linspace(0, distance, num_points)
+
+    return distances, map_array[interpolated_row, interpolated_col]
+
+def calc_extent(point_source_data, dist):
+    '''This function calculates extent of map
+    Inputs:
+        point_source_data: point source data
+        dist: dist to edge from centre
+    '''
+    lon_list, lat_list = point_source_data.longitude, point_source_data.latitude
+
+    # boundary of wind farm
+    bot_left_bound = np.array([np.amin(lon_list),np.amin(lat_list)]) 
+    top_right_bound = np.array([np.amax(lon_list),np.amax(lat_list)])
+
+    
+    dist_cnr = np.sqrt(2*dist**2)
+    bot_left = cgeo.Geodesic().direct(points=bot_left_bound,azimuths=225,distances=dist_cnr)[:,0:2][0]
+    top_right = cgeo.Geodesic().direct(points=top_right_bound,azimuths=45,distances=dist_cnr)[:,0:2][0]
+    
+    extent = [bot_left[0], top_right[0], bot_left[1], top_right[1]]
+    
+    return extent
+
+def calc_diffraction_path(elevation_handler, point_source_data):
+    """
+    Input:
+    - elevation_handler (ElevationHandler): An object containing elevation map and coordinate ranges.
+    - point_source_data (PointSourceData): Information about the source point, including longitude, latitude, and height.
+
+    Output:
+    - dss (numpy.ndarray): Path length from the source to the first diffraction point.
+    - dsr (numpy.ndarray): Path length from the receiver to the last diffraction point.
+    - e (numpy.ndarray): Total path length from the first to the last diffraction point.
+    """
+
+    # Extract necessary data from elevation_handler and point_source_data
+    map_array, long_range, lat_range = elevation_handler.map_array, elevation_handler.long_range, elevation_handler.lat_range
+    longitude, latitude, source_height = point_source_data.longitude, point_source_data.latitude, point_source_data.h
+
+    # Create meshgrid for coordinates
+    X, Y = np.meshgrid(long_range, lat_range)
+
+    # Transform coordinates to target CRS
+    trans_cords = transform_coordinates(long_range, lat_range, input_crs_str="EPSG:4326", output_crs_str="EPSG:3035")
+    # trans_cords = transform_coordinates(long_range, lat_range, input_crs_str="EPSG:4326", output_crs_str="EPSG:4326")
+
+    # Flatten arrays for easy iteration
+    map_array_flat = map_array.flatten()
+    trans_long_flat = trans_cords[:, :, 0].flatten()
+    trans_lat_flat = trans_cords[:, :, 1].flatten()
+
+    # Initialize arrays for path lengths
+    dp = np.empty(map_array_flat.shape)  # path length from source to first diffraction point
+    d = np.empty(map_array_flat.shape)  # path length from source to first diffraction point
+    dss = np.empty(map_array_flat.shape)  # path length from source to first diffraction point
+    dsr = np.empty(map_array_flat.shape)  # path length from receiver to last diffraction point
+    e = np.empty(map_array_flat.shape)    # path length from first to last diffraction
+
+    # Initialize array for transformed source coordinates
+    trans_source = np.empty(3)
+
+    # Get elevation of the source point
+    elevation_source = griddata((X.flatten(), Y.flatten()), map_array_flat, (longitude, latitude), method='linear')
+
+    # Transform source coordinates
+    trans_source[:2] = transform_coordinates(longitude, latitude, input_crs_str="EPSG:4326", output_crs_str="EPSG:3035")
+    # trans_source[:2] = transform_coordinates(longitude, latitude, input_crs_str="EPSG:4326", output_crs_str="EPSG:4326")
+    trans_source[2] = source_height + elevation_source
+
+    # Loop over each point in the flattened coordinates
+    for i in range(len(trans_long_flat)):
+        # Define start and end points for the linecut
+        start_point = trans_source[:2]
+        end_point = [trans_long_flat[i], trans_lat_flat[i]]
+
+        # Get linecut along the terrain
+        dist_list, terrain_elevation = get_linecut(map_array, trans_cords[:, :, 0], trans_cords[:, :, 1], start_point, end_point)
+        dp[i] = dist_list[-1]
+        # Set source height and receiver height
+        hs = source_height
+        hr = 0
+
+        # Calculate diffraction path indices
+        diffraction_index = calc_diffraction(hs, hr, dist_list, terrain_elevation)
+        d[i] =  np.hypot(*(diffraction_index[0, :] - diffraction_index[-1, :]))
+
+        # Calculate path lengths based on diffraction indices
+        if len(diffraction_index) == 2:  # no diffraction
+            dss[i] = 0
+            dsr[i] = 0
+            e[i] = 0
+        elif len(diffraction_index) == 3:  # single diffraction
+            dss[i] = np.hypot(*(diffraction_index[1, :] - diffraction_index[0, :]))
+            dsr[i] = np.hypot(*(diffraction_index[-2, :] - diffraction_index[-1, :]))
+            e[i] = 0
+        else:  # multiple diffraction
+            dss[i] = np.hypot(*(diffraction_index[1, :] - diffraction_index[0, :]))
+            dsr[i] = np.hypot(*(diffraction_index[-2, :] - diffraction_index[-1, :]))
+            e_elev = np.sum(np.abs(np.diff(diffraction_index[1:-1, 1])))  # change in diffraction elevation
+            e_dist = diffraction_index[-2, 0] - diffraction_index[1, 0]
+            e[i] = np.hypot(e_dist, e_elev) + e_elev
+
+
+    # Reshape the arrays to the original shape
+    dp = dp.reshape(map_array.shape)
+    d = d.reshape(map_array.shape)
+    dss = dss.reshape(map_array.shape)
+    dsr = dsr.reshape(map_array.shape)
+    e = e.reshape(map_array.shape)
+
+    return dp, d, dss, dsr, e
+
+def A_weighting(f):
+       RAf = (12194**2 * f**4)/ ((f**2 + 20.6**2) * np.sqrt((f**2 + 107.7**2) * (f**2 + 737.9**2))* (f**2 + 12194**2))
+       Af = 20 * np.log10(RAf) + 2.00
+       return Af
+
+def atmospheric_absorption(f=1000, t=10, rh=80, ps=1.01325e5):
+    """ 
+    Calculate the attenuation coefficient for a given frequency, temperature, relative humidity, and atmospheric pressure.
+    
+    Input:
+    f: frequency in Hz
+    t: temperature in C
+    rh: relative humidity in %
+    ps: atmospheric pressure in Pa
+    
+    Output:
+    alpha: attenuation coefficient
+    """
+    
+    # Convert atmospheric pressure to a variable that won't be modified
+    ps0 = 1.01325e5
+    
+    # Convert temperature from Celsius to Kelvin
+    T = t + 273.15
+    # Reference temperature in Kelvin
+    T0 = 293.15
+    
+    # Reference temperature in Kelvin for saturation vapor pressure
+    T01 = 273.16
+    
+    # Calculate saturation vapor pressure constant
+    Csat = -6.8346 * (T01/T)**1.261 + 4.6151
+    
+    # Calculate saturation vapor pressure
+    rhosat = 10**Csat
+    
+    # Calculate relative humidity ratio
+    H = rhosat * rh * ps0 / ps
+    
+    # Calculate frequency-dependent term for attenuation due to water vapor
+    frn = (ps / ps0) * (T0/T)**0.5 * (9 + 280 * H * np.exp(-4.17 * ((T0/T)**(1/3) - 1)))
+    
+    # Calculate frequency-dependent term for attenuation due to oxygen
+    fro = (ps / ps0) * (24.0 + 4.04e4 * H * (0.02 + H) / (0.391 + H))
+    
+    # Calculate the attenuation coefficient
+    alpha = 20/np.log(10) * f**2 * (1.84e-11 / ( (T0/T)**0.5 * ps / ps0 )+ (T/T0)**(-2.5)* (0.10680 * np.exp(-3352 / T) * frn / (f**2 + frn * frn)+ 0.01278 * np.exp(-2239.1 / T) * fro / (f**2 + fro * fro)))
+    
+    return alpha
 
 class Photo():
     def __init__(self, file, fov, theta, coord, location, focal_length):
@@ -765,6 +1125,17 @@ class Turbine():
         self.radius = height/(2*self.shape[0]/self.shape[1])
         self.wind_dir = wind_dir
 
+class ElevationHandlerTest:
+    def __init__(self, map_boundaries, map_shape):
+        self.map_boundaries = map_boundaries
+        self.map_shape = map_shape
+        self.long_min = np.minimum(map_boundaries[0], map_boundaries[1])
+        self.long_max = np.maximum(map_boundaries[0], map_boundaries[1])
+        self.lat_min = np.minimum(map_boundaries[2], map_boundaries[3])
+        self.lat_max = np.maximum(map_boundaries[2], map_boundaries[3])
+        self.map_array = np.zeros(map_shape)
+        self.long_range = np.linspace(self.long_min, self.long_max, self.map_shape[1])
+        self.lat_range = np.linspace(self.lat_min, self.lat_max, self.map_shape[0])
 
 class ElevationHandler:
     def __init__(self, map_boundaries, map_shape):
@@ -842,7 +1213,32 @@ class ElevationHandler:
 
         self.scaled_subarray = interp_spline(x_new, y_new)
         return self.scaled_subarray
+    
+class Line():
+    def __init__(self, startPoint, endPoint):
+        self.startPoint = startPoint
+        self.endPoint = endPoint
 
+    def length_3d(self):
+            """
+            Calculate the 3D length of the line.
+            """
+            x1, y1, z1 = self.startPoint
+            x2, y2, z2 = self.endPoint
+
+            distance_3d = np.sqrt((x2 - x1)**2 + (y2 - y1)**2 + (z2 - z1)**2)
+            return distance_3d
+
+    def length_2d(self):
+        """
+        Calculate the projected 2D length of the line.
+        """
+        x1, y1, _ = self.startPoint
+        x2, y2, _ = self.endPoint
+
+        distance_2d = np.sqrt((x2 - x1)**2 + (y2 - y1)**2)
+        return distance_2d
+    
     # def transform_coordinates(self, long_list, lat_list, input_crs_str="EPSG:4326", output_crs_str="EPSG:3035"):
     #     input_crs = pyproj.CRS(input_crs_str)  # WGS84
     #     output_crs = pyproj.CRS(output_crs_str)
