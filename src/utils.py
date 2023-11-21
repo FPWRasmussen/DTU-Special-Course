@@ -754,6 +754,11 @@ def solve_shadow_map(ray_point, ray_vec, grid3D, terrain_voxel_map):
             temp_shadow_map = np.zeros(terrain_voxel_map_shape[0:2], dtype=bool)
     return cum_shadow_map
 
+def calc_wavelength(f, temp):
+    c = 331.5 * np.sqrt(1 + temp / 273.15) # speed of sound in air [m/s]
+    wavelength = c/f # [m]
+    return wavelength
+
 def calcAgr(f, dp, G, hs, hr):
     """
     Input:
@@ -930,8 +935,8 @@ def get_linecut(map_array, X, Y, start_point, end_point):
         num_points = 2
 
     # Generate interpolated row and column indices
-    interpolated_row = (start_row + np.linspace(0, end_row - start_row, num_points)).astype(int)
-    interpolated_col = (start_col + np.linspace(0, end_col - start_col, num_points)).astype(int)
+    interpolated_row = (np.linspace(start_row, end_row, num_points)).astype(int)
+    interpolated_col = (np.linspace(start_col, end_col, num_points)).astype(int)
 
     # Generate distances along the linecut
     distances = np.linspace(0, distance, num_points)
@@ -1208,8 +1213,8 @@ class ElevationHandler:
 
         interp_spline = RectBivariateSpline(x_old, y_old, self.full_map)
             
-        x_new = np.linspace(self.map_boundaries[0], self.map_boundaries[1], self.map_shape[1])
-        y_new = np.linspace(self.map_boundaries[2], self.map_boundaries[3], self.map_shape[0])
+        x_new = np.linspace(self.map_boundaries[0], self.map_boundaries[1], self.map_shape[0])
+        y_new = np.linspace(self.map_boundaries[2], self.map_boundaries[3], self.map_shape[1])
 
         self.scaled_subarray = interp_spline(x_new, y_new)
         return self.scaled_subarray
