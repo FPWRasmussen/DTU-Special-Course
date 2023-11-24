@@ -5,7 +5,7 @@ This repository contains a collection of Jupyter notebooks developed as a part o
 
 ## Disclaimer
 
-This project is a student initiative, and as such, the author does not assume any liability or provide any warranty for the quality of the product. Users are encouraged to contribute to further development under the terms of the [GNU Affero General Public License v3.0](LICENSE.md) license agreement.
+This project is a student initiative, and as such, the author does not assume any liability or provide any warranty for the quality of the product. Users are encouraged to contribute to further development under the terms of the [GNU Affero General Public License v3.0](LICENSE) license agreement.
 
 ## Usage
 
