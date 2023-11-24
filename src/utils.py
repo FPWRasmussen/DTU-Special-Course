@@ -209,25 +209,25 @@ def is_in_frame(angle, hfov_range):
     else:
         return False
 
-def transform_coordinates(long_list, lat_list, input_crs_str = "EPSG:4326", output_crs_str = "EPSG:3035"):
+# def transform_coordinates(long_list, lat_list, input_crs_str = "EPSG:4326", output_crs_str = "EPSG:3035"):
     
-    input_crs = pyproj.CRS(input_crs_str)  # WGS84
-    output_crs = pyproj.CRS(output_crs_str)
+#     input_crs = pyproj.CRS(input_crs_str)  # WGS84
+#     output_crs = pyproj.CRS(output_crs_str)
 
-    transformer = pyproj.Transformer.from_crs(input_crs, output_crs, always_xy=True)
+#     transformer = pyproj.Transformer.from_crs(input_crs, output_crs, always_xy=True)
 
-    if isinstance(lat_list, int) or isinstance(lat_list, float):
-        lat_list, long_list = [lat_list], [long_list]
+#     if isinstance(lat_list, int) or isinstance(lat_list, float):
+#         lat_list, long_list = [lat_list], [long_list]
 
-    trans_cords = np.empty([len(lat_list),len(long_list), 2])
+#     trans_cords = np.empty([len(lat_list),len(long_list), 2])
 
-    for i, lon in enumerate(long_list):
-        for j, lat in enumerate(lat_list):
-            x, y = transformer.transform(lon, lat)
-            trans_cords[j, i, 0] = x
-            trans_cords[j, i, 1] = y
+#     for i, lon in enumerate(long_list):
+#         for j, lat in enumerate(lat_list):
+#             x, y = transformer.transform(lon, lat)
+#             trans_cords[j, i, 0] = x
+#             trans_cords[j, i, 1] = y
 
-    return trans_cords
+#     return trans_cords
 
 def pull_street_view_image(api_key, longitude, latitude, fov = 90, heading = 0, pitch = 90, width = 800, height = 800):
 # URL of the image you want to load
@@ -569,15 +569,6 @@ def transform_coordinates(long_list, lat_list, input_crs_str = "EPSG:4326", outp
 
     transformer = pyproj.Transformer.from_crs(input_crs, output_crs, always_xy=True)
 
-    # trans_cords = np.empty([len(lat_list),len(long_list), 2])
-
-    # if isinstance(long_list, (int, float, np.int64, np.float32)):
-    #     trans_cords = np.empty((1, 1, 2))
-    #     long_list = [long_list]
-    #     lat_list = [lat_list]
-    # elif isinstance(long_list, (np.ndarray, list)):
-    #     
-
     if hasattr(long_list, "__len__"):
         trans_cords = np.empty((len(lat_list), len(long_list), 2))
     else:
@@ -830,40 +821,89 @@ def calcAgr(f, dp, G, hs, hr):
 
     return As + Ar + Am
 
-def calc_direct_path(elevation_handler, point_source_data):
-    # Extract necessary data from elevation_handler and point_source_data
-    map_array, long_range, lat_range = elevation_handler.map_array, elevation_handler.long_range, elevation_handler.lat_range
-    longitude, latitude, source_height = point_source_data.longitude, point_source_data.latitude, point_source_data.h
+def solve_noise_map(elevation_handler, point_source_data, ground_factor = 0, temp = 15, rh = 70):
 
-    # Create mesh grid
-    X, Y = np.meshgrid(long_range, lat_range)
+    LDW = np.full_like(elevation_handler.map_array, -np.inf) # init res
 
-    # Transform coordinates to target CRS
-    trans_cords = transform_coordinates(long_range, lat_range, input_crs_str="EPSG:4326", output_crs_str="EPSG:3035")
+    for i, point_source in point_source_data.iterrows(): # iterate over each point source
 
-    # Flatten arrays for easier processing
-    map_array_flat, trans_long_flat, trans_lat_flat = map_array.flatten(), trans_cords[:, :, 0].flatten(), trans_cords[:, :, 1].flatten()
+        # Lf = np.ones_like(elevation_handler.map_array)*-9999999 # init res
+        Lf = np.full_like(elevation_handler.map_array, -np.inf)
 
-    # Initialize arrays
-    d = np.empty(map_array_flat.shape)
-    trans_point_source = np.empty(3)
+        dp, d, dss, dsr, e = calc_diffraction_path(elevation_handler, point_source)
+        
+        z = (dss + e + dsr) - d
 
-    # Interpolate elevation at source point
-    elevation_source = griddata((X.flatten(), Y.flatten()), map_array_flat, (longitude, latitude), method='linear')
+        Kmet = np.ones_like(z) # init Kmet
+        mask_direct = z > 0 # mask direct path (True for diffraction)
+        mask_multiple = e > 0 # mask multiple diffractions (True for multiple diffractions)
+        Kmet[mask_direct] = np.exp(-(1/2000) * np.sqrt(dss[mask_direct] * dsr[mask_direct] * d[mask_direct] / (2 * z[mask_direct]))) # Calculate Kmet only where the mask is True
 
-    # Transform source point to target CRS
-    trans_point_source[:2] = transform_coordinates(longitude, latitude, input_crs_str="EPSG:4326", output_crs_str="EPSG:3035")
-    trans_point_source[2] = source_height + elevation_source
+        hs = point_source.h
+        hr = 0
 
-    # Calculate direct path distances
-    for i in range(len(trans_long_flat)):
-        SR_direct_vector = trans_point_source - np.array([trans_long_flat[i], trans_lat_flat[i], map_array_flat[i]])
-        d[i] = np.sqrt((SR_direct_vector * SR_direct_vector).sum(axis=0))
+        for f, LW in point_source.octave_band.items(): # iterate over each octave-band sound power level
+            f = int(f)
+            wavelength = calc_wavelength(f, temp)
 
-    # Reshape the result to match the original map_array shape
-    d = d.reshape(map_array.shape)
+            C2 = 20
+            C3 = np.ones_like(z) # init Kmet
+            C3[mask_multiple] = (1 + (5*wavelength/e[mask_multiple])**2) / (1/3 + (5*wavelength/e[mask_multiple])**2)
+            Dz = np.zeros_like(z)
+            Dz[mask_direct] = np.minimum(10 * np.log10(3 + (C2 / wavelength) * C3[mask_direct] * z[mask_direct] * Kmet[mask_direct]), 25) # limit of 25 dB
+            Dz[mask_direct & ~mask_multiple] = 20 # limit 20 dB for single diffraction
 
-    return d
+            Agr = calcAgr(f, dp, ground_factor, hs, hr)
+
+            alpha = atmospheric_absorption(f, temp, rh, ps=1.01325e5)
+            Aatm = alpha * d
+
+            Adiv = 20 * np.log10(d) + 11
+
+            Abar = Dz
+            mask_Agr = Agr > 0
+            Abar[mask_Agr] = Dz[mask_Agr] - Agr[mask_Agr]
+
+            
+            A =  Adiv + Aatm  + Abar + Agr
+            
+            Lf = 10*np.log10(10**(0.1 * Lf) + 10**(0.1 * (LW - A + A_weighting(f))))
+        LDW = 10*np.log10(10**(0.1 * LDW) + 10**(0.1 * Lf))
+    return LDW
+# def calc_direct_path(elevation_handler, point_source_data):
+#     # Extract necessary data from elevation_handler and point_source_data
+#     map_array, long_range, lat_range = elevation_handler.map_array, elevation_handler.long_range, elevation_handler.lat_range
+#     longitude, latitude, source_height = point_source_data.longitude, point_source_data.latitude, point_source_data.h
+
+#     # Create mesh grid
+#     X, Y = np.meshgrid(long_range, lat_range)
+
+#     # Transform coordinates to target CRS
+#     trans_cords = transform_coordinates(long_range, lat_range, input_crs_str="EPSG:4326", output_crs_str="EPSG:3035")
+
+#     # Flatten arrays for easier processing
+#     map_array_flat, trans_long_flat, trans_lat_flat = map_array.flatten(), trans_cords[:, :, 0].flatten(), trans_cords[:, :, 1].flatten()
+
+#     # Initialize arrays
+#     d = np.empty(map_array_flat.shape)
+#     trans_point_source = np.empty(3)
+
+#     # Interpolate elevation at source point
+#     elevation_source = griddata((X.flatten(), Y.flatten()), map_array_flat, (longitude, latitude), method='linear')
+
+#     # Transform source point to target CRS
+#     trans_point_source[:2] = transform_coordinates(longitude, latitude, input_crs_str="EPSG:4326", output_crs_str="EPSG:3035")
+#     trans_point_source[2] = source_height + elevation_source
+
+#     # Calculate direct path distances
+#     for i in range(len(trans_long_flat)):
+#         SR_direct_vector = trans_point_source - np.array([trans_long_flat[i], trans_lat_flat[i], map_array_flat[i]])
+#         d[i] = np.sqrt((SR_direct_vector * SR_direct_vector).sum(axis=0))
+
+#     # Reshape the result to match the original map_array shape
+#     d = d.reshape(map_array.shape)
+
+#     return d
 
 def calc_diffraction(source_height, receiver_height, terrain_x, terrain_y):
     def diffraction_recursion(terrain_x, terrain_y, xt_new, yt_new, start_i, ylp, diffraction_index):
@@ -984,7 +1024,7 @@ def calc_diffraction_path(elevation_handler, point_source_data):
     X, Y = np.meshgrid(long_range, lat_range)
 
     # Transform coordinates to target CRS
-    trans_cords = transform_coordinates(long_range, lat_range, input_crs_str="EPSG:4326", output_crs_str="EPSG:3035")
+    trans_cords = transform_coordinates(long_range, lat_range, input_crs_str=elevation_handler.crs, output_crs_str="EPSG:3035")
     # trans_cords = transform_coordinates(long_range, lat_range, input_crs_str="EPSG:4326", output_crs_str="EPSG:4326")
 
     # Flatten arrays for easy iteration
@@ -1006,7 +1046,7 @@ def calc_diffraction_path(elevation_handler, point_source_data):
     elevation_source = griddata((X.flatten(), Y.flatten()), map_array_flat, (longitude, latitude), method='linear')
 
     # Transform source coordinates
-    trans_source[:2] = transform_coordinates(longitude, latitude, input_crs_str="EPSG:4326", output_crs_str="EPSG:3035")
+    trans_source[:2] = transform_coordinates(longitude, latitude, input_crs_str=elevation_handler.crs, output_crs_str="EPSG:3035")
     # trans_source[:2] = transform_coordinates(longitude, latitude, input_crs_str="EPSG:4326", output_crs_str="EPSG:4326")
     trans_source[2] = source_height + elevation_source
 
@@ -1131,19 +1171,20 @@ class Turbine():
         self.wind_dir = wind_dir
 
 class ElevationHandlerTest:
-    def __init__(self, map_boundaries, map_shape):
-        self.map_boundaries = map_boundaries
-        self.map_shape = map_shape
-        self.long_min = np.minimum(map_boundaries[0], map_boundaries[1])
-        self.long_max = np.maximum(map_boundaries[0], map_boundaries[1])
-        self.lat_min = np.minimum(map_boundaries[2], map_boundaries[3])
-        self.lat_max = np.maximum(map_boundaries[2], map_boundaries[3])
-        self.map_array = np.zeros(map_shape)
+    def __init__(self, map_array, crs = "EPSG:3035"):
+        self.map_array = map_array
+        self.crs = crs
+        self.map_shape = self.map_array.shape
+        self.map_boundaries = [0, self.map_array.shape[1], 0, self.map_array.shape[0]]
+        self.long_min = np.minimum(self.map_boundaries[0], self.map_boundaries[1])
+        self.long_max = np.maximum(self.map_boundaries[0], self.map_boundaries[1])
+        self.lat_min = np.minimum(self.map_boundaries[2], self.map_boundaries[3])
+        self.lat_max = np.maximum(self.map_boundaries[2], self.map_boundaries[3])
         self.long_range = np.linspace(self.long_min, self.long_max, self.map_shape[1])
         self.lat_range = np.linspace(self.lat_min, self.lat_max, self.map_shape[0])
 
 class ElevationHandler:
-    def __init__(self, map_boundaries, map_shape):
+    def __init__(self, map_boundaries, map_shape, crs = "EPSG:4326"):
         """
         Input:
             map_boudaries : array_like
@@ -1154,6 +1195,7 @@ class ElevationHandler:
                     Example: [ncol, nrow]
         """
         self.map_boundaries = map_boundaries
+        self.crs = crs
         self.map_shape = map_shape
         self.long_min = np.minimum(map_boundaries[0], map_boundaries[1])
         self.long_max = np.maximum(map_boundaries[0], map_boundaries[1])
@@ -1243,29 +1285,6 @@ class Line():
 
         distance_2d = np.sqrt((x2 - x1)**2 + (y2 - y1)**2)
         return distance_2d
-    
-    # def transform_coordinates(self, long_list, lat_list, input_crs_str="EPSG:4326", output_crs_str="EPSG:3035"):
-    #     input_crs = pyproj.CRS(input_crs_str)  # WGS84
-    #     output_crs = pyproj.CRS(output_crs_str)
-
-    #     transformer = pyproj.Transformer.from_crs(input_crs, output_crs, always_xy=True)
-
-    #     # trans_cords = np.empty([len(lat_list),len(long_list), 2])
-
-    #     if isinstance(long_list, (int, float)):
-    #         trans_cords = np.empty((1, 1, 2))
-    #         long_list = [long_list]
-    #         lat_list = [lat_list]
-    #     elif isinstance(long_list, (np.ndarray, list)):
-    #         trans_cords = np.empty((len(lat_list), len(long_list), 2))
-
-    #     for i, lon in enumerate(long_list):
-    #         for j, lat in enumerate(lat_list):
-    #             x, y = transformer.transform(lon, lat)
-    #             trans_cords[j, i, 0] = x
-    #             trans_cords[j, i, 1] = y
-
-    #     return trans_cords
     
 def test_dir():
     return os.path.dirname(os.path.abspath(__file__))

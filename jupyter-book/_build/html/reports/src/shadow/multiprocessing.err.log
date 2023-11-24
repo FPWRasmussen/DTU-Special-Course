@@ -1,4 +1,17 @@
 Traceback (most recent call last):
+  File "/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/site-packages/nbclient/client.py", line 730, in _async_poll_for_reply
+    msg = await ensure_async(self.kc.shell_channel.get_msg(timeout=new_timeout))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/site-packages/nbclient/util.py", line 96, in ensure_async
+    result = await obj
+             ^^^^^^^^^
+  File "/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/site-packages/jupyter_client/channels.py", line 315, in get_msg
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
   File "/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
     executenb(
   File "/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/site-packages/nbclient/client.py", line 1204, in execute
@@ -15,28 +28,19 @@ Traceback (most recent call last):
            ^^^^^^^^^^^^^^^
   File "/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/site-packages/nbclient/client.py", line 663, in async_execute
     await self.async_execute_cell(
-  File "/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/site-packages/nbclient/client.py", line 965, in async_execute_cell
-    await self._check_raise_for_error(cell, cell_index, exec_reply)
-  File "/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/site-packages/nbclient/client.py", line 862, in _check_raise_for_error
-    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
-nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
-------------------
-from cython import solve_shadow_map
-import multiprocessing as mp
-import pandas as pd
-import matplotlib.pyplot as plt
-from matplotlib.colors import LogNorm
-import numpy as np
-from utils import solar_angles_to_vector, solar_position, rotor_point_spacing, generate_turbine, generate_voxel_map
-------------------
-
-[0;31m---------------------------------------------------------------------------[0m
-[0;31mImportError[0m                               Traceback (most recent call last)
-Cell [0;32mIn[1], line 1[0m
-[0;32m----> 1[0m [38;5;28;01mfrom[39;00m [38;5;21;01mcython[39;00m [38;5;28;01mimport[39;00m solve_shadow_map
-[1;32m      2[0m [38;5;28;01mimport[39;00m [38;5;21;01mmultiprocessing[39;00m [38;5;28;01mas[39;00m [38;5;21;01mmp[39;00m
-[1;32m      3[0m [38;5;28;01mimport[39;00m [38;5;21;01mpandas[39;00m [38;5;28;01mas[39;00m [38;5;21;01mpd[39;00m
-
-[0;31mImportError[0m: cannot import name 'solve_shadow_map' from 'cython' (/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/site-packages/cython.py)
-ImportError: cannot import name 'solve_shadow_map' from 'cython' (/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/site-packages/cython.py)
+  File "/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/site-packages/nbclient/client.py", line 949, in async_execute_cell
+    exec_reply = await self.task_poll_for_reply
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/site-packages/nbclient/client.py", line 754, in _async_poll_for_reply
+    await self._async_handle_timeout(timeout, cell)
+  File "/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/site-packages/nbclient/client.py", line 801, in _async_handle_timeout
+    raise CellTimeoutError.error_from_timeout_and_cell(
+nbclient.exceptions.CellTimeoutError: A cell timed out while it was being executed, after 30 seconds.
+The message was: Cell execution timed out.
+Here is a preview of the cell contents:
+-------------------
+['def multiprocessing(func, points, sun_vec, minBound, maxBound, voxel_map, processes):', '    pool = mp.Pool(processes=processes)', '    results = []', '    ', '    for process in range(processes):']
+...
+['    ', '    np.savetxt("../../temp/shadow_map.txt", shadow_map)', '    return shadow_map', '', 'shadow_map = multiprocessing(solve_shadow_map.solve_shadow_map_cy, points, sun_vec, minBound, maxBound, voxel_map, 20)']
+-------------------
 

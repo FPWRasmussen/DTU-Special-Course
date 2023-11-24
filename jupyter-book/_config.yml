@@ -1,8 +1,8 @@
 # Book settings
 # Learn more at https://jupyterbook.org/customize/config.html
 
-title: My sample book
-author: The Jupyter Book Community
+title: DTU Special Course
+author: Frederik P. W. Rasmussen
 logo: jupyter-book/logo.png
 
 # Force re-execution of notebooks on each build.
@@ -10,14 +10,14 @@ logo: jupyter-book/logo.png
 execute:
   execute_notebooks: force
 
-# Define the name of the latex output file for PDF builds
-latex:
-  latex_documents:
-    targetname: book.tex
+# # Define the name of the latex output file for PDF builds
+# latex:
+#   latex_documents:
+#     targetname: book.tex
 
 # Add a bibtex file so that we can create citations
 bibtex_bibfiles:
-  - jupyter-book/references.bib
+  - jupyter-book/bibliography.bib
 
 # Information about where the book exists on the web
 repository:

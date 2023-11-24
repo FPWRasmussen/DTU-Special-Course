@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>TEST NOTEBOOK &#8212; My sample book</title>
+    <title>TEST NOTEBOOK &#8212; DTU Special Course</title>
   
   
   
@@ -165,6 +165,7 @@ const thebe_selector_output = ".output, .cell_output"
             </li>
         </ul>
         <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="noise/noise_map.html">Noise Map</a></li>
 <li class="toctree-l1"><a class="reference internal" href="map/elevation_handler.html">Elevation Handler</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="visual/visual_impact.html">Visual Impact</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="visual/3d_object_to_image.html">3D Object to Image</a></li>
@@ -445,11 +446,16 @@ document.write(`
 <h1>TEST NOTEBOOK<a class="headerlink" href="#test-notebook" title="Permalink to this heading">#</a></h1>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">find_coeffs</span><span class="p">,</span> <span class="n">print_code</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> widget
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span><span class="o">.</span><span class="n">parent</span><span class="p">))</span>
+<span class="kn">from</span> <span class="nn">src.utils</span> <span class="kn">import</span> <span class="n">find_coeffs</span><span class="p">,</span> <span class="n">print_code</span>
+<span class="c1"># from utils import find_coeffs, print_code</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">from</span> <span class="nn">subprocess</span> <span class="kn">import</span> <span class="n">check_output</span>
 <span class="kn">from</span> <span class="nn">IPython.core.display</span> <span class="kn">import</span> <span class="n">HTML</span>
-
 <span class="n">output</span> <span class="o">=</span> <span class="n">print_code</span><span class="p">(</span><span class="n">find_coeffs</span><span class="p">)</span>
 <span class="n">HTML</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
 </pre></div>
@@ -592,8 +598,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/70d20094a77bd775008861791e4affc4f956119347069803c070be0894f76a9c.png" src="../_images/70d20094a77bd775008861791e4affc4f956119347069803c070be0894f76a9c.png" />
-</div>
+<script type="application/vnd.jupyter.widget-view+json">{"version_major": 2, "version_minor": 0, "model_id": "759c2ca961cb44b390c4866e7622c920"}</script></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1247,6 +1252,60 @@ Line #      Hits         Time  Per Hit   % Time  Line Contents
 <img alt="../_images/d06525a95fec5d5fd44fdd578552fb298bf1bebadecf5a50270535a9998a5d7f.png" src="../_images/d06525a95fec5d5fd44fdd578552fb298bf1bebadecf5a50270535a9998a5d7f.png" />
 </div>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="k">def</span> <span class="nf">generate_subarray_old</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subarray_bounds</span><span class="p">):</span>
+    <span class="n">start_long</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">long_range</span> <span class="o">-</span> <span class="n">subarray_bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="n">end_long</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">long_range</span> <span class="o">-</span> <span class="n">subarray_bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span> 
+    <span class="n">start_lat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lat_range</span> <span class="o">-</span> <span class="n">subarray_bounds</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+    <span class="n">end_lat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lat_range</span> <span class="o">-</span> <span class="n">subarray_bounds</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span> 
+    
+    <span class="n">subarray</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">merged_map</span><span class="p">[</span><span class="n">start_lat</span><span class="p">:</span><span class="n">end_lat</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">start_long</span><span class="p">:</span><span class="n">end_long</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">subarray_bounds</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">long_range</span><span class="p">[</span><span class="n">start_long</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">long_range</span><span class="p">[</span><span class="n">end_long</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">lat_range</span><span class="p">[</span><span class="n">start_lat</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">lat_range</span><span class="p">[</span><span class="n">end_lat</span><span class="p">]]</span>
+    <span class="n">sublong_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">long_range</span><span class="p">[</span><span class="n">start_long</span><span class="p">:</span><span class="n">end_long</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">sublat_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lat_range</span><span class="p">[</span><span class="n">start_lat</span><span class="p">:</span><span class="n">end_lat</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+    
+    <span class="k">return</span> <span class="n">subarray</span><span class="p">,</span> <span class="n">sublong_points</span><span class="p">,</span> <span class="n">sublat_points</span><span class="p">,</span> <span class="n">subarray_bounds</span>
+
+
+
+<span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">RectBivariateSpline</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="k">def</span> <span class="nf">generate_scaled_subarray</span><span class="p">(</span><span class="n">map_array</span><span class="p">,</span> <span class="n">old_map_boundaries</span><span class="p">,</span> <span class="n">new_map_boundaries</span><span class="p">,</span> <span class="n">new_shape</span><span class="p">):</span>
+    <span class="n">x_old</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">old_map_boundaries</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">old_map_boundaries</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">map_array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">y_old</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">old_map_boundaries</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">old_map_boundaries</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">map_array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">interp_spline</span> <span class="o">=</span> <span class="n">RectBivariateSpline</span><span class="p">(</span><span class="n">x_old</span><span class="p">,</span> <span class="n">y_old</span><span class="p">,</span> <span class="n">map_array</span><span class="p">)</span>
+        
+    <span class="n">x_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">new_map_boundaries</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">new_map_boundaries</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">new_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">y_new</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">new_map_boundaries</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">new_map_boundaries</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">new_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="n">scaled_subarray</span> <span class="o">=</span> <span class="n">interp_spline</span><span class="p">(</span><span class="n">x_new</span><span class="p">,</span> <span class="n">y_new</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">scaled_subarray</span>
+
+<span class="n">map_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s2">&quot;../assets/map.txt&quot;</span><span class="p">)</span>
+<span class="n">old_map_boundaries</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">55</span><span class="p">,</span> <span class="mi">56</span><span class="p">]</span>
+<span class="n">new_map_boundaries</span> <span class="o">=</span> <span class="p">[</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">10.5</span><span class="p">,</span> <span class="mf">55.0</span><span class="p">,</span> <span class="mf">55.5</span><span class="p">]</span>
+<span class="n">new_shape</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">]</span>
+
+<span class="n">scaled_array</span> <span class="o">=</span> <span class="n">scaled_subarray</span><span class="p">(</span><span class="n">map_array</span><span class="p">,</span> <span class="n">old_map_boundaries</span><span class="p">,</span> <span class="n">new_map_boundaries</span><span class="p">,</span> <span class="n">new_shape</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">map_array</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">scaled_array</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.contour.QuadContourSet at 0x7f99f8197390&gt;
+</pre></div>
+</div>
+<img alt="../_images/21f997591bb8725e7aec80f37d6b7d27674831c5e7da57d14d54052dba1e93db.png" src="../_images/21f997591bb8725e7aec80f37d6b7d27674831c5e7da57d14d54052dba1e93db.png" />
+</div>
+</div>
 </section>
 
     <script type="text/x-thebe-config">
@@ -1295,7 +1354,7 @@ Line #      Hits         Time  Per Hit   % Time  Line Contents
   <div class="footer-item">
     
 <p class="component-author">
-By The Jupyter Book Community
+By Frederik P. W. Rasmussen
 </p>
 
   </div>

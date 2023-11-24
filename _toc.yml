@@ -1,6 +1,8 @@
 format: jb-book
 root: src/introduction
 chapters:
+- file: src/noise/noise_map
+  title: Noise Map
 - file: src/map/elevation_handler
   title: Elevation Handler
 - file: src/visual/visual_impact
@@ -23,3 +25,6 @@ chapters:
       title: Multiprocessing
 - file: src/noise/atmospheric_attenuation
   title: Atmospheric Attenuation
+- file: src/bibliography
+title: Bibliography
+

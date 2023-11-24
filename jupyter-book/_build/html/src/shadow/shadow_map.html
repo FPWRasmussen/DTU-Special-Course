@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Shadow Map &#8212; My sample book</title>
+    <title>Shadow Map &#8212; DTU Special Course</title>
   
   
   
@@ -167,6 +167,7 @@ const thebe_selector_output = ".output, .cell_output"
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../noise/noise_map.html">Noise Map</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../map/elevation_handler.html">Elevation Handler</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../visual/visual_impact.html">Visual Impact</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../visual/3d_object_to_image.html">3D Object to Image</a></li>
@@ -447,26 +448,20 @@ document.write(`
 <h1>Shadow Map<a class="headerlink" href="#shadow-map" title="Permalink to this heading">#</a></h1>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> widget
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="p">))</span>
+<span class="kn">from</span> <span class="nn">src.utils</span> <span class="kn">import</span> <span class="n">solar_angles_to_vector</span><span class="p">,</span> <span class="n">solar_position</span><span class="p">,</span> <span class="n">rotor_point_spacing</span><span class="p">,</span> <span class="n">generate_turbine</span><span class="p">,</span> <span class="n">generate_voxel_map</span><span class="p">,</span> <span class="n">solve_shadow_map</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">cartopy.crs</span> <span class="k">as</span> <span class="nn">ccrs</span>
 <span class="kn">from</span> <span class="nn">cartopy.io.img_tiles</span> <span class="kn">import</span> <span class="n">GoogleTiles</span>
 <span class="kn">from</span> <span class="nn">matplotlib.ticker</span> <span class="kn">import</span> <span class="n">AutoLocator</span>
 <span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">LogNorm</span>
-<span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">solar_angles_to_vector</span><span class="p">,</span> <span class="n">solar_position</span><span class="p">,</span> <span class="n">rotor_point_spacing</span><span class="p">,</span> <span class="n">generate_turbine</span><span class="p">,</span> <span class="n">generate_voxel_map</span><span class="p">,</span> <span class="n">solve_shadow_map</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">8</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="kn">from</span> <span class="nn">matplotlib.ticker</span> <span class="kn">import</span> <span class="n">AutoLocator</span>
-<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">LogNorm</span>
-<span class="ne">----&gt; </span><span class="mi">8</span> <span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">solar_angles_to_vector</span><span class="p">,</span> <span class="n">solar_position</span><span class="p">,</span> <span class="n">rotor_point_spacing</span><span class="p">,</span> <span class="n">generate_turbine</span><span class="p">,</span> <span class="n">generate_voxel_map</span><span class="p">,</span> <span class="n">solve_shadow_map</span>
-
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;utils&#39;
+<span class="c1"># from utils import solar_angles_to_vector, solar_position, rotor_point_spacing, generate_turbine, generate_voxel_map, solve_shadow_map</span>
 </pre></div>
 </div>
 </div>
@@ -523,6 +518,26 @@ document.write(`
 <span class="n">maxBound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Y</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">map_array</span><span class="p">)],</span> <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 <span class="n">voxel_map</span> <span class="o">=</span> <span class="n">voxel_map</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
 <span class="n">cum_shadow_map</span> <span class="o">=</span> <span class="n">solve_shadow_map</span><span class="o">.</span><span class="n">solve_shadow_map_cy</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">sun_vec</span><span class="p">,</span> <span class="n">minBound</span><span class="p">,</span> <span class="n">maxBound</span><span class="p">,</span> <span class="n">voxel_map</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/frederikwr/Dropbox/DTU Special Course/src/utils.py:608: RuntimeWarning: divide by zero encountered in scalar divide
+  rotor_angle = np.arctan(n_vector[0]/n_vector[1])+np.pi/2
+</pre></div>
+</div>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ImportError</span><span class="g g-Whitespace">                               </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span> <span class="mi">44</span>
+<span class="g g-Whitespace">     </span><span class="mi">38</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">voxel_map</span><span class="p">,</span> <span class="n">map_array</span> <span class="o">=</span> <span class="n">generate_voxel_map</span><span class="p">(</span><span class="n">map_boundaries</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">41</span> <span class="c1">#######</span>
+<span class="g g-Whitespace">     </span><span class="mi">42</span> <span class="c1"># Solve</span>
+<span class="g g-Whitespace">     </span><span class="mi">43</span> <span class="c1">######</span>
+<span class="ne">---&gt; </span><span class="mi">44</span> <span class="kn">from</span> <span class="nn">cython</span> <span class="kn">import</span> <span class="n">solve_shadow_map</span>
+<span class="g g-Whitespace">     </span><span class="mi">45</span> <span class="n">points</span> <span class="o">=</span> <span class="n">points</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">46</span> <span class="n">sun_vec</span> <span class="o">=</span> <span class="n">sun_vec</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+<span class="ne">ImportError</span>: cannot import name &#39;solve_shadow_map&#39; from &#39;cython&#39; (/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/site-packages/cython.py)
 </pre></div>
 </div>
 </div>
@@ -666,7 +681,7 @@ document.write(`
   <div class="footer-item">
     
 <p class="component-author">
-By The Jupyter Book Community
+By Frederik P. W. Rasmussen
 </p>
 
   </div>

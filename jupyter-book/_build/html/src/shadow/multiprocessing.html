@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Multiprocessing &#8212; My sample book</title>
+    <title>Multiprocessing &#8212; DTU Special Course</title>
   
   
   
@@ -167,6 +167,7 @@ const thebe_selector_output = ".output, .cell_output"
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../noise/noise_map.html">Noise Map</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../map/elevation_handler.html">Elevation Handler</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../visual/visual_impact.html">Visual Impact</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../visual/3d_object_to_image.html">3D Object to Image</a></li>
@@ -447,25 +448,19 @@ document.write(`
 <h1>Multiprocessing<a class="headerlink" href="#multiprocessing" title="Permalink to this heading">#</a></h1>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cython</span> <span class="kn">import</span> <span class="n">solve_shadow_map</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> widget
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="p">))</span>
+<span class="kn">from</span> <span class="nn">src.utils</span> <span class="kn">import</span> <span class="n">solar_angles_to_vector</span><span class="p">,</span> <span class="n">solar_position</span><span class="p">,</span> <span class="n">rotor_point_spacing</span><span class="p">,</span> <span class="n">generate_turbine</span><span class="p">,</span> <span class="n">generate_voxel_map</span>
+<span class="kn">from</span> <span class="nn">src.cython</span> <span class="kn">import</span> <span class="n">solve_shadow_map</span>
 <span class="kn">import</span> <span class="nn">multiprocessing</span> <span class="k">as</span> <span class="nn">mp</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">LogNorm</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">solar_angles_to_vector</span><span class="p">,</span> <span class="n">solar_position</span><span class="p">,</span> <span class="n">rotor_point_spacing</span><span class="p">,</span> <span class="n">generate_turbine</span><span class="p">,</span> <span class="n">generate_voxel_map</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ImportError</span><span class="g g-Whitespace">                               </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="kn">from</span> <span class="nn">cython</span> <span class="kn">import</span> <span class="n">solve_shadow_map</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">import</span> <span class="nn">multiprocessing</span> <span class="k">as</span> <span class="nn">mp</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-
-<span class="ne">ImportError</span>: cannot import name &#39;solve_shadow_map&#39; from &#39;cython&#39; (/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/site-packages/cython.py)
+<span class="c1"># from utils import solar_angles_to_vector, solar_position, rotor_point_spacing, generate_turbine, generate_voxel_map</span>
 </pre></div>
 </div>
 </div>
@@ -514,12 +509,17 @@ document.write(`
 <span class="c1">#######</span>
 <span class="c1"># Solve</span>
 <span class="c1">######</span>
-<span class="kn">from</span> <span class="nn">cython</span> <span class="kn">import</span> <span class="n">solve_shadow_map</span>
 <span class="n">points</span> <span class="o">=</span> <span class="n">points</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 <span class="n">sun_vec</span> <span class="o">=</span> <span class="n">sun_vec</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 <span class="n">minBound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">Y</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">map_array</span><span class="p">)],</span> <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 <span class="n">maxBound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Y</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">map_array</span><span class="p">)],</span> <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 <span class="n">voxel_map</span> <span class="o">=</span> <span class="n">voxel_map</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/frederikwr/Dropbox/DTU Special Course/src/utils.py:608: RuntimeWarning: divide by zero encountered in scalar divide
+  rotor_angle = np.arctan(n_vector[0]/n_vector[1])+np.pi/2
 </pre></div>
 </div>
 </div>
@@ -547,10 +547,557 @@ document.write(`
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error occurred for process </span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     
-    <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s2">&quot;../temp/shadow_map.txt&quot;</span><span class="p">,</span> <span class="n">shadow_map</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s2">&quot;../../temp/shadow_map.txt&quot;</span><span class="p">,</span> <span class="n">shadow_map</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">shadow_map</span>
 
 <span class="n">shadow_map</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="p">(</span><span class="n">solve_shadow_map</span><span class="o">.</span><span class="n">solve_shadow_map_cy</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">sun_vec</span><span class="p">,</span> <span class="n">minBound</span><span class="p">,</span> <span class="n">maxBound</span><span class="p">,</span> <span class="n">voxel_map</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Process ForkPoolWorker-4:
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Process ForkPoolWorker-11:
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Process ForkPoolWorker-10:
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Process ForkPoolWorker-7:
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Process ForkPoolWorker-3:
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Process ForkPoolWorker-6:
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Process ForkPoolWorker-13:
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Process ForkPoolWorker-5:
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Process ForkPoolWorker-17:
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Process ForkPoolWorker-15:
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Process ForkPoolWorker-8:
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Process ForkPoolWorker-12:
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Process ForkPoolWorker-1:
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Process ForkPoolWorker-20:
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Process ForkPoolWorker-14:
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Process ForkPoolWorker-18:
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Process ForkPoolWorker-9:
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Process ForkPoolWorker-2:
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Process ForkPoolWorker-16:
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Traceback (most recent call last):
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Traceback (most recent call last):
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Process ForkPoolWorker-19:
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Traceback (most recent call last):
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Traceback (most recent call last):
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Traceback (most recent call last):
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Traceback (most recent call last):
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Traceback (most recent call last):
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Traceback (most recent call last):
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Traceback (most recent call last):
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Traceback (most recent call last):
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Traceback (most recent call last):
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Traceback (most recent call last):
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Traceback (most recent call last):
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Traceback (most recent call last):
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Traceback (most recent call last):
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Traceback (most recent call last):
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Traceback (most recent call last):
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Traceback (most recent call last):
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Traceback (most recent call last):
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Traceback (most recent call last):
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 314, in _bootstrap
+    self.run()
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/pool.py&quot;, line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ^^^^^^^^^^^^^^^^^^^
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/pool.py&quot;, line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ^^^^^^^^^^^^^^^^^^^
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/pool.py&quot;, line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ^^^^^^^^^^^^^^^^^^^
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/process.py&quot;, line 108, in run
+    self._target(*self._args, **self._kwargs)
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/pool.py&quot;, line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ^^^^^^^^^^^^^^^^^^^
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/pool.py&quot;, line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ^^^^^^^^^^^^^^^^^^^
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/pool.py&quot;, line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ^^^^^^^^^^^^^^^^^^^
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/pool.py&quot;, line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ^^^^^^^^^^^^^^^^^^^
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/pool.py&quot;, line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ^^^^^^^^^^^^^^^^^^^
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/pool.py&quot;, line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ^^^^^^^^^^^^^^^^^^^
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/pool.py&quot;, line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ^^^^^^^^^^^^^^^^^^^
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/pool.py&quot;, line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ^^^^^^^^^^^^^^^^^^^
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/pool.py&quot;, line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ^^^^^^^^^^^^^^^^^^^
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/pool.py&quot;, line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ^^^^^^^^^^^^^^^^^^^
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/pool.py&quot;, line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ^^^^^^^^^^^^^^^^^^^
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/pool.py&quot;, line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ^^^^^^^^^^^^^^^^^^^
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/pool.py&quot;, line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ^^^^^^^^^^^^^^^^^^^
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;solve_shadow_map.pyx&quot;, line 49, in solve_shadow_map.solve_shadow_map_cy
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;solve_shadow_map.pyx&quot;, line 49, in solve_shadow_map.solve_shadow_map_cy
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/pool.py&quot;, line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ^^^^^^^^^^^^^^^^^^^
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/pool.py&quot;, line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ^^^^^^^^^^^^^^^^^^^
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;solve_shadow_map.pyx&quot;, line 49, in solve_shadow_map.solve_shadow_map_cy
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/pool.py&quot;, line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ^^^^^^^^^^^^^^^^^^^
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/pool.py&quot;, line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ^^^^^^^^^^^^^^^^^^^
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;solve_shadow_map.pyx&quot;, line 49, in solve_shadow_map.solve_shadow_map_cy
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;solve_shadow_map.pyx&quot;, line 49, in solve_shadow_map.solve_shadow_map_cy
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;solve_shadow_map.pyx&quot;, line 49, in solve_shadow_map.solve_shadow_map_cy
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;solve_shadow_map.pyx&quot;, line 49, in solve_shadow_map.solve_shadow_map_cy
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;solve_shadow_map.pyx&quot;, line 49, in solve_shadow_map.solve_shadow_map_cy
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;solve_shadow_map.pyx&quot;, line 49, in solve_shadow_map.solve_shadow_map_cy
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;solve_shadow_map.pyx&quot;, line 49, in solve_shadow_map.solve_shadow_map_cy
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;solve_shadow_map.pyx&quot;, line 49, in solve_shadow_map.solve_shadow_map_cy
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;solve_shadow_map.pyx&quot;, line 49, in solve_shadow_map.solve_shadow_map_cy
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;solve_shadow_map.pyx&quot;, line 49, in solve_shadow_map.solve_shadow_map_cy
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;solve_shadow_map.pyx&quot;, line 49, in solve_shadow_map.solve_shadow_map_cy
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;solve_shadow_map.pyx&quot;, line 49, in solve_shadow_map.solve_shadow_map_cy
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;solve_shadow_map.pyx&quot;, line 49, in solve_shadow_map.solve_shadow_map_cy
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>KeyboardInterrupt
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>KeyboardInterrupt
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;solve_shadow_map.pyx&quot;, line 49, in solve_shadow_map.solve_shadow_map_cy
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;solve_shadow_map.pyx&quot;, line 49, in solve_shadow_map.solve_shadow_map_cy
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>KeyboardInterrupt
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;solve_shadow_map.pyx&quot;, line 49, in solve_shadow_map.solve_shadow_map_cy
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;solve_shadow_map.pyx&quot;, line 61, in solve_shadow_map.solve_shadow_map_cy
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>KeyboardInterrupt
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>KeyboardInterrupt
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>KeyboardInterrupt
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>KeyboardInterrupt
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>KeyboardInterrupt
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>KeyboardInterrupt
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>KeyboardInterrupt
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>KeyboardInterrupt
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>KeyboardInterrupt
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>KeyboardInterrupt
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>KeyboardInterrupt
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>KeyboardInterrupt
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>KeyboardInterrupt
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>KeyboardInterrupt
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>KeyboardInterrupt
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  File &quot;/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/site-packages/numpy/core/numeric.py&quot;, line 150, in ones
+    @set_array_function_like_doc
+    
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>KeyboardInterrupt
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>KeyboardInterrupt
+</pre></div>
+</div>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">line</span> <span class="mi">25</span>
+<span class="g g-Whitespace">     </span><span class="mi">22</span>     <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s2">&quot;../../temp/shadow_map.txt&quot;</span><span class="p">,</span> <span class="n">shadow_map</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">23</span>     <span class="k">return</span> <span class="n">shadow_map</span>
+<span class="ne">---&gt; </span><span class="mi">25</span> <span class="n">shadow_map</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="p">(</span><span class="n">solve_shadow_map</span><span class="o">.</span><span class="n">solve_shadow_map_cy</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">sun_vec</span><span class="p">,</span> <span class="n">minBound</span><span class="p">,</span> <span class="n">maxBound</span><span class="p">,</span> <span class="n">voxel_map</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+
+<span class="nn">Cell In[3], line 11,</span> in <span class="ni">multiprocessing</span><span class="nt">(func, points, sun_vec, minBound, maxBound, voxel_map, processes)</span>
+<span class="g g-Whitespace">      </span><span class="mi">8</span>     <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">10</span> <span class="n">pool</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="ne">---&gt; </span><span class="mi">11</span> <span class="n">pool</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+<span class="g g-Whitespace">     </span><span class="mi">13</span> <span class="n">shadow_map</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">voxel_map</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">])</span>
+<span class="g g-Whitespace">     </span><span class="mi">15</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
+
+<span class="nn">File ~/anaconda3/envs/WindBro/lib/python3.11/multiprocessing/pool.py:665,</span> in <span class="ni">Pool.join</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">    </span><span class="mi">663</span> <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">CLOSE</span><span class="p">,</span> <span class="n">TERMINATE</span><span class="p">):</span>
+<span class="g g-Whitespace">    </span><span class="mi">664</span>     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;In unknown state&quot;</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">665</span> <span class="bp">self</span><span class="o">.</span><span class="n">_worker_handler</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+<span class="g g-Whitespace">    </span><span class="mi">666</span> <span class="bp">self</span><span class="o">.</span><span class="n">_task_handler</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+<span class="g g-Whitespace">    </span><span class="mi">667</span> <span class="bp">self</span><span class="o">.</span><span class="n">_result_handler</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+
+<span class="nn">File ~/anaconda3/envs/WindBro/lib/python3.11/threading.py:1112,</span> in <span class="ni">Thread.join</span><span class="nt">(self, timeout)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1109</span>     <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;cannot join current thread&quot;</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1111</span> <span class="k">if</span> <span class="n">timeout</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<span class="ne">-&gt; </span><span class="mi">1112</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_tstate_lock</span><span class="p">()</span>
+<span class="g g-Whitespace">   </span><span class="mi">1113</span> <span class="k">else</span><span class="p">:</span>
+<span class="g g-Whitespace">   </span><span class="mi">1114</span>     <span class="c1"># the behavior of a negative timeout isn&#39;t documented, but</span>
+<span class="g g-Whitespace">   </span><span class="mi">1115</span>     <span class="c1"># historically .join(timeout=x) for x&lt;0 has acted as if timeout=0</span>
+<span class="g g-Whitespace">   </span><span class="mi">1116</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_wait_for_tstate_lock</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">timeout</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+
+<span class="nn">File ~/anaconda3/envs/WindBro/lib/python3.11/threading.py:1132,</span> in <span class="ni">Thread._wait_for_tstate_lock</span><span class="nt">(self, block, timeout)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1129</span>     <span class="k">return</span>
+<span class="g g-Whitespace">   </span><span class="mi">1131</span> <span class="k">try</span><span class="p">:</span>
+<span class="ne">-&gt; </span><span class="mi">1132</span>     <span class="k">if</span> <span class="n">lock</span><span class="o">.</span><span class="n">acquire</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">timeout</span><span class="p">):</span>
+<span class="g g-Whitespace">   </span><span class="mi">1133</span>         <span class="n">lock</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+<span class="g g-Whitespace">   </span><span class="mi">1134</span>         <span class="bp">self</span><span class="o">.</span><span class="n">_stop</span><span class="p">()</span>
+
+<span class="ne">KeyboardInterrupt</span>: 
 </pre></div>
 </div>
 </div>
@@ -634,7 +1181,7 @@ document.write(`
   <div class="footer-item">
     
 <p class="component-author">
-By The Jupyter Book Community
+By Frederik P. W. Rasmussen
 </p>
 
   </div>

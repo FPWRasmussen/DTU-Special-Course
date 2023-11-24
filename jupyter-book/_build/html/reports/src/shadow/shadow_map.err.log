@@ -21,23 +21,70 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import cartopy.crs as ccrs
-from cartopy.io.img_tiles import GoogleTiles
-from matplotlib.ticker import AutoLocator
-from matplotlib.colors import LogNorm
-from utils import solar_angles_to_vector, solar_position, rotor_point_spacing, generate_turbine, generate_voxel_map, solve_shadow_map
+########
+# Generate sun ray vectors
+########
+start_date = '2023-01-01 00:00:00'
+end_date = '2023-12-30 23:59:59'
+latitude = 55
+longitude = 12
+date_range = pd.date_range(start=start_date, end=end_date, freq="10min")
+sun_pos = np.zeros([len(date_range), 2])
+
+for i, date in enumerate(date_range):
+    az, alt = solar_position(date, latitude, longitude)
+    sun_pos[i,:] = az, alt
+
+
+sun_pos = sun_pos[sun_pos[:,1] > np.deg2rad(5)]
+sun_vec = np.zeros([len(sun_pos), 3])
+
+for i, pos in enumerate(sun_pos):
+    sun_vec[i,:] = -solar_angles_to_vector(*pos)
+
+########
+# Generate turbine points
+########
+diameter = 100
+n_vector = np.array([1, 0])
+turbine_cord = np.array([4.302e6, 3.666e6, 230])
+grid_element_size = np.array([30, 30, 30])
+angle = np.deg2rad(45)
+r_list, n_angle = rotor_point_spacing(diameter, grid_element_size, angle)
+points = generate_turbine(r_list, n_angle, n_vector, turbine_cord)
+
+########
+# Generate voxel map
+########
+map_boundaries = np.array([9.65, 9.75, 56.05, 56.15])
+shape = [100, 100]
+X, Y, voxel_map, map_array = generate_voxel_map(map_boundaries, shape)
+
+
+#######
+# Solve
+######
+from cython import solve_shadow_map
+points = points.astype(np.float32)
+sun_vec = sun_vec.astype(np.float32)
+minBound = np.array([np.min(X), np.min(Y), np.min(map_array)], dtype = np.float32)
+maxBound = np.array([np.max(X), np.max(Y), np.max(map_array)], dtype = np.float32)
+voxel_map = voxel_map.astype(np.uint8)
+cum_shadow_map = solve_shadow_map.solve_shadow_map_cy(points, sun_vec, minBound, maxBound, voxel_map)
+
 ------------------
 
 [0;31m---------------------------------------------------------------------------[0m
-[0;31mModuleNotFoundError[0m                       Traceback (most recent call last)
-Cell [0;32mIn[1], line 8[0m
-[1;32m      6[0m [38;5;28;01mfrom[39;00m [38;5;21;01mmatplotlib[39;00m[38;5;21;01m.[39;00m[38;5;21;01mticker[39;00m [38;5;28;01mimport[39;00m AutoLocator
-[1;32m      7[0m [38;5;28;01mfrom[39;00m [38;5;21;01mmatplotlib[39;00m[38;5;21;01m.[39;00m[38;5;21;01mcolors[39;00m [38;5;28;01mimport[39;00m LogNorm
-[0;32m----> 8[0m [38;5;28;01mfrom[39;00m [38;5;21;01mutils[39;00m [38;5;28;01mimport[39;00m solar_angles_to_vector, solar_position, rotor_point_spacing, generate_turbine, generate_voxel_map, solve_shadow_map
+[0;31mImportError[0m                               Traceback (most recent call last)
+Cell [0;32mIn[2], line 44[0m
+[1;32m     38[0m X, Y, voxel_map, map_array [38;5;241m=[39m generate_voxel_map(map_boundaries, shape)
+[1;32m     41[0m [38;5;66;03m#######[39;00m
+[1;32m     42[0m [38;5;66;03m# Solve[39;00m
+[1;32m     43[0m [38;5;66;03m######[39;00m
+[0;32m---> 44[0m [38;5;28;01mfrom[39;00m [38;5;21;01mcython[39;00m [38;5;28;01mimport[39;00m solve_shadow_map
+[1;32m     45[0m points [38;5;241m=[39m points[38;5;241m.[39mastype(np[38;5;241m.[39mfloat32)
+[1;32m     46[0m sun_vec [38;5;241m=[39m sun_vec[38;5;241m.[39mastype(np[38;5;241m.[39mfloat32)
 
-[0;31mModuleNotFoundError[0m: No module named 'utils'
-ModuleNotFoundError: No module named 'utils'
+[0;31mImportError[0m: cannot import name 'solve_shadow_map' from 'cython' (/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/site-packages/cython.py)
+ImportError: cannot import name 'solve_shadow_map' from 'cython' (/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/site-packages/cython.py)
 
