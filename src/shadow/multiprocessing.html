@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Multiprocessing &#8212; My sample book</title>
+    <title>Multiprocessing &#8212; DTU Special Course</title>
   
   
   
@@ -167,6 +167,7 @@ const thebe_selector_output = ".output, .cell_output"
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../noise/noise_map.html">Noise Map</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../map/elevation_handler.html">Elevation Handler</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../visual/visual_impact.html">Visual Impact</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../visual/3d_object_to_image.html">3D Object to Image</a></li>
@@ -181,6 +182,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../noise/atmospheric_attenuation.html">Atmospheric Attenuation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
 </ul>
 
     </div>
@@ -418,7 +420,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
 </div></div>
       
     </div>
@@ -434,6 +438,14 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#code-test">Code test</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -445,57 +457,94 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="multiprocessing">
 <h1>Multiprocessing<a class="headerlink" href="#multiprocessing" title="Permalink to this heading">#</a></h1>
-<div class="cell docutils container">
+<p>To enhance the performance of the shadow map solver, multiprocessing has been implemented. Given the CPU-intensive nature of the task, multiprocessing is employed to distribute solar ray vectors (and consequently the datetime range) among multiple processes, allowing parallel execution. The extent of optimization naturally depends on the hardware specifications. However, on a moderately equipped laptop running 10 processes concurrently, a fourfold reduction in computational time can be anticipated.</p>
+<div class="cell tag_hide-input tag_thebe-init docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cython</span> <span class="kn">import</span> <span class="n">solve_shadow_map</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="p">))</span>
+<span class="kn">from</span> <span class="nn">src.utils</span> <span class="kn">import</span> <span class="n">solar_angles_to_vector</span><span class="p">,</span> <span class="n">solar_position</span><span class="p">,</span> <span class="n">rotor_point_spacing</span><span class="p">,</span> <span class="n">generate_turbine</span><span class="p">,</span> <span class="n">generate_voxel_map</span><span class="p">,</span> <span class="n">print_code</span><span class="p">,</span> <span class="n">multiprocessing</span>
+<span class="kn">from</span> <span class="nn">src.cython</span> <span class="kn">import</span> <span class="n">solve_shadow_map</span>
 <span class="kn">import</span> <span class="nn">multiprocessing</span> <span class="k">as</span> <span class="nn">mp</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">LogNorm</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">solar_angles_to_vector</span><span class="p">,</span> <span class="n">solar_position</span><span class="p">,</span> <span class="n">rotor_point_spacing</span><span class="p">,</span> <span class="n">generate_turbine</span><span class="p">,</span> <span class="n">generate_voxel_map</span>
+<span class="kn">from</span> <span class="nn">IPython.core.display</span> <span class="kn">import</span> <span class="n">HTML</span>
 </pre></div>
 </div>
 </div>
+</details>
+</div>
+<p>The code operates by dividing the sun rays into n processes using <code class="docutils literal notranslate"><span class="pre">rays</span> <span class="pre">=</span> <span class="pre">sun_vec[process::processes]</span></code>. These processes are executed in parallel, and their results are subsequently combined to calculate the cumulative shadow flickering time.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">HTML</span><span class="p">(</span><span class="n">print_code</span><span class="p">(</span><span class="n">multiprocessing</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</details>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ImportError</span><span class="g g-Whitespace">                               </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="kn">from</span> <span class="nn">cython</span> <span class="kn">import</span> <span class="n">solve_shadow_map</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">import</span> <span class="nn">multiprocessing</span> <span class="k">as</span> <span class="nn">mp</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-
-<span class="ne">ImportError</span>: cannot import name &#39;solve_shadow_map&#39; from &#39;cython&#39; (/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/site-packages/cython.py)
+<div class="output text_html"><div class="highlight" style="background: #202020"><pre style="line-height: 125%;"><span></span><a id="True-1" name="True-1" href="#True-1"></a><span style="color: #6ebf26; font-weight: bold">def</span> <span style="color: #71adff">multiprocessing</span><span style="color: #d0d0d0">(func,</span> <span style="color: #d0d0d0">points,</span> <span style="color: #d0d0d0">sun_vec,</span> <span style="color: #d0d0d0">minBound,</span> <span style="color: #d0d0d0">maxBound,</span> <span style="color: #d0d0d0">voxel_map,</span> <span style="color: #d0d0d0">processes):</span>
+<a id="True-2" name="True-2" href="#True-2"></a>    <span style="color: #d0d0d0">pool</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">mp.Pool(processes=processes)</span>
+<a id="True-3" name="True-3" href="#True-3"></a>    <span style="color: #d0d0d0">results</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">[]</span>
+<a id="True-4" name="True-4" href="#True-4"></a>    
+<a id="True-5" name="True-5" href="#True-5"></a>    <span style="color: #6ebf26; font-weight: bold">for</span> <span style="color: #d0d0d0">process</span> <span style="color: #6ebf26; font-weight: bold">in</span> <span style="color: #2fbccd">range</span><span style="color: #d0d0d0">(processes):</span>
+<a id="True-6" name="True-6" href="#True-6"></a>        <span style="color: #d0d0d0">rays</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">sun_vec[process::processes]</span>
+<a id="True-7" name="True-7" href="#True-7"></a>        <span style="color: #d0d0d0">result</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">pool.apply_async(func,</span> <span style="color: #d0d0d0">args=(points,</span> <span style="color: #d0d0d0">rays,</span> <span style="color: #d0d0d0">minBound,</span> <span style="color: #d0d0d0">maxBound,</span> <span style="color: #d0d0d0">voxel_map))</span>
+<a id="True-8" name="True-8" href="#True-8"></a>        <span style="color: #d0d0d0">results.append(result)</span>
+<a id="True-9" name="True-9" href="#True-9"></a>    
+<a id="True-10" name="True-10" href="#True-10"></a>    <span style="color: #d0d0d0">pool.close()</span>
+<a id="True-11" name="True-11" href="#True-11"></a>    <span style="color: #d0d0d0">pool.join()</span>
+<a id="True-12" name="True-12" href="#True-12"></a>    
+<a id="True-13" name="True-13" href="#True-13"></a>    <span style="color: #d0d0d0">shadow_map</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">np.zeros(voxel_map.shape[:</span><span style="color: #51b2fd">2</span><span style="color: #d0d0d0">])</span>
+<a id="True-14" name="True-14" href="#True-14"></a>    
+<a id="True-15" name="True-15" href="#True-15"></a>    <span style="color: #6ebf26; font-weight: bold">for</span> <span style="color: #d0d0d0">p,</span> <span style="color: #d0d0d0">result</span> <span style="color: #6ebf26; font-weight: bold">in</span> <span style="color: #2fbccd">enumerate</span><span style="color: #d0d0d0">(results):</span>
+<a id="True-16" name="True-16" href="#True-16"></a>        <span style="color: #6ebf26; font-weight: bold">try</span><span style="color: #d0d0d0">:</span>
+<a id="True-17" name="True-17" href="#True-17"></a>            <span style="color: #d0d0d0">temp_array</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">result.get()</span>
+<a id="True-18" name="True-18" href="#True-18"></a>            <span style="color: #d0d0d0">shadow_map</span> <span style="color: #d0d0d0">+=</span> <span style="color: #d0d0d0">temp_array</span>
+<a id="True-19" name="True-19" href="#True-19"></a>        <span style="color: #6ebf26; font-weight: bold">except</span> <span style="color: #bbbbbb">Exception</span> <span style="color: #6ebf26; font-weight: bold">as</span> <span style="color: #d0d0d0">e:</span>
+<a id="True-20" name="True-20" href="#True-20"></a>            <span style="color: #2fbccd">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">f&quot;Error occurred for process {</span><span style="color: #d0d0d0">p</span><span style="color: #ed9d13">}: {</span><span style="color: #d0d0d0">e</span><span style="color: #ed9d13">}&quot;</span><span style="color: #d0d0d0">)</span>
+<a id="True-21" name="True-21" href="#True-21"></a>    
+<a id="True-22" name="True-22" href="#True-22"></a>    <span style="color: #d0d0d0">np.savetxt(Path.joinpath(ROOT_DIR,</span> <span style="color: #ed9d13">&quot;temp/shadow_map.txt&quot;</span><span style="color: #d0d0d0">),</span> <span style="color: #d0d0d0">shadow_map)</span>
+<a id="True-23" name="True-23" href="#True-23"></a>    <span style="color: #6ebf26; font-weight: bold">return</span> <span style="color: #d0d0d0">shadow_map</span>
 </pre></div>
+</div></div>
 </div>
-</div>
-</div>
+<section id="code-test">
+<h2>Code test<a class="headerlink" href="#code-test" title="Permalink to this heading">#</a></h2>
+<p>To test the code, a number of sun rays and rotor points are defined for a given time frame.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">########</span>
-<span class="c1"># Generate sun ray vectors</span>
-<span class="c1">########</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate sun ray vectors # </span>
 <span class="n">start_date</span> <span class="o">=</span> <span class="s1">&#39;2023-01-01 00:00:00&#39;</span>
 <span class="n">end_date</span> <span class="o">=</span> <span class="s1">&#39;2023-12-30 23:59:59&#39;</span>
 <span class="n">latitude</span> <span class="o">=</span> <span class="mi">55</span>
 <span class="n">longitude</span> <span class="o">=</span> <span class="mi">12</span>
-<span class="n">date_range</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end_date</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s2">&quot;min&quot;</span><span class="p">)</span>
+<span class="n">date_range</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end_date</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s2">&quot;10min&quot;</span><span class="p">)</span>
 <span class="n">sun_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">date_range</span><span class="p">),</span> <span class="mi">2</span><span class="p">])</span>
 
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">date</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">date_range</span><span class="p">):</span>
     <span class="n">az</span><span class="p">,</span> <span class="n">alt</span> <span class="o">=</span> <span class="n">solar_position</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">latitude</span><span class="p">,</span> <span class="n">longitude</span><span class="p">)</span>
     <span class="n">sun_pos</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">az</span><span class="p">,</span> <span class="n">alt</span>
-
-
 <span class="n">sun_pos</span> <span class="o">=</span> <span class="n">sun_pos</span><span class="p">[</span><span class="n">sun_pos</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">5</span><span class="p">)]</span>
 <span class="n">sun_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">sun_pos</span><span class="p">),</span> <span class="mi">3</span><span class="p">])</span>
 
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">pos</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sun_pos</span><span class="p">):</span>
     <span class="n">sun_vec</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="o">=</span> <span class="o">-</span><span class="n">solar_angles_to_vector</span><span class="p">(</span><span class="o">*</span><span class="n">pos</span><span class="p">)</span>
 
-<span class="c1">########</span>
-<span class="c1"># Generate turbine points</span>
-<span class="c1">########</span>
+<span class="c1"># Generate turbine points #</span>
 <span class="n">diameter</span> <span class="o">=</span> <span class="mi">100</span>
 <span class="n">n_vector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
 <span class="n">turbine_cord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">4.302e6</span><span class="p">,</span> <span class="mf">3.666e6</span><span class="p">,</span> <span class="mi">230</span><span class="p">])</span>
@@ -504,17 +553,12 @@ document.write(`
 <span class="n">r_list</span><span class="p">,</span> <span class="n">n_angle</span> <span class="o">=</span> <span class="n">rotor_point_spacing</span><span class="p">(</span><span class="n">diameter</span><span class="p">,</span> <span class="n">grid_element_size</span><span class="p">,</span> <span class="n">angle</span><span class="p">)</span>
 <span class="n">points</span> <span class="o">=</span> <span class="n">generate_turbine</span><span class="p">(</span><span class="n">r_list</span><span class="p">,</span> <span class="n">n_angle</span><span class="p">,</span> <span class="n">n_vector</span><span class="p">,</span> <span class="n">turbine_cord</span><span class="p">)</span>
 
-<span class="c1">########</span>
-<span class="c1"># Generate voxel map</span>
-<span class="c1">########</span>
+<span class="c1"># Generate voxel map #</span>
 <span class="n">map_boundaries</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">9.65</span><span class="p">,</span> <span class="mf">9.75</span><span class="p">,</span> <span class="mf">56.05</span><span class="p">,</span> <span class="mf">56.15</span><span class="p">])</span>
 <span class="n">shape</span> <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
 <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">voxel_map</span><span class="p">,</span> <span class="n">map_array</span> <span class="o">=</span> <span class="n">generate_voxel_map</span><span class="p">(</span><span class="n">map_boundaries</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
 
-<span class="c1">#######</span>
-<span class="c1"># Solve</span>
-<span class="c1">######</span>
-<span class="kn">from</span> <span class="nn">cython</span> <span class="kn">import</span> <span class="n">solve_shadow_map</span>
+<span class="c1"># Solve #</span>
 <span class="n">points</span> <span class="o">=</span> <span class="n">points</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 <span class="n">sun_vec</span> <span class="o">=</span> <span class="n">sun_vec</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 <span class="n">minBound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">Y</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">map_array</span><span class="p">)],</span> <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
@@ -524,50 +568,33 @@ document.write(`
 </div>
 </div>
 </div>
+<p>The code can then be executed using the <code class="docutils literal notranslate"><span class="pre">multiprocessing</span></code> function.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">multiprocessing</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">sun_vec</span><span class="p">,</span> <span class="n">minBound</span><span class="p">,</span> <span class="n">maxBound</span><span class="p">,</span> <span class="n">voxel_map</span><span class="p">,</span> <span class="n">processes</span><span class="p">):</span>
-    <span class="n">pool</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="n">processes</span><span class="o">=</span><span class="n">processes</span><span class="p">)</span>
-    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
-    
-    <span class="k">for</span> <span class="n">process</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">processes</span><span class="p">):</span>
-        <span class="n">rays</span> <span class="o">=</span> <span class="n">sun_vec</span><span class="p">[</span><span class="n">process</span><span class="p">::</span><span class="n">processes</span><span class="p">]</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">apply_async</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">rays</span><span class="p">,</span> <span class="n">minBound</span><span class="p">,</span> <span class="n">maxBound</span><span class="p">,</span> <span class="n">voxel_map</span><span class="p">))</span>
-        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-    
-    <span class="n">pool</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    <span class="n">pool</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
-    
-    <span class="n">shadow_map</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">voxel_map</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">])</span>
-    
-    <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">temp_array</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-            <span class="n">shadow_map</span> <span class="o">+=</span> <span class="n">temp_array</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error occurred for process </span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    
-    <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s2">&quot;../temp/shadow_map.txt&quot;</span><span class="p">,</span> <span class="n">shadow_map</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">shadow_map</span>
-
-<span class="n">shadow_map</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="p">(</span><span class="n">solve_shadow_map</span><span class="o">.</span><span class="n">solve_shadow_map_cy</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">sun_vec</span><span class="p">,</span> <span class="n">minBound</span><span class="p">,</span> <span class="n">maxBound</span><span class="p">,</span> <span class="n">voxel_map</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">processes</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">shadow_map</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="p">(</span><span class="n">solve_shadow_map</span><span class="o">.</span><span class="n">solve_shadow_map_cy</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">sun_vec</span><span class="p">,</span> <span class="n">minBound</span><span class="p">,</span> <span class="n">maxBound</span><span class="p">,</span> <span class="n">voxel_map</span><span class="p">,</span> <span class="n">processes</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
+<p>The result is displayed using a contour plot below.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<span class="n">ct</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">shadow_map</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s2">&quot;twilight&quot;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">LogNorm</span><span class="p">())</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">ct</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Shadow hours&#39;</span><span class="p">)</span>
+<span class="n">ct</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">shadow_map</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s2">&quot;twilight&quot;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">LogNorm</span><span class="p">())</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span> <span class="o">=</span> <span class="s2">&quot;Longitude&quot;</span><span class="p">,</span>
+       <span class="n">ylabel</span> <span class="o">=</span> <span class="s2">&quot;Latitude&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">ct</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Ray Tracing Collisions with Terrain&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/35be04369b26b5f4e78bfdf47596e45044de2455fdfb4cfe08f6e350829ca7ef.png" src="../../_images/35be04369b26b5f4e78bfdf47596e45044de2455fdfb4cfe08f6e350829ca7ef.png" />
+<img alt="../../_images/0e7ef3965452aca0eaf61186dfe7bd1a17e7f1f1e0c37a3ccba6141e0871173d.png" src="../../_images/0e7ef3965452aca0eaf61186dfe7bd1a17e7f1f1e0c37a3ccba6141e0871173d.png" />
 </div>
 </div>
+<p>As the shadow map results have not been normalized with the sampling rate of the sun ray calculation, the plot displays the amount of ray tracing collisions with the terrain and the to total amount of hours.</p>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -625,6 +652,20 @@ document.write(`
             
             
               
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#code-test">Code test</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
             
           </div>
           <footer class="bd-footer-content">
@@ -634,7 +675,7 @@ document.write(`
   <div class="footer-item">
     
 <p class="component-author">
-By The Jupyter Book Community
+By Frederik P. W. Rasmussen
 </p>
 
   </div>

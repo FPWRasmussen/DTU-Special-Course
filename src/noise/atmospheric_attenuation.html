@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Atmospheric Attenuation &#8212; My sample book</title>
+    <title>Atmospheric Attenuation &#8212; DTU Special Course</title>
   
   
   
@@ -67,6 +67,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'src/noise/atmospheric_attenuation';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Bibliography" href="../bibliography.html" />
     <link rel="prev" title="Multiprocessing" href="../shadow/multiprocessing.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -168,6 +169,7 @@ const thebe_selector_output = ".output, .cell_output"
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="noise_map.html">Noise Map</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../map/elevation_handler.html">Elevation Handler</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../visual/visual_impact.html">Visual Impact</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../visual/3d_object_to_image.html">3D Object to Image</a></li>
@@ -182,6 +184,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 </li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Atmospheric Attenuation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
 </ul>
 
     </div>
@@ -448,8 +451,15 @@ document.write(`
 <h1>Atmospheric Attenuation<a class="headerlink" href="#atmospheric-attenuation" title="Permalink to this heading">#</a></h1>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="p">))</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">src.utils</span> <span class="kn">import</span> <span class="n">atmospheric_absorption</span><span class="p">,</span> <span class="n">print_code</span>
+<span class="kn">from</span> <span class="nn">IPython.core.display</span> <span class="kn">import</span> <span class="n">HTML</span>
 </pre></div>
 </div>
 </div>
@@ -457,53 +467,57 @@ document.write(`
 <p>As the noise is propogated through the air, the noise is reduced</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">absorption</span><span class="p">(</span><span class="n">f</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">rh</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">ps</span><span class="o">=</span><span class="mf">1.01325e5</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; </span>
-<span class="sd">    Calculate the attenuation coefficient for a given frequency, temperature, relative humidity, and atmospheric pressure.</span>
-<span class="sd">    </span>
-<span class="sd">    Input:</span>
-<span class="sd">    f: frequency in Hz</span>
-<span class="sd">    t: temperature in °C</span>
-<span class="sd">    rh: relative humidity in %</span>
-<span class="sd">    ps: atmospheric pressure in Pa</span>
-<span class="sd">    </span>
-<span class="sd">    Output:</span>
-<span class="sd">    alpha: attenuation coefficient</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    
-    <span class="c1"># Convert atmospheric pressure to a variable that won&#39;t be modified</span>
-    <span class="n">ps0</span> <span class="o">=</span> <span class="mf">1.01325e5</span>
-    
-    <span class="c1"># Convert temperature from Celsius to Kelvin</span>
-    <span class="n">T</span> <span class="o">=</span> <span class="n">t</span> <span class="o">+</span> <span class="mf">273.15</span>
-    <span class="c1"># Reference temperature in Kelvin</span>
-    <span class="n">T0</span> <span class="o">=</span> <span class="mf">293.15</span>
-    
-    <span class="c1"># Reference temperature in Kelvin for saturation vapor pressure</span>
-    <span class="n">T01</span> <span class="o">=</span> <span class="mf">273.16</span>
-    
-    <span class="c1"># Calculate saturation vapor pressure constant</span>
-    <span class="n">Csat</span> <span class="o">=</span> <span class="o">-</span><span class="mf">6.8346</span> <span class="o">*</span> <span class="p">(</span><span class="n">T01</span><span class="o">/</span><span class="n">T</span><span class="p">)</span><span class="o">**</span><span class="mf">1.261</span> <span class="o">+</span> <span class="mf">4.6151</span>
-    
-    <span class="c1"># Calculate saturation vapor pressure</span>
-    <span class="n">rhosat</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="n">Csat</span>
-    
-    <span class="c1"># Calculate relative humidity ratio</span>
-    <span class="n">H</span> <span class="o">=</span> <span class="n">rhosat</span> <span class="o">*</span> <span class="n">rh</span> <span class="o">*</span> <span class="n">ps0</span> <span class="o">/</span> <span class="n">ps</span>
-    
-    <span class="c1"># Calculate frequency-dependent term for attenuation due to water vapor</span>
-    <span class="n">frn</span> <span class="o">=</span> <span class="p">(</span><span class="n">ps</span> <span class="o">/</span> <span class="n">ps0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">T0</span><span class="o">/</span><span class="n">T</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="mi">9</span> <span class="o">+</span> <span class="mi">280</span> <span class="o">*</span> <span class="n">H</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">4.17</span> <span class="o">*</span> <span class="p">((</span><span class="n">T0</span><span class="o">/</span><span class="n">T</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span>
-    
-    <span class="c1"># Calculate frequency-dependent term for attenuation due to oxygen</span>
-    <span class="n">fro</span> <span class="o">=</span> <span class="p">(</span><span class="n">ps</span> <span class="o">/</span> <span class="n">ps0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">24.0</span> <span class="o">+</span> <span class="mf">4.04e4</span> <span class="o">*</span> <span class="n">H</span> <span class="o">*</span> <span class="p">(</span><span class="mf">0.02</span> <span class="o">+</span> <span class="n">H</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">0.391</span> <span class="o">+</span> <span class="n">H</span><span class="p">))</span>
-    
-    <span class="c1"># Calculate the attenuation coefficient</span>
-    <span class="n">alpha</span> <span class="o">=</span> <span class="mi">20</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">*</span> <span class="n">f</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.84e-11</span> <span class="o">/</span> <span class="p">(</span> <span class="p">(</span><span class="n">T0</span><span class="o">/</span><span class="n">T</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">ps</span> <span class="o">/</span> <span class="n">ps0</span> <span class="p">)</span><span class="o">+</span> <span class="p">(</span><span class="n">T</span><span class="o">/</span><span class="n">T0</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">2.5</span><span class="p">)</span><span class="o">*</span> <span class="p">(</span><span class="mf">0.10680</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">3352</span> <span class="o">/</span> <span class="n">T</span><span class="p">)</span> <span class="o">*</span> <span class="n">frn</span> <span class="o">/</span> <span class="p">(</span><span class="n">f</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">frn</span> <span class="o">*</span> <span class="n">frn</span><span class="p">)</span><span class="o">+</span> <span class="mf">0.01278</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">2239.1</span> <span class="o">/</span> <span class="n">T</span><span class="p">)</span> <span class="o">*</span> <span class="n">fro</span> <span class="o">/</span> <span class="p">(</span><span class="n">f</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">fro</span> <span class="o">*</span> <span class="n">fro</span><span class="p">)))</span>
-    
-    <span class="k">return</span> <span class="n">alpha</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">HTML</span><span class="p">(</span><span class="n">print_code</span><span class="p">(</span><span class="n">atmospheric_absorption</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class="highlight" style="background: #202020"><pre style="line-height: 125%;"><span></span><a id="True-1" name="True-1" href="#True-1"></a><span style="color: #6ebf26; font-weight: bold">def</span> <span style="color: #71adff">atmospheric_absorption</span><span style="color: #d0d0d0">(f=</span><span style="color: #51b2fd">1000</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">t=</span><span style="color: #51b2fd">10</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">rh=</span><span style="color: #51b2fd">80</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">ps=</span><span style="color: #51b2fd">1.01325e5</span><span style="color: #d0d0d0">):</span>
+<a id="True-2" name="True-2" href="#True-2"></a><span style="color: #666666">    </span><span style="color: #ed9d13">&quot;&quot;&quot; </span>
+<a id="True-3" name="True-3" href="#True-3"></a><span style="color: #ed9d13">    Calculate the attenuation coefficient for a given frequency, temperature, relative humidity, and atmospheric pressure.</span>
+<a id="True-4" name="True-4" href="#True-4"></a><span style="color: #ed9d13">    </span>
+<a id="True-5" name="True-5" href="#True-5"></a><span style="color: #ed9d13">    Input:</span>
+<a id="True-6" name="True-6" href="#True-6"></a><span style="color: #ed9d13">    f: frequency in Hz</span>
+<a id="True-7" name="True-7" href="#True-7"></a><span style="color: #ed9d13">    t: temperature in C</span>
+<a id="True-8" name="True-8" href="#True-8"></a><span style="color: #ed9d13">    rh: relative humidity in %</span>
+<a id="True-9" name="True-9" href="#True-9"></a><span style="color: #ed9d13">    ps: atmospheric pressure in Pa</span>
+<a id="True-10" name="True-10" href="#True-10"></a><span style="color: #ed9d13">    </span>
+<a id="True-11" name="True-11" href="#True-11"></a><span style="color: #ed9d13">    Output:</span>
+<a id="True-12" name="True-12" href="#True-12"></a><span style="color: #ed9d13">    alpha: attenuation coefficient</span>
+<a id="True-13" name="True-13" href="#True-13"></a><span style="color: #ed9d13">    &quot;&quot;&quot;</span>
+<a id="True-14" name="True-14" href="#True-14"></a>    
+<a id="True-15" name="True-15" href="#True-15"></a>    <span style="color: #ababab; font-style: italic"># Convert atmospheric pressure to a variable that won&#39;t be modified</span>
+<a id="True-16" name="True-16" href="#True-16"></a>    <span style="color: #d0d0d0">ps0</span> <span style="color: #d0d0d0">=</span> <span style="color: #51b2fd">1.01325e5</span>
+<a id="True-17" name="True-17" href="#True-17"></a>    
+<a id="True-18" name="True-18" href="#True-18"></a>    <span style="color: #ababab; font-style: italic"># Convert temperature from Celsius to Kelvin</span>
+<a id="True-19" name="True-19" href="#True-19"></a>    <span style="color: #d0d0d0">T</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">t</span> <span style="color: #d0d0d0">+</span> <span style="color: #51b2fd">273.15</span>
+<a id="True-20" name="True-20" href="#True-20"></a>    <span style="color: #ababab; font-style: italic"># Reference temperature in Kelvin</span>
+<a id="True-21" name="True-21" href="#True-21"></a>    <span style="color: #d0d0d0">T0</span> <span style="color: #d0d0d0">=</span> <span style="color: #51b2fd">293.15</span>
+<a id="True-22" name="True-22" href="#True-22"></a>    
+<a id="True-23" name="True-23" href="#True-23"></a>    <span style="color: #ababab; font-style: italic"># Reference temperature in Kelvin for saturation vapor pressure</span>
+<a id="True-24" name="True-24" href="#True-24"></a>    <span style="color: #d0d0d0">T01</span> <span style="color: #d0d0d0">=</span> <span style="color: #51b2fd">273.16</span>
+<a id="True-25" name="True-25" href="#True-25"></a>    
+<a id="True-26" name="True-26" href="#True-26"></a>    <span style="color: #ababab; font-style: italic"># Calculate saturation vapor pressure constant</span>
+<a id="True-27" name="True-27" href="#True-27"></a>    <span style="color: #d0d0d0">Csat</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">-</span><span style="color: #51b2fd">6.8346</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">(T01/T)**</span><span style="color: #51b2fd">1.261</span> <span style="color: #d0d0d0">+</span> <span style="color: #51b2fd">4.6151</span>
+<a id="True-28" name="True-28" href="#True-28"></a>    
+<a id="True-29" name="True-29" href="#True-29"></a>    <span style="color: #ababab; font-style: italic"># Calculate saturation vapor pressure</span>
+<a id="True-30" name="True-30" href="#True-30"></a>    <span style="color: #d0d0d0">rhosat</span> <span style="color: #d0d0d0">=</span> <span style="color: #51b2fd">10</span><span style="color: #d0d0d0">**Csat</span>
+<a id="True-31" name="True-31" href="#True-31"></a>    
+<a id="True-32" name="True-32" href="#True-32"></a>    <span style="color: #ababab; font-style: italic"># Calculate relative humidity ratio</span>
+<a id="True-33" name="True-33" href="#True-33"></a>    <span style="color: #d0d0d0">H</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">rhosat</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">rh</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">ps0</span> <span style="color: #d0d0d0">/</span> <span style="color: #d0d0d0">ps</span>
+<a id="True-34" name="True-34" href="#True-34"></a>    
+<a id="True-35" name="True-35" href="#True-35"></a>    <span style="color: #ababab; font-style: italic"># Calculate frequency-dependent term for attenuation due to water vapor</span>
+<a id="True-36" name="True-36" href="#True-36"></a>    <span style="color: #d0d0d0">frn</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">(ps</span> <span style="color: #d0d0d0">/</span> <span style="color: #d0d0d0">ps0)</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">(T0/T)**</span><span style="color: #51b2fd">0.5</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">(</span><span style="color: #51b2fd">9</span> <span style="color: #d0d0d0">+</span> <span style="color: #51b2fd">280</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">H</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">np.exp(-</span><span style="color: #51b2fd">4.17</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">((T0/T)**(</span><span style="color: #51b2fd">1</span><span style="color: #d0d0d0">/</span><span style="color: #51b2fd">3</span><span style="color: #d0d0d0">)</span> <span style="color: #d0d0d0">-</span> <span style="color: #51b2fd">1</span><span style="color: #d0d0d0">)))</span>
+<a id="True-37" name="True-37" href="#True-37"></a>    
+<a id="True-38" name="True-38" href="#True-38"></a>    <span style="color: #ababab; font-style: italic"># Calculate frequency-dependent term for attenuation due to oxygen</span>
+<a id="True-39" name="True-39" href="#True-39"></a>    <span style="color: #d0d0d0">fro</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">(ps</span> <span style="color: #d0d0d0">/</span> <span style="color: #d0d0d0">ps0)</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">(</span><span style="color: #51b2fd">24.0</span> <span style="color: #d0d0d0">+</span> <span style="color: #51b2fd">4.04e4</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">H</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">(</span><span style="color: #51b2fd">0.02</span> <span style="color: #d0d0d0">+</span> <span style="color: #d0d0d0">H)</span> <span style="color: #d0d0d0">/</span> <span style="color: #d0d0d0">(</span><span style="color: #51b2fd">0.391</span> <span style="color: #d0d0d0">+</span> <span style="color: #d0d0d0">H))</span>
+<a id="True-40" name="True-40" href="#True-40"></a>    
+<a id="True-41" name="True-41" href="#True-41"></a>    <span style="color: #ababab; font-style: italic"># Calculate the attenuation coefficient</span>
+<a id="True-42" name="True-42" href="#True-42"></a>    <span style="color: #d0d0d0">alpha</span> <span style="color: #d0d0d0">=</span> <span style="color: #51b2fd">20</span><span style="color: #d0d0d0">/np.log(</span><span style="color: #51b2fd">10</span><span style="color: #d0d0d0">)</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">f**</span><span style="color: #51b2fd">2</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">(</span><span style="color: #51b2fd">1.84e-11</span> <span style="color: #d0d0d0">/</span> <span style="color: #d0d0d0">(</span> <span style="color: #d0d0d0">(T0/T)**</span><span style="color: #51b2fd">0.5</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">ps</span> <span style="color: #d0d0d0">/</span> <span style="color: #d0d0d0">ps0</span> <span style="color: #d0d0d0">)+</span> <span style="color: #d0d0d0">(T/T0)**(-</span><span style="color: #51b2fd">2.5</span><span style="color: #d0d0d0">)*</span> <span style="color: #d0d0d0">(</span><span style="color: #51b2fd">0.10680</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">np.exp(-</span><span style="color: #51b2fd">3352</span> <span style="color: #d0d0d0">/</span> <span style="color: #d0d0d0">T)</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">frn</span> <span style="color: #d0d0d0">/</span> <span style="color: #d0d0d0">(f**</span><span style="color: #51b2fd">2</span> <span style="color: #d0d0d0">+</span> <span style="color: #d0d0d0">frn</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">frn)+</span> <span style="color: #51b2fd">0.01278</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">np.exp(-</span><span style="color: #51b2fd">2239.1</span> <span style="color: #d0d0d0">/</span> <span style="color: #d0d0d0">T)</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">fro</span> <span style="color: #d0d0d0">/</span> <span style="color: #d0d0d0">(f**</span><span style="color: #51b2fd">2</span> <span style="color: #d0d0d0">+</span> <span style="color: #d0d0d0">fro</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">fro)))</span>
+<a id="True-43" name="True-43" href="#True-43"></a>    
+<a id="True-44" name="True-44" href="#True-44"></a>    <span style="color: #6ebf26; font-weight: bold">return</span> <span style="color: #d0d0d0">alpha</span>
+</pre></div>
+</div></div>
 </div>
 <p>Lets visualize the atmospheric absorption for different relative humidities and frequencies.</p>
 <div class="cell docutils container">
@@ -516,7 +530,7 @@ document.write(`
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="k">for</span> <span class="n">rh</span> <span class="ow">in</span> <span class="n">rhs</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fs</span><span class="p">):</span>
-        <span class="n">alphas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">absorption</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">rh</span><span class="p">)</span>
+        <span class="n">alphas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">atmospheric_absorption</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">rh</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">alphas</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;rh:</span><span class="si">%d</span><span class="s1">&#39;</span><span class="o">%</span><span class="k">rh</span>)
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Absorption coefficient at </span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s1"> degrees&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -535,10 +549,10 @@ document.write(`
 <p>The noise power level thus decreases linearly with distance and can be calculated as <span class="math notranslate nohighlight">\(A_{atm} = \alpha \cdot d\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1300</span><span class="p">)</span>
 <span class="n">A0</span> <span class="o">=</span> <span class="mi">100</span>
 
-<span class="n">A</span> <span class="o">=</span> <span class="n">A0</span> <span class="o">-</span> <span class="n">absorption</span><span class="p">()</span> <span class="o">*</span> <span class="n">d</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">A0</span> <span class="o">-</span> <span class="n">atmospheric_absorption</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">80</span><span class="p">)</span> <span class="o">*</span> <span class="n">d</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">A</span><span class="p">)</span>
@@ -551,7 +565,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/41d312638e71b80d3e0759c69730220d99fd80a9c58f4df41b03cefb3c41b2f4.png" src="../../_images/41d312638e71b80d3e0759c69730220d99fd80a9c58f4df41b03cefb3c41b2f4.png" />
+<img alt="../../_images/1f0b1cfbbf4fadc53133f1116845cfa9624a40e21fa05c9da00b710486c96b40.png" src="../../_images/1f0b1cfbbf4fadc53133f1116845cfa9624a40e21fa05c9da00b710486c96b40.png" />
 </div>
 </div>
 <p>From the plot it can be seen the the effect is minimal.</p>
@@ -596,6 +610,15 @@ document.write(`
         <p class="prev-next-title">Multiprocessing</p>
       </div>
     </a>
+    <a class="right-next"
+       href="../bibliography.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Bibliography</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               
@@ -612,7 +635,7 @@ document.write(`
   <div class="footer-item">
     
 <p class="component-author">
-By The Jupyter Book Community
+By Frederik P. W. Rasmussen
 </p>
 
   </div>

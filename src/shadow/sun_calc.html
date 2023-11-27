@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Solar Calculations &#8212; My sample book</title>
+    <title>Solar Calculations &#8212; DTU Special Course</title>
   
   
   
@@ -167,6 +167,7 @@ const thebe_selector_output = ".output, .cell_output"
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../noise/noise_map.html">Noise Map</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../map/elevation_handler.html">Elevation Handler</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../visual/visual_impact.html">Visual Impact</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../visual/3d_object_to_image.html">3D Object to Image</a></li>
@@ -181,6 +182,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../noise/atmospheric_attenuation.html">Atmospheric Attenuation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
 </ul>
 
     </div>
@@ -418,7 +420,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
 </div></div>
       
     </div>
@@ -434,6 +438,24 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calculate-azimuth-and-altitude-of-sun">Calculate Azimuth and Altitude of Sun</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-of-script">Test of Script</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#convertion-to-unit-vector">Convertion to Unit Vector</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Test of Script</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#solar-analemma">Solar Analemma</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#position-of-the-sun-throughout-the-day">Position of the sun throughout the day</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sun-path-on-a-polar-graph">Sun path on a polar graph</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -445,9 +467,21 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="solar-calculations">
 <h1>Solar Calculations<a class="headerlink" href="#solar-calculations" title="Permalink to this heading">#</a></h1>
-<div class="cell docutils container">
+<p>In shadow flickering calculations, determining the sun’s path for a specified longitude and latitude is important for precise simulation of the shadow dynamics induced by wind turbines.</p>
+<p>The altitude and azimuth positions of the sun fluctuate throughout the day and across seasons. Computing the sun’s path for a particular longitude and latitude allows us to model the dynamic sun positions over time, thereby capturing the temporal variations in shadow patterns.</p>
+<p>The calculations presented in this chapter are based on the principles outlined in <span id="id1">Quae.nl [<a class="reference internal" href="../bibliography.html#id4" title="Quae.nl. Astronomy answers: position of the sun. 2021. URL: https://www.aa.quae.nl/en/reken/zonpositie.html (visited on 2023-11-27).">3</a>]</span>.</p>
+<div class="cell tag_hide-input tag_thebe-init docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">print_code</span><span class="p">,</span> <span class="n">solar_angles_to_vector</span><span class="p">,</span> <span class="n">solar_position</span><span class="p">,</span> <span class="n">add_solar_axis</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="p">))</span>
+<span class="kn">from</span> <span class="nn">src.utils</span> <span class="kn">import</span> <span class="n">print_code</span><span class="p">,</span> <span class="n">solar_angles_to_vector</span><span class="p">,</span> <span class="n">solar_position</span><span class="p">,</span> <span class="n">add_solar_axis</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">IPython.core.display</span> <span class="kn">import</span> <span class="n">HTML</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -456,75 +490,27 @@ document.write(`
 <span class="kn">import</span> <span class="nn">cartopy.crs</span> <span class="k">as</span> <span class="nn">ccrs</span>
 <span class="kn">from</span> <span class="nn">cartopy.mpl.gridliner</span> <span class="kn">import</span> <span class="n">LATITUDE_FORMATTER</span><span class="p">,</span> <span class="n">LONGITUDE_FORMATTER</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">matplotlib.dates</span> <span class="k">as</span> <span class="nn">mdates</span>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">print_code</span><span class="p">,</span> <span class="n">solar_angles_to_vector</span><span class="p">,</span> <span class="n">solar_position</span><span class="p">,</span> <span class="n">add_solar_axis</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">from</span> <span class="nn">IPython.core.display</span> <span class="kn">import</span> <span class="n">HTML</span>
-
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;utils&#39;
-</pre></div>
+</details>
 </div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">HTML</span><span class="p">(</span><span class="n">print_code</span><span class="p">(</span><span class="n">solar_angles_to_vector</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div class="highlight" style="background: #202020"><pre style="line-height: 125%;"><span></span><a id="True-1" name="True-1" href="#True-1"></a><span style="color: #6ebf26; font-weight: bold">def</span> <span style="color: #71adff">solar_angles_to_vector</span><span style="color: #d0d0d0">(azimuth,</span> <span style="color: #d0d0d0">altitude):</span>
-<a id="True-2" name="True-2" href="#True-2"></a><span style="color: #666666">    </span><span style="color: #ed9d13">&quot;&quot;&quot;</span>
-<a id="True-3" name="True-3" href="#True-3"></a><span style="color: #ed9d13">    Convert solar azimuth and altitude angles to a 3D vector</span>
-<a id="True-4" name="True-4" href="#True-4"></a>
-<a id="True-5" name="True-5" href="#True-5"></a><span style="color: #ed9d13">    Args:</span>
-<a id="True-6" name="True-6" href="#True-6"></a><span style="color: #ed9d13">        azimuth (float): Solar azimuth angle in radians</span>
-<a id="True-7" name="True-7" href="#True-7"></a><span style="color: #ed9d13">        altitude (float): Solar altitude angle in radians</span>
-<a id="True-8" name="True-8" href="#True-8"></a>
-<a id="True-9" name="True-9" href="#True-9"></a><span style="color: #ed9d13">    Returns:</span>
-<a id="True-10" name="True-10" href="#True-10"></a><span style="color: #ed9d13">        vec (np.ndarray): Normalized 3D vector representing sun direction from origin</span>
-<a id="True-11" name="True-11" href="#True-11"></a><span style="color: #ed9d13">    &quot;&quot;&quot;</span>
-<a id="True-12" name="True-12" href="#True-12"></a>    <span style="color: #ababab; font-style: italic"># Convert to radians</span>
-<a id="True-13" name="True-13" href="#True-13"></a>    <span style="color: #d0d0d0">azimuth</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">azimuth+np.pi/</span><span style="color: #51b2fd">2</span>
-<a id="True-14" name="True-14" href="#True-14"></a>
-<a id="True-15" name="True-15" href="#True-15"></a>    <span style="color: #ababab; font-style: italic"># Calculate 3D vector components</span>
-<a id="True-16" name="True-16" href="#True-16"></a>    <span style="color: #d0d0d0">x</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">-np.cos(azimuth)</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">np.cos(altitude)</span>
-<a id="True-17" name="True-17" href="#True-17"></a>    <span style="color: #d0d0d0">y</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">np.sin(azimuth)</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">np.cos(altitude)</span>
-<a id="True-18" name="True-18" href="#True-18"></a>    <span style="color: #d0d0d0">z</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">np.sin(altitude)</span>
-<a id="True-19" name="True-19" href="#True-19"></a>
-<a id="True-20" name="True-20" href="#True-20"></a>    <span style="color: #ababab; font-style: italic"># Normalize to unit vector</span>
-<a id="True-21" name="True-21" href="#True-21"></a>    <span style="color: #d0d0d0">vec</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">np.array([x,</span> <span style="color: #d0d0d0">y,</span> <span style="color: #d0d0d0">z])</span>
-<a id="True-22" name="True-22" href="#True-22"></a>    <span style="color: #d0d0d0">vec</span> <span style="color: #d0d0d0">/=</span> <span style="color: #d0d0d0">np.linalg.norm(vec)</span>
-<a id="True-23" name="True-23" href="#True-23"></a>
-<a id="True-24" name="True-24" href="#True-24"></a>    <span style="color: #6ebf26; font-weight: bold">return</span> <span style="color: #d0d0d0">vec</span>
-</pre></div>
-</div></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vec</span> <span class="o">=</span> <span class="n">solar_angles_to_vector</span><span class="p">(</span><span class="mi">135</span><span class="p">,</span> <span class="mi">179</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">vec</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[-0.08814742  0.99359368  0.07072217]
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
+<section id="calculate-azimuth-and-altitude-of-sun">
+<h2>Calculate Azimuth and Altitude of Sun<a class="headerlink" href="#calculate-azimuth-and-altitude-of-sun" title="Permalink to this heading">#</a></h2>
+<p>The key objective of solar calculations is to estimate the azimuth and altitude of the sun at a specified longitude, latitude, date, and time. The following code snippet achieves excactly this:</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">HTML</span><span class="p">(</span><span class="n">print_code</span><span class="p">(</span><span class="n">solar_position</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div class="highlight" style="background: #202020"><pre style="line-height: 125%;"><span></span><a id="True-1" name="True-1" href="#True-1"></a><span style="color: #6ebf26; font-weight: bold">def</span> <span style="color: #71adff">solar_position</span><span style="color: #d0d0d0">(date,</span> <span style="color: #d0d0d0">lat,</span> <span style="color: #d0d0d0">lng):</span>
 <a id="True-2" name="True-2" href="#True-2"></a><span style="color: #666666">    </span><span style="color: #ed9d13">&quot;&quot;&quot;</span>
@@ -567,19 +553,19 @@ document.write(`
 <a id="True-39" name="True-39" href="#True-39"></a>    <span style="color: #ababab; font-style: italic"># Calculate azimuth and altitude</span>
 <a id="True-40" name="True-40" href="#True-40"></a>    <span style="color: #d0d0d0">H</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">st</span> <span style="color: #d0d0d0">-</span> <span style="color: #d0d0d0">ra</span>
 <a id="True-41" name="True-41" href="#True-41"></a>    <span style="color: #d0d0d0">az</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">np.radians(</span><span style="color: #51b2fd">180</span><span style="color: #d0d0d0">)</span> <span style="color: #d0d0d0">+</span> <span style="color: #d0d0d0">np.arctan2(np.sin(H),</span> <span style="color: #d0d0d0">np.cos(H)</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">np.sin(rad</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">lat)</span> <span style="color: #d0d0d0">-</span> <span style="color: #d0d0d0">np.tan(dec)</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">np.cos(rad</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">lat))</span>
-<a id="True-42" name="True-42" href="#True-42"></a>    <span style="color: #ababab; font-style: italic"># if az &lt; 0:</span>
-<a id="True-43" name="True-43" href="#True-43"></a>    <span style="color: #ababab; font-style: italic">#     az += 2 * np.pi </span>
-<a id="True-44" name="True-44" href="#True-44"></a>    <span style="color: #d0d0d0">alt</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">np.arcsin(np.sin(rad</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">lat)</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">np.sin(dec)</span> <span style="color: #d0d0d0">+</span> <span style="color: #d0d0d0">np.cos(rad</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">lat)</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">np.cos(dec)</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">np.cos(H))</span>
-<a id="True-45" name="True-45" href="#True-45"></a>
-<a id="True-46" name="True-46" href="#True-46"></a>    <span style="color: #6ebf26; font-weight: bold">return</span> <span style="color: #d0d0d0">az,</span> <span style="color: #d0d0d0">alt</span>
+<a id="True-42" name="True-42" href="#True-42"></a>    <span style="color: #d0d0d0">alt</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">np.arcsin(np.sin(rad</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">lat)</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">np.sin(dec)</span> <span style="color: #d0d0d0">+</span> <span style="color: #d0d0d0">np.cos(rad</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">lat)</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">np.cos(dec)</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">np.cos(H))</span>
+<a id="True-43" name="True-43" href="#True-43"></a>    <span style="color: #6ebf26; font-weight: bold">return</span> <span style="color: #d0d0d0">az,</span> <span style="color: #d0d0d0">alt</span>
 </pre></div>
 </div></div>
 </div>
+<section id="test-of-script">
+<h3>Test of Script<a class="headerlink" href="#test-of-script" title="Permalink to this heading">#</a></h3>
+<p>Here is a brief test of the script, where the azimuth and altitude of the sun are determined in Copenhagen on the 6th of June at 12 o’clock.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2023</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-<span class="n">lat</span> <span class="o">=</span> <span class="mf">55.2</span> <span class="c1"># Copenhagen</span>
-<span class="n">lng</span> <span class="o">=</span> <span class="mf">12.575782667531543</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2023</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">lat</span> <span class="o">=</span> <span class="mf">55.692858003050134</span> <span class="c1"># Copenhagen</span>
+<span class="n">lng</span> <span class="o">=</span> <span class="mf">12.599278148554639</span>
 
 <span class="n">az</span><span class="p">,</span> <span class="n">alt</span> <span class="o">=</span> <span class="n">solar_position</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">)</span>
 
@@ -589,12 +575,80 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Azimuth: 46.92 degrees
-Altitude: -28.09 degrees
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Azimuth: 200.86 degrees
+Altitude: 56.33 degrees
 </pre></div>
 </div>
 </div>
 </div>
+</section>
+</section>
+<section id="convertion-to-unit-vector">
+<h2>Convertion to Unit Vector<a class="headerlink" href="#convertion-to-unit-vector" title="Permalink to this heading">#</a></h2>
+<p>Thereafter, the altitude and azimuth position of the sun is converted into a unit vector, such that it can be used by the ray tracing algorithm.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">HTML</span><span class="p">(</span><span class="n">print_code</span><span class="p">(</span><span class="n">solar_angles_to_vector</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class="highlight" style="background: #202020"><pre style="line-height: 125%;"><span></span><a id="True-1" name="True-1" href="#True-1"></a><span style="color: #6ebf26; font-weight: bold">def</span> <span style="color: #71adff">solar_angles_to_vector</span><span style="color: #d0d0d0">(azimuth,</span> <span style="color: #d0d0d0">altitude):</span>
+<a id="True-2" name="True-2" href="#True-2"></a><span style="color: #666666">    </span><span style="color: #ed9d13">&quot;&quot;&quot;</span>
+<a id="True-3" name="True-3" href="#True-3"></a><span style="color: #ed9d13">    Convert solar azimuth and altitude angles to a 3D vector</span>
+<a id="True-4" name="True-4" href="#True-4"></a>
+<a id="True-5" name="True-5" href="#True-5"></a><span style="color: #ed9d13">    Args:</span>
+<a id="True-6" name="True-6" href="#True-6"></a><span style="color: #ed9d13">        azimuth (float): Solar azimuth angle in radians</span>
+<a id="True-7" name="True-7" href="#True-7"></a><span style="color: #ed9d13">        altitude (float): Solar altitude angle in radians</span>
+<a id="True-8" name="True-8" href="#True-8"></a>
+<a id="True-9" name="True-9" href="#True-9"></a><span style="color: #ed9d13">    Returns:</span>
+<a id="True-10" name="True-10" href="#True-10"></a><span style="color: #ed9d13">        vec (np.ndarray): Normalized 3D vector representing sun direction from origin</span>
+<a id="True-11" name="True-11" href="#True-11"></a><span style="color: #ed9d13">    &quot;&quot;&quot;</span>
+<a id="True-12" name="True-12" href="#True-12"></a>    <span style="color: #d0d0d0">azimuth</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">azimuth+np.pi/</span><span style="color: #51b2fd">2</span>
+<a id="True-13" name="True-13" href="#True-13"></a>
+<a id="True-14" name="True-14" href="#True-14"></a>    <span style="color: #ababab; font-style: italic"># Calculate 3D vector components</span>
+<a id="True-15" name="True-15" href="#True-15"></a>    <span style="color: #d0d0d0">x</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">-np.cos(azimuth)</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">np.cos(altitude)</span>
+<a id="True-16" name="True-16" href="#True-16"></a>    <span style="color: #d0d0d0">y</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">np.sin(azimuth)</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">np.cos(altitude)</span>
+<a id="True-17" name="True-17" href="#True-17"></a>    <span style="color: #d0d0d0">z</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">np.sin(altitude)</span>
+<a id="True-18" name="True-18" href="#True-18"></a>
+<a id="True-19" name="True-19" href="#True-19"></a>    <span style="color: #ababab; font-style: italic"># Normalize to unit vector</span>
+<a id="True-20" name="True-20" href="#True-20"></a>    <span style="color: #d0d0d0">vec</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">np.array([x,</span> <span style="color: #d0d0d0">y,</span> <span style="color: #d0d0d0">z])</span>
+<a id="True-21" name="True-21" href="#True-21"></a>    <span style="color: #d0d0d0">vec</span> <span style="color: #d0d0d0">/=</span> <span style="color: #d0d0d0">np.linalg.norm(vec)</span>
+<a id="True-22" name="True-22" href="#True-22"></a>
+<a id="True-23" name="True-23" href="#True-23"></a>    <span style="color: #6ebf26; font-weight: bold">return</span> <span style="color: #d0d0d0">vec</span>
+</pre></div>
+</div></div>
+</div>
+<section id="id2">
+<h3>Test of Script<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h3>
+<p>Below a small test of the script can be found. Note that the vector defines the direction vector from the ground towards the sun.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vec</span> <span class="o">=</span> <span class="n">solar_angles_to_vector</span><span class="p">(</span><span class="mi">135</span><span class="p">,</span> <span class="mi">179</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Components of unit vector:</span><span class="se">\n</span><span class="s2">X: </span><span class="si">{</span><span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="se">\n</span><span class="s2">Y: </span><span class="si">{</span><span class="n">vec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="se">\n</span><span class="s2">Z: </span><span class="si">{</span><span class="n">vec</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Components of unit vector:
+X: -0.09
+Y: 0.99
+Z: 0.07
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="solar-analemma">
+<h2>Solar Analemma<a class="headerlink" href="#solar-analemma" title="Permalink to this heading">#</a></h2>
+<p>An analemma is a figure-eight curve that illustrates the Sun’s changing position at the same time each day throughout the year. This curve can be generated by plotting the Sun’s location from a fixed spot on Earth daily or by graphing its declination against time. The size and shape of the analemma are influenced by the observer’s position, providing a visual representation of the Sun’s varying position throughout the year.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">start_date</span> <span class="o">=</span> <span class="s1">&#39;2023-01-01 12:00:00&#39;</span>
@@ -619,13 +673,17 @@ Altitude: -28.09 degrees
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/482681aab9221be3f4f68f414d9b51134b40da29b23db082e82acef9c620a729.png" src="../../_images/482681aab9221be3f4f68f414d9b51134b40da29b23db082e82acef9c620a729.png" />
+<img alt="../../_images/b9b8e1e4dd779da95b8e19c805fabaa458e79ceb57adc266f6360ebe8eaa5820.png" src="../../_images/b9b8e1e4dd779da95b8e19c805fabaa458e79ceb57adc266f6360ebe8eaa5820.png" />
 </div>
 </div>
+</section>
+<section id="position-of-the-sun-throughout-the-day">
+<h2>Position of the sun throughout the day<a class="headerlink" href="#position-of-the-sun-throughout-the-day" title="Permalink to this heading">#</a></h2>
+<p>Using the previously displayed functions, the path of the sun throughout the day can be mapped you as below:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">start_date</span> <span class="o">=</span> <span class="s1">&#39;2023-03-01 00:00:00&#39;</span>
-<span class="n">end_date</span> <span class="o">=</span> <span class="s1">&#39;2023-03-01 23:59:59&#39;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">start_date</span> <span class="o">=</span> <span class="s1">&#39;2023-06-15 00:00:00&#39;</span>
+<span class="n">end_date</span> <span class="o">=</span> <span class="s1">&#39;2023-06-15 23:59:59&#39;</span>
 <span class="n">date_range</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end_date</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s2">&quot;min&quot;</span><span class="p">)</span>
 <span class="n">sun_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">date_range</span><span class="p">),</span> <span class="mi">2</span><span class="p">])</span>
 <span class="n">sun_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">date_range</span><span class="p">),</span> <span class="mi">3</span><span class="p">])</span>
@@ -648,14 +706,13 @@ Altitude: -28.09 degrees
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/8eb04ddc2016a1530e6ea8307e42197a3c41b5793fb5fd3f584f121137c5fb4d.png" src="../../_images/8eb04ddc2016a1530e6ea8307e42197a3c41b5793fb5fd3f584f121137c5fb4d.png" />
+<img alt="../../_images/a29c4c3c73102fbe861e24076f2b7cdd4618589fdf8c80dcf0402cf49e7af933.png" src="../../_images/a29c4c3c73102fbe861e24076f2b7cdd4618589fdf8c80dcf0402cf49e7af933.png" />
 </div>
 </div>
+<p>Alternatively, the information can also be displayed using two plots as seen below:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.dates</span> <span class="k">as</span> <span class="nn">mdates</span>
-
-<span class="c1"># Plots for solar zenith and solar azimuth angles</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plots for solar zenith and solar azimuth angles</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Solar Position&#39;</span><span class="p">)</span>
 
@@ -677,9 +734,13 @@ Altitude: -28.09 degrees
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/2cc0d7db7bf2c931a7b17b338b48b45404cc8c5d7ba9d53648a9d2dccba592c2.png" src="../../_images/2cc0d7db7bf2c931a7b17b338b48b45404cc8c5d7ba9d53648a9d2dccba592c2.png" />
+<img alt="../../_images/5b4e1f71fd06531961cdadd561ba414f5fdc9df4d7bffbd89ac9ff08f0a1940d.png" src="../../_images/5b4e1f71fd06531961cdadd561ba414f5fdc9df4d7bffbd89ac9ff08f0a1940d.png" />
 </div>
 </div>
+</section>
+<section id="sun-path-on-a-polar-graph">
+<h2>Sun path on a polar graph<a class="headerlink" href="#sun-path-on-a-polar-graph" title="Permalink to this heading">#</a></h2>
+<p>Finally, utilizing the functions to showcase the sun path on a polar graph provides a clear visualization of the solar trajectory throughout the day and across seasons. This proves to be an effective tool for comprehending solar dynamics in various geographic locations.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">positive_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">sun_pos</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
@@ -693,12 +754,12 @@ Altitude: -28.09 degrees
 <span class="n">sunrise_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">first_azimuth</span><span class="p">)],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">first_azimuth</span><span class="p">)]])</span>
 
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">circle_coords</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">)</span> <span class="c1"># circle</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">first_azimuth</span><span class="p">)],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">first_azimuth</span><span class="p">)],</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Sunrise: </span><span class="si">{</span><span class="p">(</span><span class="n">first_azimuth</span><span class="p">)</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">°&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">last_azimuth</span><span class="p">)],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">last_azimuth</span><span class="p">)],</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Sunset: </span><span class="si">{</span><span class="p">(</span><span class="n">last_azimuth</span><span class="p">)</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">°&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sun_vec</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">sun_vec</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;Path of Sun&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">circle_coords</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;Horizon&quot;</span><span class="p">)</span> <span class="c1"># circle</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">first_azimuth</span><span class="p">)],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">first_azimuth</span><span class="p">)],</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Sunrise: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">first_azimuth</span><span class="p">)</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">°&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">last_azimuth</span><span class="p">)],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">last_azimuth</span><span class="p">)],</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Sunset: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">last_azimuth</span><span class="p">)</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1">°&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sun_vec</span><span class="p">[:,</span><span class="mi">0</span><span class="p">][</span><span class="n">sun_vec</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">],</span> <span class="n">sun_vec</span><span class="p">[:,</span><span class="mi">1</span><span class="p">][</span><span class="n">sun_vec</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;g-&quot;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;Path of Sun (Day)&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper center&#39;</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">),</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 
-<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span> <span class="o">=</span> <span class="s2">&quot;upper left&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">,</span> <span class="n">adjustable</span><span class="o">=</span><span class="s1">&#39;box&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Solar Position&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
@@ -707,10 +768,10 @@ Altitude: -28.09 degrees
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/55c8061659eb329895f342dc4ab681897901a8effde3729c1c911ac8b9c75480.png" src="../../_images/55c8061659eb329895f342dc4ab681897901a8effde3729c1c911ac8b9c75480.png" />
+<img alt="../../_images/e44433eadea5393068ee8d8b01cf22b313d2ba433cafa315444fc95c266edab1.png" src="../../_images/e44433eadea5393068ee8d8b01cf22b313d2ba433cafa315444fc95c266edab1.png" />
 </div>
 </div>
-<p>This solar position can when be plotted on a map.</p>
+<p>Furthermore, this solar position can when be plotted on a map.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">proj</span> <span class="o">=</span> <span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">()</span>
@@ -742,9 +803,10 @@ Altitude: -28.09 degrees
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/988e52215e9626c7e67af828ee09036d58e63f316e42ec8f032de30479071eef.png" src="../../_images/988e52215e9626c7e67af828ee09036d58e63f316e42ec8f032de30479071eef.png" />
+<img alt="../../_images/a080399f8264b014a147479991f2b29b30898ae913aee1f201421cabfd409310.png" src="../../_images/a080399f8264b014a147479991f2b29b30898ae913aee1f201421cabfd409310.png" />
 </div>
 </div>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -802,6 +864,30 @@ Altitude: -28.09 degrees
             
             
               
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calculate-azimuth-and-altitude-of-sun">Calculate Azimuth and Altitude of Sun</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#test-of-script">Test of Script</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#convertion-to-unit-vector">Convertion to Unit Vector</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Test of Script</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#solar-analemma">Solar Analemma</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#position-of-the-sun-throughout-the-day">Position of the sun throughout the day</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sun-path-on-a-polar-graph">Sun path on a polar graph</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
             
           </div>
           <footer class="bd-footer-content">
@@ -811,7 +897,7 @@ Altitude: -28.09 degrees
   <div class="footer-item">
     
 <p class="component-author">
-By The Jupyter Book Community
+By Frederik P. W. Rasmussen
 </p>
 
   </div>

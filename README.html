@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>DTU-Special-Course &#8212; My sample book</title>
+    <title>Wind Energy Analysis Tools &#8212; DTU Special Course</title>
   
   
   
@@ -165,6 +165,7 @@ const thebe_selector_output = ".output, .cell_output"
             </li>
         </ul>
         <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="src/noise/noise_map.html">Noise Map</a></li>
 <li class="toctree-l1"><a class="reference internal" href="src/map/elevation_handler.html">Elevation Handler</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="src/visual/visual_impact.html">Visual Impact</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="src/visual/3d_object_to_image.html">3D Object to Image</a></li>
@@ -179,6 +180,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="src/noise/atmospheric_attenuation.html">Atmospheric Attenuation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src/bibliography.html">Bibliography</a></li>
 </ul>
 
     </div>
@@ -362,7 +364,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>DTU-Special-Course</h1>
+    <h1>Wind Energy Analysis Tools</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -372,10 +374,11 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tasks">Tasks</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#notes">Notes:</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#disclaimer">Disclaimer</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#acknowledgments">Acknowledgments</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tasks">Tasks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notes">Notes:</a></li>
 </ul>
             </nav>
         </div>
@@ -387,8 +390,22 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="dtu-special-course">
-<h1>DTU-Special-Course<a class="headerlink" href="#dtu-special-course" title="Permalink to this heading">#</a></h1>
+  <p><a class="reference external" href="https://mybinder.org/v2/gh/FPWRasmussen/DTU-Special-Course/main"><img alt="Binder" src="https://mybinder.org/badge_logo.svg" /></a></p>
+<section class="tex2jax_ignore mathjax_ignore" id="wind-energy-analysis-tools">
+<h1>Wind Energy Analysis Tools<a class="headerlink" href="#wind-energy-analysis-tools" title="Permalink to this heading">#</a></h1>
+<p>This repository contains a collection of Jupyter notebooks developed as a part of the special course “Noise and Visual Impact Analysis in Wind Energy” at DTU (Technical University of Denmark). The notebooks are designed to assist in wind turbine impact assessments, specifically addressing shadow flickering, noise calculations (ISO 9613-2), and generating visual impact assessments using the Google Street View API.</p>
+<section id="disclaimer">
+<h2>Disclaimer<a class="headerlink" href="#disclaimer" title="Permalink to this heading">#</a></h2>
+<p>This project is a student initiative, and as such, the author does not assume any liability or provide any warranty for the quality of the product. Users are encouraged to contribute to further development under the terms of the <a class="reference download internal" download="" href="_downloads/9879d6db96fd29134fc802214163b95a/LICENSE"><span class="xref download myst">GNU Affero General Public License v3.0</span></a> license agreement.</p>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">#</a></h2>
+<p>To use the notebooks, follow the steps outlined below: (TODO)</p>
+</section>
+<section id="acknowledgments">
+<h2>Acknowledgments<a class="headerlink" href="#acknowledgments" title="Permalink to this heading">#</a></h2>
+<p>Special thanks to the course instructors at the DTU Wind department for their guidance and support during the development of these tools.</p>
+</section>
 <section id="tasks">
 <h2>Tasks<a class="headerlink" href="#tasks" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
@@ -396,16 +413,16 @@ document.write(`
 <li><p>Jupyter book (<a class="reference external" href="https://jupyterbook.org/en/stable/publish/gh-pages.html">https://jupyterbook.org/en/stable/publish/gh-pages.html</a>)</p></li>
 <li><p>pytest (<a class="reference external" href="https://docs.pytest.org/en/7.4.x/">https://docs.pytest.org/en/7.4.x/</a>)</p></li>
 </ul>
+</section>
 <section id="notes">
-<h3>Notes:<a class="headerlink" href="#notes" title="Permalink to this heading">#</a></h3>
-<p><em>- To build the Jupyter book use:</em> jupyter-book build DTU\ Special\ Course/ –path-output DTU\ Special\ Course/jupyter-book/ –config DTU\ Special\ Course/jupyter-book/_config.yml
-<em>- To push the changes to Github:</em> ghp-import -n -p -f _build/html</p>
+<h2>Notes:<a class="headerlink" href="#notes" title="Permalink to this heading">#</a></h2>
+<p><em>- To build the Jupyter book use:</em> jupyter-book build DTU\ Special\ Course/ –path-output DTU\ Special\ Course/jupyter-book/ –config DTU\ Special\ Course/jupyter-book/_config.yml (–builder pdfhtml)</p>
+<p><em>- To push the changes to Github:</em> ghp-import -n -p -f _build/html</p>
 <ul class="simple">
 <li><p>Use scoped-style</p></li>
 <li><p>pyproject.toml (dependencies)</p></li>
 </ul>
 <p>python <a class="reference external" href="http://setup.py">setup.py</a> build_ext –inplace</p>
-</section>
 </section>
 </section>
 
@@ -454,10 +471,11 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tasks">Tasks</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#notes">Notes:</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#disclaimer">Disclaimer</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#acknowledgments">Acknowledgments</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tasks">Tasks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notes">Notes:</a></li>
 </ul>
   </nav></div>
 
@@ -472,7 +490,7 @@ document.write(`
   <div class="footer-item">
     
 <p class="component-author">
-By The Jupyter Book Community
+By Frederik P. W. Rasmussen
 </p>
 
   </div>

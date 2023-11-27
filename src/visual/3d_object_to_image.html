@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Convert OBJ file to PNG &#8212; My sample book</title>
+    <title>Convert OBJ file to PNG &#8212; DTU Special Course</title>
   
   
   
@@ -167,6 +167,7 @@ const thebe_selector_output = ".output, .cell_output"
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../noise/noise_map.html">Noise Map</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../map/elevation_handler.html">Elevation Handler</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="visual_impact.html">Visual Impact</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">3D Object to Image</a></li>
@@ -181,6 +182,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../noise/atmospheric_attenuation.html">Atmospheric Attenuation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
 </ul>
 
     </div>
@@ -448,23 +450,17 @@ document.write(`
 <p>In the notebook .obj files are loaded and converted to .png files</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">print_code</span><span class="p">,</span> <span class="n">load_and_normalize_obj</span><span class="p">,</span> <span class="n">plot_trisurface</span><span class="p">,</span> <span class="n">crop_image</span><span class="p">,</span> <span class="n">adjust_image</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> widget
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="p">))</span>
+<span class="kn">from</span> <span class="nn">src.utils</span> <span class="kn">import</span> <span class="n">print_code</span><span class="p">,</span> <span class="n">load_and_normalize_obj</span><span class="p">,</span> <span class="n">plot_trisurface</span><span class="p">,</span> <span class="n">crop_image</span><span class="p">,</span> <span class="n">adjust_image</span>
+<span class="c1"># from utils import print_code, load_and_normalize_obj, plot_trisurface, crop_image, adjust_image</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageEnhance</span>
 <span class="kn">from</span> <span class="nn">IPython.core.display</span> <span class="kn">import</span> <span class="n">HTML</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">print_code</span><span class="p">,</span> <span class="n">load_and_normalize_obj</span><span class="p">,</span> <span class="n">plot_trisurface</span><span class="p">,</span> <span class="n">crop_image</span><span class="p">,</span> <span class="n">adjust_image</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;utils&#39;
 </pre></div>
 </div>
 </div>
@@ -504,21 +500,20 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>V:  [[-0.12417317  0.04519447  0.20578117]
- [-0.12417317  0.03176677  0.20578117]
- [-0.12220532  0.04519447  0.20578117]
- ...
- [-0.13311945 -0.06512105  0.1551131 ]
- [ 0.12557878 -0.03222979  0.16860694]
- [-0.12559531  0.03221325  0.16860694]] 
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">FileNotFoundError</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">V</span><span class="p">,</span> <span class="n">F</span> <span class="o">=</span> <span class="n">load_and_normalize_obj</span><span class="p">(</span><span class="s2">&quot;../assets/eiffel.obj&quot;</span><span class="p">,</span> <span class="n">total_height</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;V: &quot;</span><span class="p">,</span><span class="n">V</span><span class="p">,</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">F: &quot;</span><span class="p">,</span> <span class="n">F</span><span class="p">)</span>
 
-F:  [[     0      1      2]
- [     2      1      3]
- [     4      5      6]
- ...
- [166246 166247 166248]
- [ 26963 166249  26961]
- [108153 166250 108151]]
+<span class="nn">File ~/Dropbox/DTU Special Course/src/utils.py:335,</span> in <span class="ni">load_and_normalize_obj</span><span class="nt">(file_path, total_height)</span>
+<span class="g g-Whitespace">    </span><span class="mi">333</span> <span class="k">def</span> <span class="nf">load_and_normalize_obj</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">total_height</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<span class="g g-Whitespace">    </span><span class="mi">334</span>     <span class="n">V</span><span class="p">,</span> <span class="n">F</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+<span class="ne">--&gt; </span><span class="mi">335</span>     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">336</span>         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>
+<span class="g g-Whitespace">    </span><span class="mi">337</span>             <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">):</span>
+
+<span class="ne">FileNotFoundError</span>: [Errno 2] No such file or directory: &#39;../assets/eiffel.obj&#39;
 </pre></div>
 </div>
 </div>
@@ -713,7 +708,7 @@ F:  [[     0      1      2]
   <div class="footer-item">
     
 <p class="component-author">
-By The Jupyter Book Community
+By Frederik P. W. Rasmussen
 </p>
 
   </div>
