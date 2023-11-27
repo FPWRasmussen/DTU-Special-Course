@@ -182,6 +182,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../noise/atmospheric_attenuation.html">Atmospheric Attenuation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
 </ul>
 
     </div>
@@ -419,7 +420,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
 </div></div>
       
     </div>
@@ -435,6 +438,16 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-shadow-flicker">What is Shadow Flicker?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-script">Running the Script</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#displaying-to-results">Displaying to Results</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -446,173 +459,90 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="shadow-map">
 <h1>Shadow Map<a class="headerlink" href="#shadow-map" title="Permalink to this heading">#</a></h1>
-<div class="cell docutils container">
+<p>This chapter outlines the shadow mapping process, employing ray tracing to precisely delineate the patterns of shadow flickering attributed to a wind park. Through this method, a reliable estimation is obtained, facilitating a good assessment of the potential impact of shadow flickering on neighboring residents in the vicinity of the wind park.</p>
+<section id="what-is-shadow-flicker">
+<h2>What is Shadow Flicker?<a class="headerlink" href="#what-is-shadow-flicker" title="Permalink to this heading">#</a></h2>
+<p>Shadow flicker occurs when the sun shines through the rotating blades of a wind turbine, creating a dynamic shadow. This phenomenon raises concerns within nearby communities when the intermittent shadow from the turbine’s rotating blades passes over buildings or homes, leading to the perception of a recurrent flicker with alternating light and dark periods through windows.</p>
+<p>Given the specific sun angle required for this effect, shadow flicker is relatively uncommon, manifesting in restricted areas and lasting only a few hours annually. Nevertheless, when it does occur, it has the potential to become a nuisance for homeowners situated in close proximity to the turbines. Therefore, the government imposes stringent regulations on wind park developers to ensure that the impact of shadow flickering remains below specified thresholds (e.g., Denmark’s limit of 10 hours per year) for neighboring residents. If instances arise where shadow flickering surpasses these defined limits, curtailment measures may become necessary.</p>
+<img src="../../jupyter-book/images/shadow-flicker.png" alt="shadow-flickering" width="400px" class="bg-primary">
+<p><em>Fig 1: Shadow flickering becomes more pronounced in the evening due to the lower altitude of the sun, resulting in longer shadows cast by the turbines. (<a class="reference external" href="https://energyfollower.com/wind-turbine-shadow-flicker/">Image Source</a>)</em></p>
+<div class="cell tag_hide-input tag_thebe-init docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> widget
-<span class="kn">import</span> <span class="nn">os</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="p">))</span>
-<span class="kn">from</span> <span class="nn">src.utils</span> <span class="kn">import</span> <span class="n">solar_angles_to_vector</span><span class="p">,</span> <span class="n">solar_position</span><span class="p">,</span> <span class="n">rotor_point_spacing</span><span class="p">,</span> <span class="n">generate_turbine</span><span class="p">,</span> <span class="n">generate_voxel_map</span><span class="p">,</span> <span class="n">solve_shadow_map</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">src.utils</span> <span class="kn">import</span> <span class="n">ElevationHandler</span><span class="p">,</span> <span class="n">shadow_map_solver</span><span class="p">,</span>  <span class="n">import_point_source_data</span><span class="p">,</span> <span class="n">calc_extent</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">cartopy.crs</span> <span class="k">as</span> <span class="nn">ccrs</span>
 <span class="kn">from</span> <span class="nn">cartopy.io.img_tiles</span> <span class="kn">import</span> <span class="n">GoogleTiles</span>
-<span class="kn">from</span> <span class="nn">matplotlib.ticker</span> <span class="kn">import</span> <span class="n">AutoLocator</span>
 <span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">LogNorm</span>
-<span class="c1"># from utils import solar_angles_to_vector, solar_position, rotor_point_spacing, generate_turbine, generate_voxel_map, solve_shadow_map</span>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
+</section>
+<section id="running-the-script">
+<h2>Running the Script<a class="headerlink" href="#running-the-script" title="Permalink to this heading">#</a></h2>
+<p>To execute the shadow flickering calculator, the <code class="docutils literal notranslate"><span class="pre">shadow_map_solver</span></code> function requires details about the terrain elevation of the target area and specifications of the wind park turbines. This essential information is acquired by utilizing the <code class="docutils literal notranslate"><span class="pre">ElevationHandler</span></code> and <code class="docutils literal notranslate"><span class="pre">import_point_source_data</span></code> functions. The time frame for the shadow mapping is determined by setting the start and end dates. The script then runs the shadow mapping solver, producing a cumulative shadow map that includes the entire wind park.</p>
+<p>To generate an accurate shadow map, it is crucial to minimize the time interval between iterations to avoid creating gaps in the map. A default interval of freq = “10min” is currently used. To encompass the entire wind turbine rotor disc in the simulation, the rotor disc is approximated as a collection of points, each representing the starting point of a ray from the sun to the ground. To optimize simulation time, the minimum point density of the rotor disc is calculated based on terrain resolution and solar altitude angle.</p>
+<p>To further expedite calculations, the main script has been converted to C using Cython. Despite these optimizations, the function remains computationally intensive, and the runtime can extend to several minutes depending on the number of turbines in the wind park and the terrain resolution.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">########</span>
-<span class="c1"># Generate sun ray vectors</span>
-<span class="c1">########</span>
-<span class="n">start_date</span> <span class="o">=</span> <span class="s1">&#39;2023-01-01 00:00:00&#39;</span>
-<span class="n">end_date</span> <span class="o">=</span> <span class="s1">&#39;2023-12-30 23:59:59&#39;</span>
-<span class="n">latitude</span> <span class="o">=</span> <span class="mi">55</span>
-<span class="n">longitude</span> <span class="o">=</span> <span class="mi">12</span>
-<span class="n">date_range</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">start_date</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end_date</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s2">&quot;10min&quot;</span><span class="p">)</span>
-<span class="n">sun_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">date_range</span><span class="p">),</span> <span class="mi">2</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">point_source_data</span> <span class="o">=</span> <span class="n">import_point_source_data</span><span class="p">(</span><span class="s2">&quot;Juurakko.json&quot;</span><span class="p">)</span> <span class="c1"># load wind park data</span>
+<span class="n">map_shape</span> <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span> <span class="c1"># resolution of map data (in pixels)</span>
+<span class="n">dist</span> <span class="o">=</span> <span class="mi">3000</span> <span class="c1"># distance from turbines to the edge of the map (in meters)</span>
+<span class="n">map_boundaries</span> <span class="o">=</span> <span class="n">calc_extent</span><span class="p">(</span><span class="n">point_source_data</span><span class="p">,</span> <span class="n">dist</span><span class="p">)</span> <span class="c1"># calculate map boundaries (min/max longitude and latitude)</span>
+<span class="n">elevation_handler</span> <span class="o">=</span> <span class="n">ElevationHandler</span><span class="p">(</span><span class="n">map_boundaries</span><span class="p">,</span> <span class="n">map_shape</span><span class="p">)</span> <span class="c1"># Initiate Elevation Handler (Takes care of the map downloads)</span>
+<span class="n">start_date</span> <span class="o">=</span> <span class="s1">&#39;2023-01-01 00:00:00&#39;</span> <span class="c1"># Start date</span>
+<span class="n">end_date</span> <span class="o">=</span> <span class="s1">&#39;2023-12-31 23:59:59&#39;</span> <span class="c1"># End date</span>
+<span class="n">processes</span> <span class="o">=</span> <span class="mi">4</span> <span class="c1"># Processes for multiprocessing</span>
 
-<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">date</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">date_range</span><span class="p">):</span>
-    <span class="n">az</span><span class="p">,</span> <span class="n">alt</span> <span class="o">=</span> <span class="n">solar_position</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="n">latitude</span><span class="p">,</span> <span class="n">longitude</span><span class="p">)</span>
-    <span class="n">sun_pos</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">az</span><span class="p">,</span> <span class="n">alt</span>
-
-
-<span class="n">sun_pos</span> <span class="o">=</span> <span class="n">sun_pos</span><span class="p">[</span><span class="n">sun_pos</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">5</span><span class="p">)]</span>
-<span class="n">sun_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">sun_pos</span><span class="p">),</span> <span class="mi">3</span><span class="p">])</span>
-
-<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">pos</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sun_pos</span><span class="p">):</span>
-    <span class="n">sun_vec</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="o">=</span> <span class="o">-</span><span class="n">solar_angles_to_vector</span><span class="p">(</span><span class="o">*</span><span class="n">pos</span><span class="p">)</span>
-
-<span class="c1">########</span>
-<span class="c1"># Generate turbine points</span>
-<span class="c1">########</span>
-<span class="n">diameter</span> <span class="o">=</span> <span class="mi">100</span>
-<span class="n">n_vector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-<span class="n">turbine_cord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">4.302e6</span><span class="p">,</span> <span class="mf">3.666e6</span><span class="p">,</span> <span class="mi">230</span><span class="p">])</span>
-<span class="n">grid_element_size</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">])</span>
-<span class="n">angle</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">45</span><span class="p">)</span>
-<span class="n">r_list</span><span class="p">,</span> <span class="n">n_angle</span> <span class="o">=</span> <span class="n">rotor_point_spacing</span><span class="p">(</span><span class="n">diameter</span><span class="p">,</span> <span class="n">grid_element_size</span><span class="p">,</span> <span class="n">angle</span><span class="p">)</span>
-<span class="n">points</span> <span class="o">=</span> <span class="n">generate_turbine</span><span class="p">(</span><span class="n">r_list</span><span class="p">,</span> <span class="n">n_angle</span><span class="p">,</span> <span class="n">n_vector</span><span class="p">,</span> <span class="n">turbine_cord</span><span class="p">)</span>
-
-<span class="c1">########</span>
-<span class="c1"># Generate voxel map</span>
-<span class="c1">########</span>
-<span class="n">map_boundaries</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">9.65</span><span class="p">,</span> <span class="mf">9.75</span><span class="p">,</span> <span class="mf">56.05</span><span class="p">,</span> <span class="mf">56.15</span><span class="p">])</span>
-<span class="n">shape</span> <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
-<span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">voxel_map</span><span class="p">,</span> <span class="n">map_array</span> <span class="o">=</span> <span class="n">generate_voxel_map</span><span class="p">(</span><span class="n">map_boundaries</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
-
-
-<span class="c1">#######</span>
-<span class="c1"># Solve</span>
-<span class="c1">######</span>
-<span class="kn">from</span> <span class="nn">cython</span> <span class="kn">import</span> <span class="n">solve_shadow_map</span>
-<span class="n">points</span> <span class="o">=</span> <span class="n">points</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-<span class="n">sun_vec</span> <span class="o">=</span> <span class="n">sun_vec</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-<span class="n">minBound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">Y</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">map_array</span><span class="p">)],</span> <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-<span class="n">maxBound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Y</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">map_array</span><span class="p">)],</span> <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-<span class="n">voxel_map</span> <span class="o">=</span> <span class="n">voxel_map</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
-<span class="n">cum_shadow_map</span> <span class="o">=</span> <span class="n">solve_shadow_map</span><span class="o">.</span><span class="n">solve_shadow_map_cy</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">sun_vec</span><span class="p">,</span> <span class="n">minBound</span><span class="p">,</span> <span class="n">maxBound</span><span class="p">,</span> <span class="n">voxel_map</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/frederikwr/Dropbox/DTU Special Course/src/utils.py:608: RuntimeWarning: divide by zero encountered in scalar divide
-  rotor_angle = np.arctan(n_vector[0]/n_vector[1])+np.pi/2
-</pre></div>
-</div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ImportError</span><span class="g g-Whitespace">                               </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span> <span class="mi">44</span>
-<span class="g g-Whitespace">     </span><span class="mi">38</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">voxel_map</span><span class="p">,</span> <span class="n">map_array</span> <span class="o">=</span> <span class="n">generate_voxel_map</span><span class="p">(</span><span class="n">map_boundaries</span><span class="p">,</span> <span class="n">shape</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">41</span> <span class="c1">#######</span>
-<span class="g g-Whitespace">     </span><span class="mi">42</span> <span class="c1"># Solve</span>
-<span class="g g-Whitespace">     </span><span class="mi">43</span> <span class="c1">######</span>
-<span class="ne">---&gt; </span><span class="mi">44</span> <span class="kn">from</span> <span class="nn">cython</span> <span class="kn">import</span> <span class="n">solve_shadow_map</span>
-<span class="g g-Whitespace">     </span><span class="mi">45</span> <span class="n">points</span> <span class="o">=</span> <span class="n">points</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">46</span> <span class="n">sun_vec</span> <span class="o">=</span> <span class="n">sun_vec</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-
-<span class="ne">ImportError</span>: cannot import name &#39;solve_shadow_map&#39; from &#39;cython&#39; (/home/frederikwr/anaconda3/envs/WindBro/lib/python3.11/site-packages/cython.py)
+<span class="n">cum_shadow_map</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">shadow_map_solver</span><span class="p">(</span><span class="n">elevation_handler</span><span class="p">,</span> <span class="n">point_source_data</span><span class="p">,</span> <span class="n">start_date</span> <span class="o">=</span> <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span> <span class="o">=</span> <span class="n">end_date</span><span class="p">,</span> <span class="n">processes</span> <span class="o">=</span> <span class="n">processes</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
+</section>
+<section id="displaying-to-results">
+<h2>Displaying to Results<a class="headerlink" href="#displaying-to-results" title="Permalink to this heading">#</a></h2>
+<p>Once the script completes its iteration across individual wind turbines, the aggregated results can be visualized overlaid on an image from Google Maps.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cython</span> <span class="kn">import</span> <span class="n">solve_shadow_map</span>
-<span class="n">points</span> <span class="o">=</span> <span class="n">points</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-<span class="n">sun_vec</span> <span class="o">=</span> <span class="n">sun_vec</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-<span class="n">minBound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">Y</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">map_array</span><span class="p">)],</span> <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-<span class="n">maxBound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">Y</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">map_array</span><span class="p">)],</span> <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-<span class="n">voxel_map</span> <span class="o">=</span> <span class="n">voxel_map</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
-<span class="n">cum_shadow_map</span> <span class="o">=</span> <span class="n">solve_shadow_map</span><span class="o">.</span><span class="n">solve_shadow_map_cy</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">sun_vec</span><span class="p">,</span> <span class="n">minBound</span><span class="p">,</span> <span class="n">maxBound</span><span class="p">,</span> <span class="n">voxel_map</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<span class="n">test_map</span> <span class="o">=</span> <span class="n">cum_shadow_map</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">ct</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">test_map</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s2">&quot;twilight&quot;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">LogNorm</span><span class="p">())</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">ct</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Shadow hours&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+<span class="n">imagery</span> <span class="o">=</span> <span class="n">GoogleTiles</span><span class="p">(</span><span class="n">style</span> <span class="o">=</span> <span class="s2">&quot;satellite&quot;</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="n">imagery</span><span class="o">.</span><span class="n">crs</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_extent</span><span class="p">(</span><span class="n">map_boundaries</span><span class="p">)</span>
 
+<span class="n">cp</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">cum_shadow_map</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s2">&quot;jet&quot;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">(),</span> <span class="n">norm</span><span class="o">=</span><span class="n">LogNorm</span><span class="p">())</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">point_source_data</span><span class="o">.</span><span class="n">longitude</span><span class="p">,</span> <span class="n">point_source_data</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span> 
+           <span class="n">marker</span> <span class="o">=</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;Wind Turbines&quot;</span><span class="p">,</span>
+           <span class="n">transform</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cp</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Shadow Hour(s)&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">add_image</span><span class="p">(</span><span class="n">imagery</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span> <span class="c1"># Deterine Image Resolution</span>
+<span class="n">gl</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">gridlines</span><span class="p">(</span><span class="n">crs</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">(),</span> <span class="n">draw_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">gl</span><span class="o">.</span><span class="n">top_labels</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">gl</span><span class="o">.</span><span class="n">right_labels</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/b98522be8d94ad0bc99a407f9b0baff4a3d5ea780d4e6598c3e697bd5e071ee5.png" src="../../_images/b98522be8d94ad0bc99a407f9b0baff4a3d5ea780d4e6598c3e697bd5e071ee5.png" />
+<img alt="../../_images/e43d698283a4c801216559c99c62150d2c9e5dcc453f37240c244ac948cd2a2d.png" src="../../_images/e43d698283a4c801216559c99c62150d2c9e5dcc453f37240c244ac948cd2a2d.png" />
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">subplot_kw</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;projection&#39;</span><span class="p">:</span> <span class="n">ccrs</span><span class="o">.</span><span class="n">epsg</span><span class="p">(</span><span class="mi">3035</span><span class="p">)},</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
-
-
-<span class="n">vmin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%.2g</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">cum_shadow_map</span><span class="p">)))</span>
-<span class="n">vmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%.2g</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">cum_shadow_map</span><span class="p">)))</span> <span class="c1"># round down to two significant digits</span>
-<span class="n">levels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-
-<span class="c1"># ct = ax.contourf(trans_cords[:,:,0], trans_cords[:,:,1], map_array, </span>
-<span class="c1">#                 levels = levels, vmin = vmin, vmax = vmax, extend = &quot;both&quot;,</span>
-<span class="c1">#                 cmap=&#39;terrain&#39;, alpha = 0.5)</span>
-
-
-<span class="n">ct</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">cum_shadow_map</span><span class="p">,</span>
-                <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;twilight&#39;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">norm</span> <span class="o">=</span> <span class="n">LogNorm</span><span class="p">())</span>
-
-<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">ct</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Elevation (meters)&#39;</span><span class="p">)</span>
-
-<span class="c1"># ax.set_extent(map_boundaries)</span>
-<span class="n">imagery</span> <span class="o">=</span> <span class="n">GoogleTiles</span><span class="p">(</span><span class="n">style</span> <span class="o">=</span> <span class="s2">&quot;satellite&quot;</span><span class="p">)</span> <span class="c1"># Valid styles: street, satellite, terrain, only_streets</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">add_image</span><span class="p">(</span><span class="n">imagery</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span> <span class="c1"># 16</span>
-
-<span class="c1"># For some reason, the ticks needs to be overriden ([0]) before AutoLocator can be used.</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="n">crs</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">epsg</span><span class="p">(</span><span class="mi">3035</span><span class="p">))</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="n">crs</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">epsg</span><span class="p">(</span><span class="mi">3035</span><span class="p">))</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">AutoLocator</span><span class="p">())</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">AutoLocator</span><span class="p">())</span>
-
-<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Elevation Map&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Longitude&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Latitude&#39;</span><span class="p">)</span>
-
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../../_images/9891c740d88b0ff231e9cc403aabeaf718ac9276d5b9c53c7999f1fb4bb73462.png" src="../../_images/9891c740d88b0ff231e9cc403aabeaf718ac9276d5b9c53c7999f1fb4bb73462.png" />
-</div>
-</div>
+</section>
 <div class="toctree-wrapper compound">
 </div>
 </section>
@@ -671,6 +601,22 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-shadow-flicker">What is Shadow Flicker?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-script">Running the Script</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#displaying-to-results">Displaying to Results</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

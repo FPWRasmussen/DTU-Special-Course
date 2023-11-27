@@ -3,6 +3,8 @@
     "longitude": 12,
     "latitude": 55,
     "h": 132,
+    "d" : 100,
+    "wind_dir" : 0,
     "octave_band": {
       "63": 112.7,
       "125": 107.9,
@@ -18,6 +20,8 @@
     "longitude": 12.05,
     "latitude": 55.05,
     "h": 132,
+    "d" : 100,
+    "wind_dir" : 0,
     "octave_band": {
       "63": 112.7,
       "125": 107.9,
@@ -33,6 +37,8 @@
     "longitude": 11.95,
     "latitude": 55,
     "h": 132,
+    "d" : 100,
+    "wind_dir" : 0,
     "octave_band": {
       "63": 112.7,
       "125": 107.9,
@@ -48,6 +54,8 @@
     "longitude": 12.1,
     "latitude": 55,
     "h": 132,
+    "d" : 100,
+    "wind_dir" : 0,
     "octave_band": {
       "63": 112.7,
       "125": 107.9,
@@ -63,6 +71,8 @@
     "longitude": 12,
     "latitude": 55.1,
     "h": 132,
+    "d" : 100,
+    "wind_dir" : 0,
     "octave_band": {
       "63": 112.7,
       "125": 107.9,
@@ -78,6 +88,8 @@
     "longitude": 12,
     "latitude": 54.95,
     "h": 132,
+    "d" : 100,
+    "wind_dir" : 0,
     "octave_band": {
       "63": 112.7,
       "125": 107.9,
@@ -93,6 +105,8 @@
     "longitude": 11.98,
     "latitude": 55.02,
     "h": 132,
+    "d" : 100,
+    "wind_dir" : 0,
     "octave_band": {
       "63": 112.7,
       "125": 107.9,
@@ -108,6 +122,8 @@
     "longitude": 11.95,
     "latitude": 54.95,
     "h": 132,
+    "d" : 100,
+    "wind_dir" : 0,
     "octave_band": {
       "63": 112.7,
       "125": 107.9,

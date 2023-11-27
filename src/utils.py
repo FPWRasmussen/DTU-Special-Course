@@ -17,8 +17,71 @@ from pathlib import Path
 import json
 import pandas as pd
 import cartopy.geodesic as cgeo
+import multiprocessing as mp
+import sys
+import importlib
+import imp
 
+file_path = Path(os.path.abspath(__file__)).parent
+file_path = Path.joinpath(file_path, "cython")
+
+file, pathname, description = imp.find_module('solve_shadow_map', [file_path])
+solve_shadow_map = imp.load_module('solve_shadow_map', file, pathname, description)
+
+np.seterr(divide='ignore', invalid='ignore')
 ROOT_DIR = Path(os.path.abspath(__file__)).parent.parent
+
+def voxel_traversal(origin, direction, grid3D, verbose=False):
+    boxSize = grid3D['maxBound'] - grid3D['minBound']
+
+    cur_vox = np.floor(((origin - grid3D['minBound']) / boxSize) * grid3D["n"])
+    visited_vox = []
+    step = np.ones(3)
+    tVoxel = np.empty(3)
+
+    if direction[0] >= 0:
+      tVoxel[0] = (cur_vox[0] + 1) / grid3D['n'][0]
+    else:
+      tVoxel[0] = cur_vox[0]/ grid3D['n'][0]
+      step[0] = -1
+    
+    if direction[1] >= 0:
+      tVoxel[1]= (cur_vox[1] + 1) / grid3D['n'][1]
+    else:
+      tVoxel[1] = cur_vox[1] / grid3D['n'][1]
+      step[1] = -1
+    
+    if direction[2] >= 0:
+      tVoxel[2] = (cur_vox[2] + 1) / grid3D['n'][2]
+    else:
+      tVoxel[2] = cur_vox[2] / grid3D['n'][2]
+      step[2] = -1
+
+    voxelMax = grid3D['minBound'] + tVoxel*boxSize
+    tMax = (voxelMax - origin) / direction
+    voxelSize = boxSize / grid3D['n']
+    tDelta = voxelSize / abs(direction)
+    visited_vox.append(cur_vox.copy())
+    while (cur_vox[0] < grid3D['n'][0]) and (cur_vox[0] >= 0) and (cur_vox[1] < grid3D['n'][1]) and (cur_vox[1] >= 0) and (cur_vox[2] < grid3D['n'][2]) and (cur_vox[2] >= 0):
+      if verbose:
+        print(f'Intersection: voxel = ({cur_vox[0]}, {cur_vox[1]}, {cur_vox[2]})')
+
+      if tMax[0] < tMax[1]:
+        if tMax[0] < tMax[2]:
+          cur_vox[0] += step[0]
+          tMax[0] += tDelta[0]
+        else:
+          cur_vox[2] += step[2]
+          tMax[2] += tDelta[2]
+      else:
+        if tMax[1] < tMax[2]:
+          cur_vox[1] += step[1]
+          tMax[1] += tDelta[1]
+        else:
+          cur_vox[2] += step[2]
+          tMax[2] += tDelta[2]
+      visited_vox.append(cur_vox.copy())
+    return visited_vox
 
 def import_point_source_data(file_name):
     input_folder = Path.joinpath(ROOT_DIR, "inputs")
@@ -209,26 +272,6 @@ def is_in_frame(angle, hfov_range):
     else:
         return False
 
-# def transform_coordinates(long_list, lat_list, input_crs_str = "EPSG:4326", output_crs_str = "EPSG:3035"):
-    
-#     input_crs = pyproj.CRS(input_crs_str)  # WGS84
-#     output_crs = pyproj.CRS(output_crs_str)
-
-#     transformer = pyproj.Transformer.from_crs(input_crs, output_crs, always_xy=True)
-
-#     if isinstance(lat_list, int) or isinstance(lat_list, float):
-#         lat_list, long_list = [lat_list], [long_list]
-
-#     trans_cords = np.empty([len(lat_list),len(long_list), 2])
-
-#     for i, lon in enumerate(long_list):
-#         for j, lat in enumerate(lat_list):
-#             x, y = transformer.transform(lon, lat)
-#             trans_cords[j, i, 0] = x
-#             trans_cords[j, i, 1] = y
-
-#     return trans_cords
-
 def pull_street_view_image(api_key, longitude, latitude, fov = 90, heading = 0, pitch = 90, width = 800, height = 800):
 # URL of the image you want to load
     pitch = 90 - pitch # correct for reference frame
@@ -366,7 +409,6 @@ def solar_angles_to_vector(azimuth, altitude):
     Returns:
         vec (np.ndarray): Normalized 3D vector representing sun direction from origin
     """
-    # Convert to radians
     azimuth = azimuth+np.pi/2
 
     # Calculate 3D vector components
@@ -379,6 +421,16 @@ def solar_angles_to_vector(azimuth, altitude):
     vec /= np.linalg.norm(vec)
 
     return vec
+
+def angle_to_unit_vector(angle):
+    # Convert angle to radians
+    angle_rad = np.deg2rad(angle)
+    
+    # Calculate the components of the unit vector
+    x_component = np.sin(angle_rad)
+    y_component = np.cos(angle_rad)
+    
+    return np.array([x_component, y_component])
 
 def add_solar_axis(fig, ax):
         """
@@ -433,10 +485,7 @@ def solar_position(date, lat, lng):
     # Calculate azimuth and altitude
     H = st - ra
     az = np.radians(180) + np.arctan2(np.sin(H), np.cos(H) * np.sin(rad * lat) - np.tan(dec) * np.cos(rad * lat))
-    # if az < 0:
-    #     az += 2 * np.pi 
     alt = np.arcsin(np.sin(rad * lat) * np.sin(dec) + np.cos(rad * lat) * np.cos(dec) * np.cos(H))
-
     return az, alt
 
 def download_elevation(map_boundaries):
@@ -589,7 +638,6 @@ def rotor_point_spacing(diameter, grid_element_size, angle):
 
     grid_resolution = min(grid_element_size[0], grid_element_size[0]**2*np.abs(np.tan(angle)))
 
-
     n_radius = np.ceil(diameter/(grid_resolution)).astype(int)
     r_list = np.linspace(0, diameter/2, n_radius)
     
@@ -645,105 +693,105 @@ def generate_voxel_map(map_boundaries, shape):
     map_array_max = np.ceil(np.max(map_array)).astype(int)
 
     elevation_range = np.arange(map_array_min, map_array_max, 1)
-    voxel_map = np.zeros((map_array.shape[0], map_array.shape[1], len(elevation_range)), dtype=bool)
+    voxel_map = np.zeros((map_array.shape[0], map_array.shape[1], len(elevation_range)), dtype=np.uint8)
     for i, elev in enumerate(elevation_range):
-        voxel_map[:, :, i] = map_array > elev
+        voxel_map[:, :, i][map_array > elev] = 1
     return X, Y, voxel_map, map_array
 
-def solve_shadow_map(ray_point, ray_vec, grid3D, terrain_voxel_map):
-    terrain_voxel_map_shape = terrain_voxel_map.shape
-    temp_shadow_map = np.zeros(terrain_voxel_map_shape[0:2], dtype=bool)
-    cum_shadow_map = np.zeros(terrain_voxel_map_shape[0:2], dtype=int)
+# def solve_shadow_map(ray_point, ray_vec, grid3D, terrain_voxel_map):
+#     terrain_voxel_map_shape = terrain_voxel_map.shape
+#     temp_shadow_map = np.zeros(terrain_voxel_map_shape[0:2], dtype=bool)
+#     cum_shadow_map = np.zeros(terrain_voxel_map_shape[0:2], dtype=int)
 
-    terrain_max_elevation = grid3D['maxBound'][2] - 1
+#     terrain_max_elevation = grid3D['maxBound'][2] - 1
 
-    for i in range(ray_vec.shape[0]):
-        ray = ray_vec[i, :]
+#     for i in range(ray_vec.shape[0]):
+#         ray = ray_vec[i, :]
 
-        for j in range(ray_point.shape[0]):
-            point = ray_point[j, :]
-            if terrain_max_elevation < point[2]:  # optimize for elevation
-                x0, y0, z0 = point
-                A, B, C = ray
-                t = (terrain_max_elevation - z0) / C
-                x = x0 + A * t
-                y = y0 + B * t
-                point = np.array([x, y, terrain_max_elevation])
-            boxSize = grid3D['maxBound'] - grid3D['minBound']
-            cur_vox = np.floor(((point - grid3D['minBound']) / boxSize) * terrain_voxel_map_shape).astype(int)
+#         for j in range(ray_point.shape[0]):
+#             point = ray_point[j, :]
+#             if terrain_max_elevation < point[2]:  # optimize for elevation
+#                 x0, y0, z0 = point
+#                 A, B, C = ray
+#                 t = (terrain_max_elevation - z0) / C
+#                 x = x0 + A * t
+#                 y = y0 + B * t
+#                 point = np.array([x, y, terrain_max_elevation])
+#             boxSize = grid3D['maxBound'] - grid3D['minBound']
+#             cur_vox = np.floor(((point - grid3D['minBound']) / boxSize) * terrain_voxel_map_shape).astype(int)
 
-            if cur_vox[0] >= terrain_voxel_map_shape[0] or cur_vox[0] < 0:
-                continue
-            elif cur_vox[1] >= terrain_voxel_map_shape[1] or cur_vox[1] < 0:
-                continue
-            elif cur_vox[2] >= terrain_voxel_map_shape[2] or cur_vox[2] < 0:
-                continue
+#             if cur_vox[0] >= terrain_voxel_map_shape[0] or cur_vox[0] < 0:
+#                 continue
+#             elif cur_vox[1] >= terrain_voxel_map_shape[1] or cur_vox[1] < 0:
+#                 continue
+#             elif cur_vox[2] >= terrain_voxel_map_shape[2] or cur_vox[2] < 0:
+#                 continue
             
-            step = np.ones(3)
-            tVoxel = np.empty(3)
+#             step = np.ones(3)
+#             tVoxel = np.empty(3)
 
-            if ray[0] >= 0:
-                tVoxel[0] = (cur_vox[0] + 1) / terrain_voxel_map_shape[0]
-            else:
-                tVoxel[0] = cur_vox[0] / terrain_voxel_map_shape[0]
-                step[0] = -1
+#             if ray[0] >= 0:
+#                 tVoxel[0] = (cur_vox[0] + 1) / terrain_voxel_map_shape[0]
+#             else:
+#                 tVoxel[0] = cur_vox[0] / terrain_voxel_map_shape[0]
+#                 step[0] = -1
 
-            if ray[1] >= 0:
-                tVoxel[1] = (cur_vox[1] + 1) / terrain_voxel_map_shape[1]
-            else:
-                tVoxel[1] = cur_vox[1] / terrain_voxel_map_shape[1]
-                step[1] = -1
+#             if ray[1] >= 0:
+#                 tVoxel[1] = (cur_vox[1] + 1) / terrain_voxel_map_shape[1]
+#             else:
+#                 tVoxel[1] = cur_vox[1] / terrain_voxel_map_shape[1]
+#                 step[1] = -1
 
-            if ray[2] >= 0:
-                tVoxel[2] = (cur_vox[2] + 1) / terrain_voxel_map_shape[2]
-            else:
-                tVoxel[2] = cur_vox[2] / terrain_voxel_map_shape[2]
-                step[2] = -1
+#             if ray[2] >= 0:
+#                 tVoxel[2] = (cur_vox[2] + 1) / terrain_voxel_map_shape[2]
+#             else:
+#                 tVoxel[2] = cur_vox[2] / terrain_voxel_map_shape[2]
+#                 step[2] = -1
 
-            voxelMax = grid3D['minBound']+ tVoxel*boxSize
+#             voxelMax = grid3D['minBound']+ tVoxel*boxSize
 
-            tMax     = (voxelMax - point) / ray
-            voxelSize = boxSize/ terrain_voxel_map_shape
-            tDelta = voxelSize / abs(ray)
+#             tMax     = (voxelMax - point) / ray
+#             voxelSize = boxSize/ terrain_voxel_map_shape
+#             tDelta = voxelSize / abs(ray)
 
-            while True:
-                if tMax[0] < tMax[1]:
-                    if tMax[0] < tMax[2]:
-                        cur_vox[0] += step[0]
-                        if (cur_vox[0] >= terrain_voxel_map_shape[0]) or (cur_vox[0] < 0):
-                            break
-                        elif terrain_voxel_map[cur_vox[0], cur_vox[1], cur_vox[2]]:
-                            temp_shadow_map[cur_vox[1], cur_vox[0]] = True
-                            break
-                        tMax[0] += tDelta[0]
-                    else:
-                        cur_vox[2] += step[2]
-                        if cur_vox[2] >= terrain_voxel_map_shape[2] or (cur_vox[2] < 0):
-                            break
-                        elif terrain_voxel_map[cur_vox[0], cur_vox[1], cur_vox[2]]:
-                            temp_shadow_map[cur_vox[1], cur_vox[0]] = True
-                            break
-                        tMax[2] += tDelta[2]
-                else:
-                    if tMax[1] < tMax[2]:
-                        cur_vox[1] += step[1]
-                        if cur_vox[1] >= terrain_voxel_map_shape[1] or (cur_vox[1] < 0):
-                            break
-                        elif terrain_voxel_map[cur_vox[0], cur_vox[1], cur_vox[2]]:
-                            temp_shadow_map[cur_vox[1], cur_vox[0]] = True
-                            break
-                        tMax[1] += tDelta[1]
-                    else:
-                        cur_vox[2] += step[2]
-                        if cur_vox[2] >= terrain_voxel_map_shape[2] or (cur_vox[2] < 0):
-                            break
-                        if terrain_voxel_map[cur_vox[0], cur_vox[1], cur_vox[2]]:
-                            temp_shadow_map[cur_vox[1], cur_vox[0]] = True
-                            break
-                        tMax[2] += tDelta[2]
-            cum_shadow_map[temp_shadow_map] += 1
-            temp_shadow_map = np.zeros(terrain_voxel_map_shape[0:2], dtype=bool)
-    return cum_shadow_map
+#             while True:
+#                 if tMax[0] < tMax[1]:
+#                     if tMax[0] < tMax[2]:
+#                         cur_vox[0] += step[0]
+#                         if (cur_vox[0] >= terrain_voxel_map_shape[0]) or (cur_vox[0] < 0):
+#                             break
+#                         elif terrain_voxel_map[cur_vox[0], cur_vox[1], cur_vox[2]]:
+#                             temp_shadow_map[cur_vox[1], cur_vox[0]] = True
+#                             break
+#                         tMax[0] += tDelta[0]
+#                     else:
+#                         cur_vox[2] += step[2]
+#                         if cur_vox[2] >= terrain_voxel_map_shape[2] or (cur_vox[2] < 0):
+#                             break
+#                         elif terrain_voxel_map[cur_vox[0], cur_vox[1], cur_vox[2]]:
+#                             temp_shadow_map[cur_vox[1], cur_vox[0]] = True
+#                             break
+#                         tMax[2] += tDelta[2]
+#                 else:
+#                     if tMax[1] < tMax[2]:
+#                         cur_vox[1] += step[1]
+#                         if cur_vox[1] >= terrain_voxel_map_shape[1] or (cur_vox[1] < 0):
+#                             break
+#                         elif terrain_voxel_map[cur_vox[0], cur_vox[1], cur_vox[2]]:
+#                             temp_shadow_map[cur_vox[1], cur_vox[0]] = True
+#                             break
+#                         tMax[1] += tDelta[1]
+#                     else:
+#                         cur_vox[2] += step[2]
+#                         if cur_vox[2] >= terrain_voxel_map_shape[2] or (cur_vox[2] < 0):
+#                             break
+#                         if terrain_voxel_map[cur_vox[0], cur_vox[1], cur_vox[2]]:
+#                             temp_shadow_map[cur_vox[1], cur_vox[0]] = True
+#                             break
+#                         tMax[2] += tDelta[2]
+#             cum_shadow_map[temp_shadow_map] += 1
+#             temp_shadow_map = np.zeros(terrain_voxel_map_shape[0:2], dtype=bool)
+#     return cum_shadow_map
 
 def calc_wavelength(f, temp):
     c = 331.5 * np.sqrt(1 + temp / 273.15) # speed of sound in air [m/s]
@@ -870,40 +918,6 @@ def solve_noise_map(elevation_handler, point_source_data, ground_factor = 0, tem
             Lf = 10*np.log10(10**(0.1 * Lf) + 10**(0.1 * (LW - A + A_weighting(f))))
         LDW = 10*np.log10(10**(0.1 * LDW) + 10**(0.1 * Lf))
     return LDW
-# def calc_direct_path(elevation_handler, point_source_data):
-#     # Extract necessary data from elevation_handler and point_source_data
-#     map_array, long_range, lat_range = elevation_handler.map_array, elevation_handler.long_range, elevation_handler.lat_range
-#     longitude, latitude, source_height = point_source_data.longitude, point_source_data.latitude, point_source_data.h
-
-#     # Create mesh grid
-#     X, Y = np.meshgrid(long_range, lat_range)
-
-#     # Transform coordinates to target CRS
-#     trans_cords = transform_coordinates(long_range, lat_range, input_crs_str="EPSG:4326", output_crs_str="EPSG:3035")
-
-#     # Flatten arrays for easier processing
-#     map_array_flat, trans_long_flat, trans_lat_flat = map_array.flatten(), trans_cords[:, :, 0].flatten(), trans_cords[:, :, 1].flatten()
-
-#     # Initialize arrays
-#     d = np.empty(map_array_flat.shape)
-#     trans_point_source = np.empty(3)
-
-#     # Interpolate elevation at source point
-#     elevation_source = griddata((X.flatten(), Y.flatten()), map_array_flat, (longitude, latitude), method='linear')
-
-#     # Transform source point to target CRS
-#     trans_point_source[:2] = transform_coordinates(longitude, latitude, input_crs_str="EPSG:4326", output_crs_str="EPSG:3035")
-#     trans_point_source[2] = source_height + elevation_source
-
-#     # Calculate direct path distances
-#     for i in range(len(trans_long_flat)):
-#         SR_direct_vector = trans_point_source - np.array([trans_long_flat[i], trans_lat_flat[i], map_array_flat[i]])
-#         d[i] = np.sqrt((SR_direct_vector * SR_direct_vector).sum(axis=0))
-
-#     # Reshape the result to match the original map_array shape
-#     d = d.reshape(map_array.shape)
-
-#     return d
 
 def calc_diffraction(source_height, receiver_height, terrain_x, terrain_y):
     def diffraction_recursion(terrain_x, terrain_y, xt_new, yt_new, start_i, ylp, diffraction_index):
@@ -1143,6 +1157,87 @@ def atmospheric_absorption(f=1000, t=10, rh=80, ps=1.01325e5):
     
     return alpha
 
+def multiprocessing(func, points, sun_vec, minBound, maxBound, voxel_map, processes):
+    pool = mp.Pool(processes=processes)
+    results = []
+    
+    for process in range(processes):
+        rays = sun_vec[process::processes]
+        result = pool.apply_async(func, args=(points, rays, minBound, maxBound, voxel_map))
+        results.append(result)
+    
+    pool.close()
+    pool.join()
+    
+    shadow_map = np.zeros(voxel_map.shape[:2])
+    
+    for p, result in enumerate(results):
+        try:
+            temp_array = result.get()
+            shadow_map += temp_array
+        except Exception as e:
+            print(f"Error occurred for process {p}: {e}")
+    
+    np.savetxt(Path.joinpath(ROOT_DIR, "temp/shadow_map.txt"), shadow_map)
+    return shadow_map
+
+def shadow_map_solver(elevation_handler, point_source_data, start_date = '2023-01-01 00:00:00', end_date = '2023-12-30 23:59:59', freq="10min", altitude_limit = np.deg2rad(5), processes = 1):
+    
+    # Generate solar vector #
+    date_range = pd.date_range(start=start_date, end=end_date, freq=freq)
+    sun_pos = np.zeros([len(date_range), 2])
+
+    mean_longitude = np.mean(point_source_data.longitude)
+    mean_latitude = np.mean(point_source_data.latitude)
+    
+    for i, date in enumerate(date_range):
+        az, alt = solar_position(date, mean_latitude, mean_longitude)
+        sun_pos[i,:] = az, alt
+
+    sun_pos = sun_pos[sun_pos[:,1] > altitude_limit]
+    sun_vec = np.zeros([len(sun_pos), 3]).astype(np.float32)
+
+    for i, pos in enumerate(sun_pos):
+        sun_vec[i,:] = -solar_angles_to_vector(*pos)
+    ##################################################
+
+    # Generate voxel map #
+    X, Y, voxel_map, map_array = generate_voxel_map(elevation_handler.map_boundaries, elevation_handler.map_shape)
+
+    grid_element_size = np.array([np.max(X) - np.min(X), np.max(Y) - np.min(Y), np.ceil(np.max(map_array)) - np.floor(np.min(map_array))]) / np.array(voxel_map.shape)
+    # Generate turbine points #
+    points = []
+    for i, point_source in point_source_data.iterrows(): 
+        diameter = point_source.d
+        n_vector = angle_to_unit_vector(point_source.wind_dir)
+        longitude, latitude, source_height = point_source.longitude, point_source.latitude, point_source.h
+
+        trans_long, trans_lat = transform_coordinates(longitude, latitude, input_crs_str=elevation_handler.crs, output_crs_str="EPSG:3035")[0][0]
+
+        elevation_source = griddata((X.flatten(), Y.flatten()),  map_array.flatten(), (trans_long, trans_lat), method='linear')
+
+        turbine_cord = np.array([trans_long, trans_lat, elevation_source + source_height])
+        angle = altitude_limit
+        r_list, n_angle = rotor_point_spacing(diameter, grid_element_size, angle)
+        points.append(generate_turbine(r_list, n_angle, n_vector, turbine_cord))
+    points = np.concatenate(points).astype(np.float32)
+    
+    # SOLVE #
+    minBound = np.array([np.min(X), np.min(Y), np.floor(np.min(map_array))], dtype = np.float32)
+    maxBound = np.array([np.max(X), np.max(Y), np.ceil(np.max(map_array))], dtype = np.float32)
+    cum_shadow_map = multiprocessing(solve_shadow_map.solve_shadow_map_cy, points, sun_vec, minBound, maxBound, voxel_map, processes)
+
+    # FACTOR IN SAMPLING INTERVAL #
+    date1 = date_range[0]
+    date2 = date_range[1]
+    time_difference = (date2 - date1).seconds
+
+    cum_shadow_map *= time_difference/3600
+
+    trans_cords = transform_coordinates(X[0,:], Y[:,0], input_crs_str="EPSG:3035", output_crs_str=elevation_handler.crs)
+    cum_shadow_map[cum_shadow_map == 0] = np.nan
+    return cum_shadow_map, trans_cords[:,:,0], trans_cords[:,:,1]
+
 class Photo():
     def __init__(self, file, fov, theta, coord, location, focal_length):
         self.im = Image.open(file, mode = "r").convert('RGBA')
@@ -1208,6 +1303,8 @@ class ElevationHandler:
         self.map_array = self.generate_scaled_subarray()
         self.long_range = np.linspace(self.long_min, self.long_max, self.map_shape[1])
         self.lat_range = np.linspace(self.lat_min, self.lat_max, self.map_shape[0])
+        self.long_length = Geod(ellps='WGS84').inv(self.long_min, self.lat_min, self.long_max, self.lat_min)[2]
+        self.lat_length = Geod(ellps='WGS84').inv(self.long_min, self.lat_min, self.long_min, self.lat_max)[2]
 
     def download_elevation(self):
         self.full_map = np.zeros([len(self.full_map_lat_range)*3601, len(self.full_map_long_range)*3601]) # init full_map
@@ -1253,12 +1350,12 @@ class ElevationHandler:
         x_old = np.linspace(self.full_map_boundaries[0], self.full_map_boundaries[1], self.full_map.shape[1])
         y_old = np.linspace(self.full_map_boundaries[2], self.full_map_boundaries[3], self.full_map.shape[0])
 
-        interp_spline = RectBivariateSpline(x_old, y_old, self.full_map)
+        interp_spline = RectBivariateSpline(y_old, x_old, self.full_map)
             
-        x_new = np.linspace(self.map_boundaries[0], self.map_boundaries[1], self.map_shape[0])
-        y_new = np.linspace(self.map_boundaries[2], self.map_boundaries[3], self.map_shape[1])
+        x_new = np.linspace(self.map_boundaries[0], self.map_boundaries[1], self.map_shape[1])
+        y_new = np.linspace(self.map_boundaries[2], self.map_boundaries[3], self.map_shape[0])
 
-        self.scaled_subarray = interp_spline(x_new, y_new)
+        self.scaled_subarray = interp_spline(y_new, x_new)
         return self.scaled_subarray
     
 class Line():

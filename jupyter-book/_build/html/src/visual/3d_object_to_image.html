@@ -182,6 +182,7 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../noise/atmospheric_attenuation.html">Atmospheric Attenuation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
 </ul>
 
     </div>
@@ -505,12 +506,12 @@ document.write(`
 <span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">V</span><span class="p">,</span> <span class="n">F</span> <span class="o">=</span> <span class="n">load_and_normalize_obj</span><span class="p">(</span><span class="s2">&quot;../assets/eiffel.obj&quot;</span><span class="p">,</span> <span class="n">total_height</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
 <span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;V: &quot;</span><span class="p">,</span><span class="n">V</span><span class="p">,</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">F: &quot;</span><span class="p">,</span> <span class="n">F</span><span class="p">)</span>
 
-<span class="nn">File ~/Dropbox/DTU Special Course/src/utils.py:292,</span> in <span class="ni">load_and_normalize_obj</span><span class="nt">(file_path, total_height)</span>
-<span class="g g-Whitespace">    </span><span class="mi">290</span> <span class="k">def</span> <span class="nf">load_and_normalize_obj</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">total_height</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
-<span class="g g-Whitespace">    </span><span class="mi">291</span>     <span class="n">V</span><span class="p">,</span> <span class="n">F</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
-<span class="ne">--&gt; </span><span class="mi">292</span>     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">293</span>         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>
-<span class="g g-Whitespace">    </span><span class="mi">294</span>             <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">):</span>
+<span class="nn">File ~/Dropbox/DTU Special Course/src/utils.py:335,</span> in <span class="ni">load_and_normalize_obj</span><span class="nt">(file_path, total_height)</span>
+<span class="g g-Whitespace">    </span><span class="mi">333</span> <span class="k">def</span> <span class="nf">load_and_normalize_obj</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">total_height</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<span class="g g-Whitespace">    </span><span class="mi">334</span>     <span class="n">V</span><span class="p">,</span> <span class="n">F</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+<span class="ne">--&gt; </span><span class="mi">335</span>     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">336</span>         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>
+<span class="g g-Whitespace">    </span><span class="mi">337</span>             <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">):</span>
 
 <span class="ne">FileNotFoundError</span>: [Errno 2] No such file or directory: &#39;../assets/eiffel.obj&#39;
 </pre></div>

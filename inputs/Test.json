@@ -3,6 +3,8 @@
       "latitude": 10,
       "longitude": 10,
       "h": 1,
+      "d" : 1,
+      "wind_dir" : 0,
       "octave_band": {
         "63": 93,
         "125": 93,
