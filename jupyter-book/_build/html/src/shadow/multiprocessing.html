@@ -455,7 +455,7 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="multiprocessing">
+  <section id="multiprocessing">
 <h1>Multiprocessing<a class="headerlink" href="#multiprocessing" title="Permalink to this heading">#</a></h1>
 <p>To enhance the performance of the shadow map solver, multiprocessing has been implemented. Given the CPU-intensive nature of the task, multiprocessing is employed to distribute solar ray vectors (and consequently the datetime range) among multiple processes, allowing parallel execution. The extent of optimization naturally depends on the hardware specifications. However, on a moderately equipped laptop running 10 processes concurrently, a fourfold reduction in computational time can be anticipated.</p>
 <div class="cell tag_hide-input tag_thebe-init docutils container">

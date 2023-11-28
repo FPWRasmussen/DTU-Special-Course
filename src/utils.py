@@ -19,14 +19,30 @@ import pandas as pd
 import cartopy.geodesic as cgeo
 import multiprocessing as mp
 import sys
-import importlib
-import imp
 
-file_path = Path(os.path.abspath(__file__)).parent
-file_path = Path.joinpath(file_path, "cython")
+if __name__ == "__main__":
+    file_path = Path(os.path.abspath(__file__)).parent/"cython"
+    sys.path.append(file_path)
+    from cython import solve_shadow_map
 
-file, pathname, description = imp.find_module('solve_shadow_map', [file_path])
-solve_shadow_map = imp.load_module('solve_shadow_map', file, pathname, description)
+# file, pathname, description = imp.find_module('solve_shadow_map', [file_path])
+# solve_shadow_map = imp.load_module('solve_shadow_map', file, pathname, description)
+
+# import importlib.util
+# from pathlib import Path
+
+# file_path = Path(__file__).resolve().parent
+# file_path = file_path / "cython"
+
+# import importlib.util
+# from pathlib import Path
+
+# file_path = Path(__file__).resolve().parent
+# file_path = file_path / "cython"
+
+
+# solve_shadow_map = importlib.import_module(str(file_path /'solve_shadow_map.cpython-311-x86_64-linux-gnu.so'))
+
 
 np.seterr(divide='ignore', invalid='ignore')
 ROOT_DIR = Path(os.path.abspath(__file__)).parent.parent

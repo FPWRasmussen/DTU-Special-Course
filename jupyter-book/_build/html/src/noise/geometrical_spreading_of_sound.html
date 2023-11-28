@@ -62,8 +62,6 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../_static/sphinx-thebe.js"></script>
-    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'src/noise/geometrical_spreading_of_sound';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -445,43 +443,43 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="geometrical-spreading-of-sound">
+  <section id="geometrical-spreading-of-sound">
 <h1>Geometrical spreading of sound<a class="headerlink" href="#geometrical-spreading-of-sound" title="Permalink to this heading">#</a></h1>
-<p>The unit for intensity, <span class="math notranslate nohighlight">\(I\)</span>, is watts per square meter [<span class="math notranslate nohighlight">\(W/m^2\)</span>]</p>
+<p>The unit for intensity, $I$, is watts per square meter [$W/m^2$]</p>
 <p>W is the sound power of the source</p>
-<p><span class="math notranslate nohighlight">\(
+<p>$
 \begin{equation}
 I = \dfrac{W}{4 \pi r^2} = \dfrac{p^2}{\rho c} = \dfrac{p^2}{z_0}
 \end{equation}
-\)</span></p>
-<p><span class="math notranslate nohighlight">\(z_0\)</span> : characteristic specific acoustic impedance</p>
+$</p>
+<p>$z_0$ : characteristic specific acoustic impedance</p>
 <p>Rearranging the equation:</p>
-<p><span class="math notranslate nohighlight">\(
+<p>$
 \begin{equation}
 W = \dfrac{p^2}{z_0} (4 \pi r^2)
 \end{equation}
-\)</span></p>
-<p><span class="math notranslate nohighlight">\(
+$</p>
+<p>$
 \begin{equation}
 \dfrac{W}{W_0} = \dfrac{p_0^2}{W_0} \dfrac{p^2}{p_0^2} \dfrac{1}{z_0} (4 \pi r^2)
 \end{equation}
-\)</span></p>
-<p><span class="math notranslate nohighlight">\(
+$</p>
+<p>$
 \begin{equation}
 10\log(\dfrac{W}{W_0}) = 10\log(\dfrac{p_0^2}{W_0} \dfrac{p^2}{p_0^2} \dfrac{1}{z_0} (4 \pi r^2))
 \end{equation}
-\)</span></p>
-<p><span class="math notranslate nohighlight">\(
+$</p>
+<p>$
 \begin{equation}
 L_W = L_P + 10\log(\dfrac{p_0^2}{W_0 z_0}(4 \pi r^2))
 \end{equation}
-\)</span></p>
-<p><span class="math notranslate nohighlight">\( \dfrac{p_0^2}{W_0 z_0} = 1 \)</span></p>
-<p><span class="math notranslate nohighlight">\(
+$</p>
+<p>$ \dfrac{p_0^2}{W_0 z_0} = 1 $</p>
+<p>$
 \begin{equation}
 L_W = L_P + 20\log(r) = 10\log(4 \pi)
 \end{equation}
-\)</span></p>
+$</p>
 <p>By applying the formula to an oscillating</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">

@@ -23,9 +23,9 @@ Special thanks to the course instructors at the DTU Wind department for their gu
 
 
 ## Notes:
-*- To build the Jupyter book use:* jupyter-book build DTU\ Special\ Course/ --path-output DTU\ Special\ Course/jupyter-book/ --config DTU\ Special\ Course/jupyter-book/_config.yml (--builder pdfhtml)
+*- To build the Jupyter book use:* jupyter-book build DTU\ Special\ Course/ --path-output DTU\ Special\ Course/jupyter-book/ --config DTU\ Special\ Course/jupyter-book/_config.yml (--builder pdfhtml) (DROPBOX)
 
-*- To push the changes to Github:* ghp-import -n -p -f _build/html
+*- To push the changes to Github:* ghp-import -n -p -f _build/html (jupyter-book)
 
 - Use scoped-style
 - pyproject.toml (dependencies)

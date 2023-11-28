@@ -24,6 +24,10 @@ repository:
   url: https://github.com/FPWRasmussen/DTU-Special-Course # Online location of your book
   branch: main 
 
+parse:
+  myst_enable_extensions:  # default extensions to enable in the myst parser. See https://myst-parser.readthedocs.io/en/latest/using/syntax-optional.html
+     - html_image
+
 # Add GitHub buttons to your book
 # See https://jupyterbook.org/customize/config.html#add-a-link-to-your-repository
 html:
