@@ -13,39 +13,40 @@ from IPython.display import display
 from datetime import datetime
 from scipy.interpolate import RectBivariateSpline, griddata
 import gzip
+import pathlib
 from pathlib import Path
 import json
 import pandas as pd
 import cartopy.geodesic as cgeo
 import multiprocessing as mp
 import sys
+import PIL
 
 if __name__ == "__main__":
     file_path = Path(os.path.abspath(__file__)).parent/"cython"
     sys.path.append(file_path)
     from cython import solve_shadow_map
 
-# file, pathname, description = imp.find_module('solve_shadow_map', [file_path])
-# solve_shadow_map = imp.load_module('solve_shadow_map', file, pathname, description)
-
-# import importlib.util
-# from pathlib import Path
-
-# file_path = Path(__file__).resolve().parent
-# file_path = file_path / "cython"
-
-# import importlib.util
-# from pathlib import Path
-
-# file_path = Path(__file__).resolve().parent
-# file_path = file_path / "cython"
-
-
-# solve_shadow_map = importlib.import_module(str(file_path /'solve_shadow_map.cpython-311-x86_64-linux-gnu.so'))
-
 
 np.seterr(divide='ignore', invalid='ignore')
 ROOT_DIR = Path(os.path.abspath(__file__)).parent.parent
+
+def get_api_key():
+    api_key_file_path = Path.joinpath(ROOT_DIR, "assets/api_key.txt")
+
+    # Check if the file exists
+    if os.path.exists(api_key_file_path):
+        # If the file exists, read the API key from the file
+        with open(api_key_file_path, 'r') as file:
+            api_key = file.read().strip()
+    else:
+        # If the file does not exist, prompt the user for an API key
+        api_key = input("Enter API key: ")
+
+        # Save the API key to the file
+        with open(api_key_file_path, 'w') as file:
+            file.write(api_key)
+    return api_key
 
 def voxel_traversal(origin, direction, grid3D, verbose=False):
     boxSize = grid3D['maxBound'] - grid3D['minBound']
@@ -225,22 +226,6 @@ def generate_visual_impact(pic_class, turb_class, debug = True):
     C_N = extrinsic_parameters(R, camera_origin)
     P = camera_matrix(K, C_N)
 
-    # calculate turbine direction
-    # e_y = np.array([0, 1])
-    # angle_vector = (turbine_origin - camera_origin)[:2]
-    # direction = np.arccos((e_y @ angle_vector)/(np.linalg.norm(angle_vector)))
-    # print(np.rad2deg(direction))
-
-    # point1 = np.array([-np.sin(direction)*radius, np.cos(direction)*radius, 0]) + turbine_origin
-    # point2 = np.array([np.sin(direction)*radius, -np.cos(direction)*radius, 0]) + turbine_origin
-    # point3= np.array([-np.sin(direction)*radius, np.cos(direction)*radius, height+radius]) + turbine_origin
-    # point4 = np.array([np.sin(direction)*radius, -np.cos(direction)*radius, height+radius]) + turbine_origin
-
-    # point1 = np.array([-np.cos(direction)*radius, -np.sin(direction)*radius, 0]) + turbine_origin
-    # point2 = np.array([np.cos(direction)*radius, np.sin(direction)*radius, 0]) + turbine_origin
-    # point3= np.array([-np.cos(direction)*radius, -np.sin(direction)*radius, height+radius]) + turbine_origin
-    # point4 = np.array([np.cos(direction)*radius, np.sin(direction)*radius, height+radius]) + turbine_origin
-
     perp1, perp2 = object_frame_boundaries(turbine_origin[:-1]-camera_origin[:-1], radius)
     point1 = np.append(perp1, 0) + np.append(camera_origin[:-1], 0) + np.array([0,0,turbine_origin[2]])
     point2 = np.append(perp2, 0) + np.append(camera_origin[:-1], 0) + np.array([0,0,turbine_origin[2]])
@@ -259,12 +244,11 @@ def generate_visual_impact(pic_class, turb_class, debug = True):
         pa.append([u,v])
 
     pc = np.array(pa).reshape(4,2)
-    print(pc)
     pc[:,0] -= np.amin(pc[:,0])
     pc[:,1] -= np.amin(pc[:,1])
 
-    pb = [(turb_class.shape[1], turb_class.shape[0]), (0, turb_class.shape[0]),  (turb_class.shape[1], 0), (0, 0)]
-
+    # pb = [(turb_class.shape[1], turb_class.shape[0]), (0, turb_class.shape[0]),  (turb_class.shape[1], 0), (0, 0)]
+    pb = [(0, turb_class.shape[0]), (turb_class.shape[1], turb_class.shape[0]),  (0, 0), (turb_class.shape[1], 0)]
     pd = list(pa)
     for i in range(len(pa)):
         pa[i] = [pc[i,0],pc[i,1]]
@@ -272,8 +256,9 @@ def generate_visual_impact(pic_class, turb_class, debug = True):
     coeffs = find_coeffs(pa, pb)
 
     turb_class.im = turb_class.im.transform((int(np.amax(np.array(pa).reshape(4,2)[:,0])),int(np.amax(np.array(pa).reshape(4,2)[:,1]))), method=Image.Transform.PERSPECTIVE,data=coeffs)
-    pic_class.im.paste(turb_class.im, box=[np.amin(np.array(pd).reshape(4,2)[:,0]).astype(int),np.amin(np.array(pd).reshape(4,2)[:,1]).astype(int)], mask = turb_class.im)
 
+    pic_class.im.paste(turb_class.im, box=[np.amin(np.array(pd).reshape(4,2)[:,0]).astype(int),np.amin(np.array(pd).reshape(4,2)[:,1]).astype(int)], mask = turb_class.im)
+    pic_class.im.save(Path.joinpath(ROOT_DIR, "temp/site_img.png"))
     return pic_class.im
 
 def calc_angle_dist(location1, location2):
@@ -317,10 +302,12 @@ def pull_street_view_image(api_key, longitude, latitude, fov = 90, heading = 0, 
 
 def adjust_image(image_path, brightness = 1, contrast = 1, display_image = True):
     # Load the image using PIL.
-    if isinstance(image_path, str):
+    if isinstance(image_path, (pathlib.PosixPath, str)):
         image = Image.open(image_path)
-    else:
+    elif isinstance(image_path, PIL.Image.Image):
         image = image_path
+    else:
+        print(f"DataTypeError: {type(image_path)} is an unsupported DataType.")
 
     # Apply the brightness and contrast adjustments to the image.
     enhancer = ImageEnhance.Brightness(image)
@@ -378,12 +365,11 @@ def plot_trisurface(file_path, elevation = 0, azimuth = 0, view_height = 0, tota
     tri.set(facecolor = "white", edgecolor = "gray")
 
     limits = np.array([getattr(ax, f"get_{axis}lim")() for axis in "xyz"])
-    lower_bound = min(0, 2*view_height - total_height)
-    upper_bound = max(total_height, 2*view_height)
+    lower_bound = np.minimum(0, 2*view_height - total_height)
+    upper_bound = np.maximum(total_height, 2*view_height)
     limits[2,:] = [lower_bound, upper_bound]
     ax.set(zlim=limits[2,:], aspect="equal")
 
-    # plt.savefig(f"../../temp/obj2png.png", dpi=600, transparent=True)
     plt.savefig(Path.joinpath(ROOT_DIR, "temp/obj2png.png"), dpi=600, transparent=True)
     if show_plot:
         plt.show()
@@ -714,100 +700,41 @@ def generate_voxel_map(map_boundaries, shape):
         voxel_map[:, :, i][map_array > elev] = 1
     return X, Y, voxel_map, map_array
 
-# def solve_shadow_map(ray_point, ray_vec, grid3D, terrain_voxel_map):
-#     terrain_voxel_map_shape = terrain_voxel_map.shape
-#     temp_shadow_map = np.zeros(terrain_voxel_map_shape[0:2], dtype=bool)
-#     cum_shadow_map = np.zeros(terrain_voxel_map_shape[0:2], dtype=int)
+def visual_impact_assesment(elevation_handler, point_source_data, camera_coord, theta, fov = [90, 90]):
+    api_key = get_api_key()
+    camera_origin = transform_coordinates(camera_coord[0], camera_coord[1], input_crs_str = "EPSG:4326", output_crs_str = "EPSG:3035")[0,0]
+    map_array, long_range, lat_range = elevation_handler.map_array, elevation_handler.long_range, elevation_handler.lat_range
+    X, Y = np.meshgrid(long_range, lat_range)
+    camera_ground_elevation = griddata((X.flatten(), Y.flatten()), map_array.flatten(), (camera_coord[0], camera_coord[1]), method='linear').max() 
+    camera_elevation = 2 # Google Street View picture elevation above ground
+    camera_origin = np.append(camera_origin, camera_elevation + camera_ground_elevation)
+    roll, tilt, yaw = theta
+    pull_street_view_image(api_key, camera_coord[0], camera_coord[1], fov = fov[0], heading = yaw, pitch = roll, width = 800, height = 800)
+    
+    camera_angles, camera_distances = [], []
+    for i, point_source in point_source_data.iterrows():
+        camera_angle, camera_distance = calc_angle_dist(camera_coord, [point_source.longitude, point_source.latitude])
+        camera_angles.append(camera_angle)
+        camera_distances.append(camera_distance)
+    point_source_data = point_source_data.assign(camera_angle=camera_angles, camera_distance=camera_distances)
+    point_source_data.sort_values(by="camera_distance", ascending=False, inplace=True, ignore_index=True)
 
-#     terrain_max_elevation = grid3D['maxBound'][2] - 1
+    for i, point_source in point_source_data.iterrows(): 
+        turbine_coord = [point_source.longitude, point_source.latitude]
+        turbine_origin = transform_coordinates(*turbine_coord, input_crs_str = "EPSG:4326", output_crs_str = "EPSG:3035")[0,0]
+        turbine_ground_elevation = griddata((X.flatten(), Y.flatten()), map_array.flatten(), turbine_coord, method='linear').max() 
+        turbine_elevation = 0 # turbine elevation above ground (on ground preferably)
+        turbine_height = point_source.h + point_source.d/2
+        turbine_origin = np.append(turbine_origin, turbine_elevation + turbine_ground_elevation)
 
-#     for i in range(ray_vec.shape[0]):
-#         ray = ray_vec[i, :]
+        relative_elevation_diff = camera_ground_elevation + camera_elevation - turbine_ground_elevation - turbine_elevation
 
-#         for j in range(ray_point.shape[0]):
-#             point = ray_point[j, :]
-#             if terrain_max_elevation < point[2]:  # optimize for elevation
-#                 x0, y0, z0 = point
-#                 A, B, C = ray
-#                 t = (terrain_max_elevation - z0) / C
-#                 x = x0 + A * t
-#                 y = y0 + B * t
-#                 point = np.array([x, y, terrain_max_elevation])
-#             boxSize = grid3D['maxBound'] - grid3D['minBound']
-#             cur_vox = np.floor(((point - grid3D['minBound']) / boxSize) * terrain_voxel_map_shape).astype(int)
-
-#             if cur_vox[0] >= terrain_voxel_map_shape[0] or cur_vox[0] < 0:
-#                 continue
-#             elif cur_vox[1] >= terrain_voxel_map_shape[1] or cur_vox[1] < 0:
-#                 continue
-#             elif cur_vox[2] >= terrain_voxel_map_shape[2] or cur_vox[2] < 0:
-#                 continue
-            
-#             step = np.ones(3)
-#             tVoxel = np.empty(3)
-
-#             if ray[0] >= 0:
-#                 tVoxel[0] = (cur_vox[0] + 1) / terrain_voxel_map_shape[0]
-#             else:
-#                 tVoxel[0] = cur_vox[0] / terrain_voxel_map_shape[0]
-#                 step[0] = -1
-
-#             if ray[1] >= 0:
-#                 tVoxel[1] = (cur_vox[1] + 1) / terrain_voxel_map_shape[1]
-#             else:
-#                 tVoxel[1] = cur_vox[1] / terrain_voxel_map_shape[1]
-#                 step[1] = -1
-
-#             if ray[2] >= 0:
-#                 tVoxel[2] = (cur_vox[2] + 1) / terrain_voxel_map_shape[2]
-#             else:
-#                 tVoxel[2] = cur_vox[2] / terrain_voxel_map_shape[2]
-#                 step[2] = -1
-
-#             voxelMax = grid3D['minBound']+ tVoxel*boxSize
-
-#             tMax     = (voxelMax - point) / ray
-#             voxelSize = boxSize/ terrain_voxel_map_shape
-#             tDelta = voxelSize / abs(ray)
-
-#             while True:
-#                 if tMax[0] < tMax[1]:
-#                     if tMax[0] < tMax[2]:
-#                         cur_vox[0] += step[0]
-#                         if (cur_vox[0] >= terrain_voxel_map_shape[0]) or (cur_vox[0] < 0):
-#                             break
-#                         elif terrain_voxel_map[cur_vox[0], cur_vox[1], cur_vox[2]]:
-#                             temp_shadow_map[cur_vox[1], cur_vox[0]] = True
-#                             break
-#                         tMax[0] += tDelta[0]
-#                     else:
-#                         cur_vox[2] += step[2]
-#                         if cur_vox[2] >= terrain_voxel_map_shape[2] or (cur_vox[2] < 0):
-#                             break
-#                         elif terrain_voxel_map[cur_vox[0], cur_vox[1], cur_vox[2]]:
-#                             temp_shadow_map[cur_vox[1], cur_vox[0]] = True
-#                             break
-#                         tMax[2] += tDelta[2]
-#                 else:
-#                     if tMax[1] < tMax[2]:
-#                         cur_vox[1] += step[1]
-#                         if cur_vox[1] >= terrain_voxel_map_shape[1] or (cur_vox[1] < 0):
-#                             break
-#                         elif terrain_voxel_map[cur_vox[0], cur_vox[1], cur_vox[2]]:
-#                             temp_shadow_map[cur_vox[1], cur_vox[0]] = True
-#                             break
-#                         tMax[1] += tDelta[1]
-#                     else:
-#                         cur_vox[2] += step[2]
-#                         if cur_vox[2] >= terrain_voxel_map_shape[2] or (cur_vox[2] < 0):
-#                             break
-#                         if terrain_voxel_map[cur_vox[0], cur_vox[1], cur_vox[2]]:
-#                             temp_shadow_map[cur_vox[1], cur_vox[0]] = True
-#                             break
-#                         tMax[2] += tDelta[2]
-#             cum_shadow_map[temp_shadow_map] += 1
-#             temp_shadow_map = np.zeros(terrain_voxel_map_shape[0:2], dtype=bool)
-#     return cum_shadow_map
+        object_to_image(Path.joinpath(ROOT_DIR, "assets/windmill.obj"), elevation = 0, azimuth = point_source.camera_angle +  point_source.wind_dir - 90, view_height = relative_elevation_diff, total_height = turbine_height, debug = False)
+        adjust_image(Path.joinpath(ROOT_DIR, "temp/obj2png.png"), brightness = 0.5, contrast = 0.5, display_image = False)
+        pic_class = Photo(Path.joinpath(ROOT_DIR, "temp/site_img.png"), fov, np.deg2rad(theta), camera_coord, camera_origin, focal_length = 1)
+        turb_class = Turbine(Path.joinpath(ROOT_DIR, "temp/obj2png.png"), fov, turbine_height, turbine_coord, turbine_origin)
+        res_pic = generate_visual_impact(pic_class, turb_class, debug = False)
+    return res_pic
 
 def calc_wavelength(f, temp):
     c = 331.5 * np.sqrt(1 + temp / 273.15) # speed of sound in air [m/s]
@@ -1271,7 +1198,7 @@ class Photo():
         self.focal_length = focal_length
         
 class Turbine():
-    def __init__(self, file, fov, height, coord, location, wind_dir):
+    def __init__(self, file, fov, height, coord, location):
         self.im = Image.open(file, mode = "r").convert('RGBA')
         self.height = height
         self.coord = coord
@@ -1279,7 +1206,6 @@ class Turbine():
         self.shape = np.shape(self.im)
         self.width = fov[0]/self.shape[0] * self.shape[1]
         self.radius = height/(2*self.shape[0]/self.shape[1])
-        self.wind_dir = wind_dir
 
 class ElevationHandlerTest:
     def __init__(self, map_array, crs = "EPSG:3035"):
