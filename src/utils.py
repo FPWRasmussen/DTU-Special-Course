@@ -852,9 +852,9 @@ def solve_noise_map(elevation_handler, point_source_data, ground_factor = 0, tem
             Adiv = 20 * np.log10(d) + 11
 
             Abar = Dz
-            mask_Agr = Agr > 0
+            mask_Agr = Agr < 0
             Abar[mask_Agr] = Dz[mask_Agr] - Agr[mask_Agr]
-
+            Abar = np.maximum(0, Abar)
             
             A =  Adiv + Aatm  + Abar + Agr
             
@@ -1208,11 +1208,12 @@ class Turbine():
         self.radius = height/(2*self.shape[0]/self.shape[1])
 
 class ElevationHandlerTest:
-    def __init__(self, map_array, crs = "EPSG:3035"):
+    def __init__(self, map_array, map_boundaries, crs = "EPSG:3035"):
         self.map_array = map_array
         self.crs = crs
         self.map_shape = self.map_array.shape
-        self.map_boundaries = [0, self.map_array.shape[1], 0, self.map_array.shape[0]]
+        # self.map_boundaries = [0, self.map_array.shape[1], 0, self.map_array.shape[0]]
+        self.map_boundaries = map_boundaries
         self.long_min = np.minimum(self.map_boundaries[0], self.map_boundaries[1])
         self.long_max = np.maximum(self.map_boundaries[0], self.map_boundaries[1])
         self.lat_min = np.minimum(self.map_boundaries[2], self.map_boundaries[3])
