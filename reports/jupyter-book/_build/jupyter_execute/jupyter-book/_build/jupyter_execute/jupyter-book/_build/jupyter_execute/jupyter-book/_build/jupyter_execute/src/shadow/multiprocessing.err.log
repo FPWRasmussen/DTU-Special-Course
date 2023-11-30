@@ -27,7 +27,6 @@ import sys
 sys.path.append(str(Path(os.getcwd()).parent.parent))
 from src.utils import solar_angles_to_vector, solar_position, rotor_point_spacing, generate_turbine, generate_voxel_map, print_code, multiprocessing
 from src.cython import solve_shadow_map
-import multiprocessing as mp
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
@@ -42,7 +41,7 @@ Cell [0;32mIn[1], line 5[0m
 [1;32m      4[0m sys[38;5;241m.[39mpath[38;5;241m.[39mappend([38;5;28mstr[39m(Path(os[38;5;241m.[39mgetcwd())[38;5;241m.[39mparent[38;5;241m.[39mparent))
 [0;32m----> 5[0m [38;5;28;01mfrom[39;00m [38;5;21;01msrc[39;00m[38;5;21;01m.[39;00m[38;5;21;01mutils[39;00m [38;5;28;01mimport[39;00m solar_angles_to_vector, solar_position, rotor_point_spacing, generate_turbine, generate_voxel_map, print_code, multiprocessing
 [1;32m      6[0m [38;5;28;01mfrom[39;00m [38;5;21;01msrc[39;00m[38;5;21;01m.[39;00m[38;5;21;01mcython[39;00m [38;5;28;01mimport[39;00m solve_shadow_map
-[1;32m      7[0m [38;5;28;01mimport[39;00m [38;5;21;01mmultiprocessing[39;00m [38;5;28;01mas[39;00m [38;5;21;01mmp[39;00m
+[1;32m      7[0m [38;5;28;01mimport[39;00m [38;5;21;01mpandas[39;00m [38;5;28;01mas[39;00m [38;5;21;01mpd[39;00m
 
 [0;31mModuleNotFoundError[0m: No module named 'src.utils'
 ModuleNotFoundError: No module named 'src.utils'

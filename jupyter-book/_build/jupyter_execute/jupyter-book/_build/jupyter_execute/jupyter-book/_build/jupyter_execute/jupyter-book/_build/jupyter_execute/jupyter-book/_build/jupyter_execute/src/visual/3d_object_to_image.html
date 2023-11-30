@@ -1,0 +1,739 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Convert OBJ file to PNG &#8212; DTU Special Course</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../../../../../../../../../../../../../../_static/styles/theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../../../../../../../../../../../../../../../../../_static/styles/bootstrap.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../../../../../../../../../../../../../../../../../_static/styles/pydata-sphinx-theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+
+  
+  <link href="../../../../../../../../../../../../../../../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../../../../../../../../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../../../../../../../../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../../../../../../../../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../../../../../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../../../../../../../../../../../../../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../../../../../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../../../../../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../../../../../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../../../../../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../../../../../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../../../../../../../../../../../../../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794" />
+<link rel="preload" as="script" href="../../../../../../../../../../../../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794" />
+  <script src="../../../../../../../../../../../../../../../../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=ac02cc09edc035673794"></script>
+
+    <script data-url_root="../../../../../../../../../../../../../../../../../" id="documentation_options" src="../../../../../../../../../../../../../../../../../_static/documentation_options.js"></script>
+    <script src="../../../../../../../../../../../../../../../../../_static/jquery.js"></script>
+    <script src="../../../../../../../../../../../../../../../../../_static/underscore.js"></script>
+    <script src="../../../../../../../../../../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../../../../../../../../../../../../../../../_static/doctools.js"></script>
+    <script src="../../../../../../../../../../../../../../../../../_static/clipboard.min.js"></script>
+    <script src="../../../../../../../../../../../../../../../../../_static/copybutton.js"></script>
+    <script src="../../../../../../../../../../../../../../../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../../../../../../../../../../../../../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../../../../../../../../../../../../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../../../../../../../../../../../../../../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/src/visual/3d_object_to_image';</script>
+    <link rel="index" title="Index" href="../../../../../../../../../../../../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../../../../../../../../../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../../../../../../../../../../../../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../../../../../../../../../../../../../../../../../src/introduction.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../../../../../../../../../../../../../../_static/logo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../../../../../../../../../../../../../../../../../_static/logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../../../../../../../../../../../../../../../src/introduction.html">
+                    Wind Energy Analysis Tools
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/map/elevation_handler.html">Elevation Handler</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/noise/noise_map.html">Noise Map</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/noise/geometrical_spreading_of_sound.html">Geometrical Spreading of Sound</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/noise/atmospheric_attenuation.html">Atmospheric Attenuation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/noise/ground_effect.html">Ground Effect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/noise/barrier_attenuation.html">Barrier Attenuation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/noise/verification.html">Barrier Verification</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/shadow/shadow_map.html">Shadow Map</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/shadow/fast_voxel_traversal.html">Fast Voxel Traversal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/shadow/sun_calc.html">Solar Calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/shadow/rotor_point_cloud.html">Rotor Point Cloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/shadow/multiprocessing.html">Multiprocessing</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/visual/visual_impact.html">Visual Impact</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/visual/google_street_view.html">Google Street View</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/visual/camera_calibration.html">Camera Calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/visual/3d_object_to_image.html">3D Object to Image</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/bibliography.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/FPWRasmussen/DTU-Special-Course/main?urlpath=lab/tree/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/src/visual/3d_object_to_image.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../../../../../../../../../../../../../../../../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/FPWRasmussen/DTU-Special-Course" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/FPWRasmussen/DTU-Special-Course/issues/new?title=Issue%20on%20page%20%2Fjupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/src/visual/3d_object_to_image.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../../../../../../../../../../../../../../_sources/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/src/visual/3d_object_to_image.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Convert OBJ file to PNG</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="convert-obj-file-to-png">
+<h1>Convert OBJ file to PNG<a class="headerlink" href="#convert-obj-file-to-png" title="Permalink to this heading">#</a></h1>
+<p>To produce images of wind turbines for visual impact assessment, the program loads .obj files and converts them into .png files. This conversion involves utilizing the view angle and wind direction to appropriately rotate the object file in the desired orientation.</p>
+<div class="cell tag_hide-input tag_thebe-init docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="p">))</span>
+<span class="kn">from</span> <span class="nn">src.utils</span> <span class="kn">import</span> <span class="n">print_code</span><span class="p">,</span> <span class="n">load_and_normalize_obj</span><span class="p">,</span> <span class="n">plot_trisurface</span><span class="p">,</span> <span class="n">crop_image</span><span class="p">,</span> <span class="n">adjust_image</span><span class="p">,</span> <span class="n">plot_trisurface</span>
+<span class="kn">from</span> <span class="nn">IPython.core.display</span> <span class="kn">import</span> <span class="n">HTML</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">5</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">import</span> <span class="nn">sys</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="p">))</span>
+<span class="ne">----&gt; </span><span class="mi">5</span> <span class="kn">from</span> <span class="nn">src.utils</span> <span class="kn">import</span> <span class="n">print_code</span><span class="p">,</span> <span class="n">load_and_normalize_obj</span><span class="p">,</span> <span class="n">plot_trisurface</span><span class="p">,</span> <span class="n">crop_image</span><span class="p">,</span> <span class="n">adjust_image</span><span class="p">,</span> <span class="n">plot_trisurface</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="kn">from</span> <span class="nn">IPython.core.display</span> <span class="kn">import</span> <span class="n">HTML</span>
+
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;src.utils&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Initially, the program loads vertices and faces from the .obj file and normalizes them based on the total height of the wind turbine.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">HTML</span><span class="p">(</span><span class="n">print_code</span><span class="p">(</span><span class="n">load_and_normalize_obj</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class="highlight" style="background: #202020"><pre style="line-height: 125%;"><span></span><a id="True-1" name="True-1" href="#True-1"></a><span style="color: #6ebf26; font-weight: bold">def</span> <span style="color: #71adff">load_and_normalize_obj</span><span style="color: #d0d0d0">(file_path,</span> <span style="color: #d0d0d0">total_height</span> <span style="color: #d0d0d0">=</span> <span style="color: #51b2fd">1</span><span style="color: #d0d0d0">):</span>
+<a id="True-2" name="True-2" href="#True-2"></a>    <span style="color: #d0d0d0">V,</span> <span style="color: #d0d0d0">F</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">[],</span> <span style="color: #d0d0d0">[]</span>
+<a id="True-3" name="True-3" href="#True-3"></a>    <span style="color: #6ebf26; font-weight: bold">with</span> <span style="color: #2fbccd">open</span><span style="color: #d0d0d0">(file_path)</span> <span style="color: #6ebf26; font-weight: bold">as</span> <span style="color: #d0d0d0">f:</span>
+<a id="True-4" name="True-4" href="#True-4"></a>        <span style="color: #6ebf26; font-weight: bold">for</span> <span style="color: #d0d0d0">line</span> <span style="color: #6ebf26; font-weight: bold">in</span> <span style="color: #d0d0d0">f.readlines():</span>
+<a id="True-5" name="True-5" href="#True-5"></a>            <span style="color: #6ebf26; font-weight: bold">if</span> <span style="color: #d0d0d0">line.startswith(</span><span style="color: #ed9d13">&#39;#&#39;</span><span style="color: #d0d0d0">):</span>
+<a id="True-6" name="True-6" href="#True-6"></a>                <span style="color: #6ebf26; font-weight: bold">continue</span>
+<a id="True-7" name="True-7" href="#True-7"></a>            <span style="color: #d0d0d0">values</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">line.split()</span>
+<a id="True-8" name="True-8" href="#True-8"></a>            <span style="color: #6ebf26; font-weight: bold">if</span> <span style="color: #6ebf26; font-weight: bold">not</span> <span style="color: #d0d0d0">values:</span>
+<a id="True-9" name="True-9" href="#True-9"></a>                <span style="color: #6ebf26; font-weight: bold">continue</span>
+<a id="True-10" name="True-10" href="#True-10"></a>            <span style="color: #6ebf26; font-weight: bold">if</span> <span style="color: #d0d0d0">values[</span><span style="color: #51b2fd">0</span><span style="color: #d0d0d0">]</span> <span style="color: #d0d0d0">==</span> <span style="color: #ed9d13">&#39;v&#39;</span><span style="color: #d0d0d0">:</span>
+<a id="True-11" name="True-11" href="#True-11"></a>                <span style="color: #d0d0d0">V.append([</span><span style="color: #2fbccd">float</span><span style="color: #d0d0d0">(x)</span> <span style="color: #6ebf26; font-weight: bold">for</span> <span style="color: #d0d0d0">x</span> <span style="color: #6ebf26; font-weight: bold">in</span> <span style="color: #d0d0d0">values[</span><span style="color: #51b2fd">1</span><span style="color: #d0d0d0">:</span><span style="color: #51b2fd">4</span><span style="color: #d0d0d0">]])</span>
+<a id="True-12" name="True-12" href="#True-12"></a>            <span style="color: #6ebf26; font-weight: bold">elif</span> <span style="color: #d0d0d0">values[</span><span style="color: #51b2fd">0</span><span style="color: #d0d0d0">]</span> <span style="color: #d0d0d0">==</span> <span style="color: #ed9d13">&#39;f&#39;</span> <span style="color: #d0d0d0">:</span>
+<a id="True-13" name="True-13" href="#True-13"></a>                <span style="color: #d0d0d0">F.append([</span><span style="color: #2fbccd">int</span><span style="color: #d0d0d0">(x.split(</span><span style="color: #ed9d13">&quot;/&quot;</span><span style="color: #d0d0d0">,</span> <span style="color: #51b2fd">1</span><span style="color: #d0d0d0">)[</span><span style="color: #51b2fd">0</span><span style="color: #d0d0d0">])</span> <span style="color: #6ebf26; font-weight: bold">for</span> <span style="color: #d0d0d0">x</span> <span style="color: #6ebf26; font-weight: bold">in</span> <span style="color: #d0d0d0">values[</span><span style="color: #51b2fd">1</span><span style="color: #d0d0d0">:</span><span style="color: #51b2fd">4</span><span style="color: #d0d0d0">]])</span>
+<a id="True-14" name="True-14" href="#True-14"></a>    <span style="color: #d0d0d0">V,</span> <span style="color: #d0d0d0">F</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">np.array(V),</span> <span style="color: #d0d0d0">np.array(F)-</span><span style="color: #51b2fd">1</span>
+<a id="True-15" name="True-15" href="#True-15"></a>    <span style="color: #d0d0d0">V</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">(V</span> <span style="color: #d0d0d0">-</span> <span style="color: #d0d0d0">np.min(V[:,</span><span style="color: #51b2fd">2</span><span style="color: #d0d0d0">]))</span> <span style="color: #d0d0d0">/</span> <span style="color: #d0d0d0">(np.max(V[:,</span><span style="color: #51b2fd">2</span><span style="color: #d0d0d0">])</span> <span style="color: #d0d0d0">-</span> <span style="color: #d0d0d0">np.min(V[:,</span><span style="color: #51b2fd">2</span><span style="color: #d0d0d0">]))*total_height</span>
+<a id="True-16" name="True-16" href="#True-16"></a>    <span style="color: #6ebf26; font-weight: bold">return</span> <span style="color: #d0d0d0">V,</span> <span style="color: #d0d0d0">F</span>
+</pre></div>
+</div></div>
+</div>
+<p>The vertices are represented by points in 3D space, while the faces are defined by the indices of the vertices that form the face.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">V</span><span class="p">,</span> <span class="n">F</span> <span class="o">=</span> <span class="n">load_and_normalize_obj</span><span class="p">(</span><span class="s2">&quot;../../assets/turbine.obj&quot;</span><span class="p">,</span> <span class="n">total_height</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;V: &quot;</span><span class="p">,</span><span class="n">V</span><span class="p">,</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">F: &quot;</span><span class="p">,</span> <span class="n">F</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>V:  [[-0.38323411 -0.04002556  0.67077201]
+ [-0.38322772 -0.03992025  0.67064993]
+ [-0.38322314 -0.04018633  0.67075629]
+ ...
+ [ 0.19505491 -0.03958282  0.99919489]
+ [ 0.19505738 -0.03963892  0.99921006]
+ [ 0.1950604  -0.03974164  0.99916952]] 
+
+F:  [[475 444 471]
+ [477 492 471]
+ [475 471 492]
+ ...
+ [388 583 348]
+ [532 583 388]
+ [466 532 388]]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Following that, the vertices and faces are loaded into <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>, and a 3D plot is created using <code class="docutils literal notranslate"><span class="pre">plt.plot_trisurf</span></code>. The background of the 3D plot is set to transparent and the image is thereafter saved as a .png file.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">HTML</span><span class="p">(</span><span class="n">print_code</span><span class="p">(</span><span class="n">plot_trisurface</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class="highlight" style="background: #202020"><pre style="line-height: 125%;"><span></span><a id="True-1" name="True-1" href="#True-1"></a><span style="color: #6ebf26; font-weight: bold">def</span> <span style="color: #71adff">plot_trisurface</span><span style="color: #d0d0d0">(file_path,</span> <span style="color: #d0d0d0">elevation</span> <span style="color: #d0d0d0">=</span> <span style="color: #51b2fd">0</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">azimuth</span> <span style="color: #d0d0d0">=</span> <span style="color: #51b2fd">0</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">view_height</span> <span style="color: #d0d0d0">=</span> <span style="color: #51b2fd">0</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">total_height</span> <span style="color: #d0d0d0">=</span> <span style="color: #51b2fd">1</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">show_plot</span> <span style="color: #d0d0d0">=</span> <span style="color: #6ebf26; font-weight: bold">True</span><span style="color: #d0d0d0">):</span>
+<a id="True-2" name="True-2" href="#True-2"></a>    
+<a id="True-3" name="True-3" href="#True-3"></a>    <span style="color: #d0d0d0">V,</span> <span style="color: #d0d0d0">F</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">load_and_normalize_obj(file_path,</span> <span style="color: #d0d0d0">total_height</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">total_height)</span>
+<a id="True-4" name="True-4" href="#True-4"></a>
+<a id="True-5" name="True-5" href="#True-5"></a>    <span style="color: #d0d0d0">fig</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">plt.figure(figsize=(</span><span style="color: #51b2fd">6</span><span style="color: #d0d0d0">,</span><span style="color: #51b2fd">6</span><span style="color: #d0d0d0">))</span>
+<a id="True-6" name="True-6" href="#True-6"></a>    <span style="color: #d0d0d0">ax</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">fig.add_subplot(</span><span style="color: #51b2fd">111</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">projection=</span><span style="color: #ed9d13">&quot;3d&quot;</span><span style="color: #d0d0d0">)</span>
+<a id="True-7" name="True-7" href="#True-7"></a>
+<a id="True-8" name="True-8" href="#True-8"></a>    <span style="color: #d0d0d0">plt.axis(</span><span style="color: #ed9d13">&#39;off&#39;</span><span style="color: #d0d0d0">)</span>
+<a id="True-9" name="True-9" href="#True-9"></a>    <span style="color: #d0d0d0">plt.grid(visible=</span><span style="color: #6ebf26; font-weight: bold">None</span><span style="color: #d0d0d0">)</span>
+<a id="True-10" name="True-10" href="#True-10"></a>    <span style="color: #d0d0d0">ax.view_init(elev=elevation,</span> <span style="color: #d0d0d0">azim=azimuth)</span>
+<a id="True-11" name="True-11" href="#True-11"></a>
+<a id="True-12" name="True-12" href="#True-12"></a>    <span style="color: #d0d0d0">tri</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">ax.plot_trisurf(V[:,</span> <span style="color: #51b2fd">0</span><span style="color: #d0d0d0">],</span> <span style="color: #d0d0d0">V[:,</span><span style="color: #51b2fd">1</span><span style="color: #d0d0d0">],</span> <span style="color: #d0d0d0">F,</span> <span style="color: #d0d0d0">V[:,</span> <span style="color: #51b2fd">2</span><span style="color: #d0d0d0">],</span> <span style="color: #d0d0d0">linewidth=</span><span style="color: #51b2fd">0.1</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">antialiased=</span><span style="color: #6ebf26; font-weight: bold">True</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">closed=</span><span style="color: #6ebf26; font-weight: bold">True</span><span style="color: #d0d0d0">)</span>
+<a id="True-13" name="True-13" href="#True-13"></a>    <span style="color: #d0d0d0">tri.set(facecolor</span> <span style="color: #d0d0d0">=</span> <span style="color: #ed9d13">&quot;white&quot;</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">edgecolor</span> <span style="color: #d0d0d0">=</span> <span style="color: #ed9d13">&quot;gray&quot;</span><span style="color: #d0d0d0">)</span>
+<a id="True-14" name="True-14" href="#True-14"></a>
+<a id="True-15" name="True-15" href="#True-15"></a>    <span style="color: #d0d0d0">limits</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">np.array([</span><span style="color: #2fbccd">getattr</span><span style="color: #d0d0d0">(ax,</span> <span style="color: #ed9d13">f&quot;get_{</span><span style="color: #d0d0d0">axis</span><span style="color: #ed9d13">}lim&quot;</span><span style="color: #d0d0d0">)()</span> <span style="color: #6ebf26; font-weight: bold">for</span> <span style="color: #d0d0d0">axis</span> <span style="color: #6ebf26; font-weight: bold">in</span> <span style="color: #ed9d13">&quot;xyz&quot;</span><span style="color: #d0d0d0">])</span>
+<a id="True-16" name="True-16" href="#True-16"></a>    <span style="color: #d0d0d0">lower_bound</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">np.minimum(</span><span style="color: #51b2fd">0</span><span style="color: #d0d0d0">,</span> <span style="color: #51b2fd">2</span><span style="color: #d0d0d0">*view_height</span> <span style="color: #d0d0d0">-</span> <span style="color: #d0d0d0">total_height)</span>
+<a id="True-17" name="True-17" href="#True-17"></a>    <span style="color: #d0d0d0">upper_bound</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">np.maximum(total_height,</span> <span style="color: #51b2fd">2</span><span style="color: #d0d0d0">*view_height)</span>
+<a id="True-18" name="True-18" href="#True-18"></a>    <span style="color: #d0d0d0">limits[</span><span style="color: #51b2fd">2</span><span style="color: #d0d0d0">,:]</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">[lower_bound,</span> <span style="color: #d0d0d0">upper_bound]</span>
+<a id="True-19" name="True-19" href="#True-19"></a>    <span style="color: #d0d0d0">ax.set(zlim=limits[</span><span style="color: #51b2fd">2</span><span style="color: #d0d0d0">,:],</span> <span style="color: #d0d0d0">aspect=</span><span style="color: #ed9d13">&quot;equal&quot;</span><span style="color: #d0d0d0">)</span>
+<a id="True-20" name="True-20" href="#True-20"></a>
+<a id="True-21" name="True-21" href="#True-21"></a>    <span style="color: #d0d0d0">plt.savefig(Path.joinpath(ROOT_DIR,</span> <span style="color: #ed9d13">&quot;temp/obj2png.png&quot;</span><span style="color: #d0d0d0">),</span> <span style="color: #d0d0d0">dpi=</span><span style="color: #51b2fd">600</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">transparent=</span><span style="color: #6ebf26; font-weight: bold">True</span><span style="color: #d0d0d0">)</span>
+<a id="True-22" name="True-22" href="#True-22"></a>    <span style="color: #6ebf26; font-weight: bold">if</span> <span style="color: #d0d0d0">show_plot:</span>
+<a id="True-23" name="True-23" href="#True-23"></a>        <span style="color: #d0d0d0">plt.show()</span>
+<a id="True-24" name="True-24" href="#True-24"></a>    <span style="color: #6ebf26; font-weight: bold">else</span><span style="color: #d0d0d0">:</span>
+<a id="True-25" name="True-25" href="#True-25"></a>        <span style="color: #d0d0d0">plt.close()</span> <span style="color: #ababab; font-style: italic"># prevent plot from showing</span>
+</pre></div>
+</div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot_trisurface</span><span class="p">(</span><span class="s2">&quot;../../assets/turbine.obj&quot;</span><span class="p">,</span> <span class="n">azimuth</span><span class="o">=-</span><span class="mi">90</span><span class="p">)</span>    
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../../../../../../../../../../../../../../../_images/9a7006ffe2f340cfc8d19db490fb10ae03a3cc69fa9a2def07ba7959bfd8d5b5.png" src="../../../../../../../../../../../../../../../../../_images/9a7006ffe2f340cfc8d19db490fb10ae03a3cc69fa9a2def07ba7959bfd8d5b5.png" />
+</div>
+</div>
+<p>The image needs to be cropped to remove the axis from the plot. This is done be removing the 5 border pixels of the image.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">HTML</span><span class="p">(</span><span class="n">print_code</span><span class="p">(</span><span class="n">crop_image</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class="highlight" style="background: #202020"><pre style="line-height: 125%;"><span></span><a id="True-1" name="True-1" href="#True-1"></a><span style="color: #6ebf26; font-weight: bold">def</span> <span style="color: #71adff">crop_image</span><span style="color: #d0d0d0">(file_path,</span> <span style="color: #d0d0d0">display_image</span> <span style="color: #d0d0d0">=</span> <span style="color: #6ebf26; font-weight: bold">True</span><span style="color: #d0d0d0">):</span>
+<a id="True-2" name="True-2" href="#True-2"></a>    <span style="color: #d0d0d0">pil_image</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">Image.open(file_path)</span>
+<a id="True-3" name="True-3" href="#True-3"></a>    <span style="color: #d0d0d0">pil_image</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">pil_image.crop((</span><span style="color: #51b2fd">5</span><span style="color: #d0d0d0">,</span> <span style="color: #51b2fd">5</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">pil_image.size[</span><span style="color: #51b2fd">0</span><span style="color: #d0d0d0">]-</span><span style="color: #51b2fd">5</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">pil_image.size[</span><span style="color: #51b2fd">1</span><span style="color: #d0d0d0">]-</span><span style="color: #51b2fd">5</span><span style="color: #d0d0d0">))</span>
+<a id="True-4" name="True-4" href="#True-4"></a>    <span style="color: #d0d0d0">np_array</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">np.array(pil_image)</span>
+<a id="True-5" name="True-5" href="#True-5"></a>    <span style="color: #d0d0d0">blank_px</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">[</span><span style="color: #51b2fd">255</span><span style="color: #d0d0d0">,</span> <span style="color: #51b2fd">255</span><span style="color: #d0d0d0">,</span> <span style="color: #51b2fd">255</span><span style="color: #d0d0d0">,</span> <span style="color: #51b2fd">0</span><span style="color: #d0d0d0">]</span>
+<a id="True-6" name="True-6" href="#True-6"></a>    <span style="color: #d0d0d0">mask</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">np_array</span> <span style="color: #d0d0d0">!=</span> <span style="color: #d0d0d0">blank_px</span>
+<a id="True-7" name="True-7" href="#True-7"></a>    <span style="color: #d0d0d0">coords</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">np.argwhere(mask)</span>
+<a id="True-8" name="True-8" href="#True-8"></a>    <span style="color: #d0d0d0">x0,</span> <span style="color: #d0d0d0">y0,</span> <span style="color: #d0d0d0">z0</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">coords.min(axis=</span><span style="color: #51b2fd">0</span><span style="color: #d0d0d0">)</span>
+<a id="True-9" name="True-9" href="#True-9"></a>    <span style="color: #d0d0d0">x1,</span> <span style="color: #d0d0d0">y1,</span> <span style="color: #d0d0d0">z1</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">coords.max(axis=</span><span style="color: #51b2fd">0</span><span style="color: #d0d0d0">)</span> <span style="color: #d0d0d0">+</span> <span style="color: #51b2fd">1</span>
+<a id="True-10" name="True-10" href="#True-10"></a>    <span style="color: #d0d0d0">cropped_box</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">np_array[x0:x1,</span> <span style="color: #d0d0d0">y0:y1,</span> <span style="color: #51b2fd">0</span><span style="color: #d0d0d0">:</span><span style="color: #51b2fd">4</span><span style="color: #d0d0d0">]</span>
+<a id="True-11" name="True-11" href="#True-11"></a>    <span style="color: #d0d0d0">pil_image</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">Image.fromarray(cropped_box,</span> <span style="color: #ed9d13">&#39;RGBA&#39;</span><span style="color: #d0d0d0">)</span>
+<a id="True-12" name="True-12" href="#True-12"></a>    <span style="color: #d0d0d0">pil_image.save(file_path)</span>
+<a id="True-13" name="True-13" href="#True-13"></a>
+<a id="True-14" name="True-14" href="#True-14"></a>    <span style="color: #6ebf26; font-weight: bold">if</span> <span style="color: #d0d0d0">display_image:</span>
+<a id="True-15" name="True-15" href="#True-15"></a>        <span style="color: #d0d0d0">display(pil_image)</span>
+<a id="True-16" name="True-16" href="#True-16"></a>
+<a id="True-17" name="True-17" href="#True-17"></a>    <span style="color: #6ebf26; font-weight: bold">return</span> <span style="color: #d0d0d0">pil_image</span>
+</pre></div>
+</div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pil_image</span> <span class="o">=</span> <span class="n">crop_image</span><span class="p">(</span><span class="s2">&quot;../../temp/obj2png.png&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../../../../../../../../../../../../../../../_images/8d1a7db9a805c59212aa1ceced57ef2af5c86ebc34ba03c8c67a7944a0f1dbee.png" src="../../../../../../../../../../../../../../../../../_images/8d1a7db9a805c59212aa1ceced57ef2af5c86ebc34ba03c8c67a7944a0f1dbee.png" />
+</div>
+</div>
+<p>Lastly, the image needs to be adjusted according to the weather conditions of the Google Street View image.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">HTML</span><span class="p">(</span><span class="n">print_code</span><span class="p">(</span><span class="n">adjust_image</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class="highlight" style="background: #202020"><pre style="line-height: 125%;"><span></span><a id="True-1" name="True-1" href="#True-1"></a><span style="color: #6ebf26; font-weight: bold">def</span> <span style="color: #71adff">adjust_image</span><span style="color: #d0d0d0">(image_path,</span> <span style="color: #d0d0d0">brightness</span> <span style="color: #d0d0d0">=</span> <span style="color: #51b2fd">1</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">contrast</span> <span style="color: #d0d0d0">=</span> <span style="color: #51b2fd">1</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">display_image</span> <span style="color: #d0d0d0">=</span> <span style="color: #6ebf26; font-weight: bold">True</span><span style="color: #d0d0d0">):</span>
+<a id="True-2" name="True-2" href="#True-2"></a>    <span style="color: #ababab; font-style: italic"># Load the image using PIL.</span>
+<a id="True-3" name="True-3" href="#True-3"></a>    <span style="color: #6ebf26; font-weight: bold">if</span> <span style="color: #2fbccd">isinstance</span><span style="color: #d0d0d0">(image_path,</span> <span style="color: #d0d0d0">(pathlib.PosixPath,</span> <span style="color: #2fbccd">str</span><span style="color: #d0d0d0">)):</span>
+<a id="True-4" name="True-4" href="#True-4"></a>        <span style="color: #d0d0d0">image</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">Image.open(image_path)</span>
+<a id="True-5" name="True-5" href="#True-5"></a>    <span style="color: #6ebf26; font-weight: bold">elif</span> <span style="color: #2fbccd">isinstance</span><span style="color: #d0d0d0">(image_path,</span> <span style="color: #d0d0d0">PIL.Image.Image):</span>
+<a id="True-6" name="True-6" href="#True-6"></a>        <span style="color: #d0d0d0">image</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">image_path</span>
+<a id="True-7" name="True-7" href="#True-7"></a>    <span style="color: #6ebf26; font-weight: bold">else</span><span style="color: #d0d0d0">:</span>
+<a id="True-8" name="True-8" href="#True-8"></a>        <span style="color: #2fbccd">print</span><span style="color: #d0d0d0">(</span><span style="color: #ed9d13">f&quot;DataTypeError: {</span><span style="color: #2fbccd">type</span><span style="color: #d0d0d0">(image_path)</span><span style="color: #ed9d13">} is an unsupported DataType.&quot;</span><span style="color: #d0d0d0">)</span>
+<a id="True-9" name="True-9" href="#True-9"></a>
+<a id="True-10" name="True-10" href="#True-10"></a>    <span style="color: #ababab; font-style: italic"># Apply the brightness and contrast adjustments to the image.</span>
+<a id="True-11" name="True-11" href="#True-11"></a>    <span style="color: #d0d0d0">enhancer</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">ImageEnhance.Brightness(image)</span>
+<a id="True-12" name="True-12" href="#True-12"></a>    <span style="color: #d0d0d0">image</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">enhancer.enhance(brightness)</span>
+<a id="True-13" name="True-13" href="#True-13"></a>
+<a id="True-14" name="True-14" href="#True-14"></a>    <span style="color: #d0d0d0">enhancer</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">ImageEnhance.Contrast(image)</span>
+<a id="True-15" name="True-15" href="#True-15"></a>    <span style="color: #d0d0d0">image</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">enhancer.enhance(contrast)</span>
+<a id="True-16" name="True-16" href="#True-16"></a>
+<a id="True-17" name="True-17" href="#True-17"></a>    <span style="color: #ababab; font-style: italic"># Save or display the adjusted image.</span>
+<a id="True-18" name="True-18" href="#True-18"></a>    <span style="color: #ababab; font-style: italic"># image.save(&quot;../../temp/obj2png.png&quot;)</span>
+<a id="True-19" name="True-19" href="#True-19"></a>    <span style="color: #d0d0d0">image.save(Path.joinpath(ROOT_DIR,</span> <span style="color: #ed9d13">&quot;temp/obj2png.png&quot;</span><span style="color: #d0d0d0">))</span>
+<a id="True-20" name="True-20" href="#True-20"></a>    <span style="color: #6ebf26; font-weight: bold">if</span> <span style="color: #d0d0d0">display_image:</span>
+<a id="True-21" name="True-21" href="#True-21"></a>        <span style="color: #d0d0d0">display(image)</span>
+<a id="True-22" name="True-22" href="#True-22"></a>    <span style="color: #6ebf26; font-weight: bold">return</span> <span style="color: #d0d0d0">image</span>
+</pre></div>
+</div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">image</span> <span class="o">=</span> <span class="n">adjust_image</span><span class="p">(</span><span class="s2">&quot;../../temp/obj2png.png&quot;</span><span class="p">,</span> <span class="n">brightness</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">contrast</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../../../../../../../../../../../../../../../_images/40bc33a0f73067169063b02cfb803df4f3577b395883f252a4f8d91f526ff73c.png" src="../../../../../../../../../../../../../../../../../_images/40bc33a0f73067169063b02cfb803df4f3577b395883f252a4f8d91f526ff73c.png" />
+</div>
+</div>
+<p>Currently, the program applies a fixed 50% reduction in contrast and brightness, as weather data hasn’t been integrated. This configuration is subject to adjustment in future iterations.</p>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "FPWRasmussen/DTU-Special-Course",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/src/visual"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Frederik P. W. Rasmussen
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../../../../../../../../../../../../../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794"></script>
+<script src="../../../../../../../../../../../../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
