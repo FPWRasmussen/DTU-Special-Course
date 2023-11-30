@@ -21,15 +21,18 @@ import cartopy.geodesic as cgeo
 import multiprocessing as mp
 import sys
 import PIL
+import importlib.util as _importlib_util 
 
-if __name__ == "__main__":
-    file_path = Path(os.path.abspath(__file__)).parent/"cython"
-    sys.path.append(file_path)
-    from cython import solve_shadow_map
-else:
-    from src.cython import solve_shadow_map
 np.seterr(divide='ignore', invalid='ignore')
 ROOT_DIR = Path(os.path.abspath(__file__)).parent.parent
+
+def load_dynamic(name, module_path): 
+    spec = _importlib_util.spec_from_file_location(name, module_path) 
+    module = _importlib_util.module_from_spec(spec) 
+    # sys.modules[name] = module 
+    spec.loader.exec_module(module) 
+    return module 
+solve_shadow_map = load_dynamic("solve_shadow_map", Path.joinpath(ROOT_DIR, "src/cython/solve_shadow_map.cpython-311-x86_64-linux-gnu.so"))
 
 def get_api_key():
     api_key_file_path = Path.joinpath(ROOT_DIR, "assets/api_key.txt")
