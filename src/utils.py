@@ -317,7 +317,6 @@ def adjust_image(image_path, brightness = 1, contrast = 1, display_image = True)
     image = enhancer.enhance(contrast)
 
     # Save or display the adjusted image.
-    # image.save("../../temp/obj2png.png")
     image.save(Path.joinpath(ROOT_DIR, "temp/obj2png.png"))
     if display_image:
         display(image)

@@ -1,0 +1,651 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Visual Impact Assesment &#8212; DTU Special Course</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../../_static/styles/theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../../../../../_static/styles/bootstrap.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../../../../../_static/styles/pydata-sphinx-theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+
+  
+  <link href="../../../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794" />
+<link rel="preload" as="script" href="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794" />
+  <script src="../../../../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=ac02cc09edc035673794"></script>
+
+    <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+    <script src="../../../../../_static/jquery.js"></script>
+    <script src="../../../../../_static/underscore.js"></script>
+    <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../../../_static/doctools.js"></script>
+    <script src="../../../../../_static/clipboard.min.js"></script>
+    <script src="../../../../../_static/copybutton.js"></script>
+    <script src="../../../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'jupyter-book/_build/jupyter_execute/src/visual/visual_impact';</script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../../../../../src/introduction.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../../_static/logo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../../../../../_static/logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../../../src/introduction.html">
+                    <no title>
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../src/map/elevation_handler.html">Elevation Handler</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../../src/noise/noise_map.html">Noise Map</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../src/noise/geometrical_spreading_of_sound.html">Geometrical Spreading of Sound</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../src/noise/atmospheric_attenuation.html">Atmospheric Attenuation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../src/noise/ground_effect.html">Ground Effect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../src/noise/barrier_attenuation.html">Barrier Attenuation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../src/noise/verification.html">Barrier Verification</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../../src/shadow/shadow_map.html">Shadow Map</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../src/shadow/fast_voxel_traversal.html">Fast Voxel Traversal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../src/shadow/sun_calc.html">Solar Calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../src/shadow/rotor_point_cloud.html">Rotor Point Cloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../src/shadow/multiprocessing.html">Multiprocessing</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../../src/visual/visual_impact.html">Visual Impact</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../src/visual/google_street_view.html">Google Street View</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../src/visual/camera_calibration.html">Camera Calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../src/visual/3d_object_to_image.html">3D Object to Image</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../src/bibliography.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/FPWRasmussen/DTU-Special-Course/main?urlpath=lab/tree/jupyter-book/_build/jupyter_execute/src/visual/visual_impact.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../../../../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/FPWRasmussen/DTU-Special-Course" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/FPWRasmussen/DTU-Special-Course/issues/new?title=Issue%20on%20page%20%2Fjupyter-book/_build/jupyter_execute/src/visual/visual_impact.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../../_sources/jupyter-book/_build/jupyter_execute/src/visual/visual_impact.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Visual Impact Assesment</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#test-of-function">Test of function</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="visual-impact-assesment">
+<h1>Visual Impact Assesment<a class="headerlink" href="#visual-impact-assesment" title="Permalink to this heading">#</a></h1>
+<p>As part of the Environmental Impact Assessment preceding the construction of a wind park, the visual impact of integrating the wind turbines into the landscape is assessed by simulating their placement in nearby images. To accurately represent the turbines, it is crucial that they are appropriately warped and scaled within the image, providing a proper understanding of their impact on the landscape. In this program, image data is retrieved from Google Street View through their API. Subsequently, the turbines are inserted into the image by converting a .obj file to an image and appropriately scaling it using a pinhole camera model.</p>
+<div class="cell tag_hide-input tag_thebe-init docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="p">))</span>
+<span class="kn">from</span> <span class="nn">src.utils</span> <span class="kn">import</span> <span class="n">ElevationHandler</span><span class="p">,</span> <span class="n">visual_impact_assesment</span><span class="p">,</span> <span class="n">calc_extent</span><span class="p">,</span> <span class="n">import_point_source_data</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">5</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">import</span> <span class="nn">sys</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="p">))</span>
+<span class="ne">----&gt; </span><span class="mi">5</span> <span class="kn">from</span> <span class="nn">src.utils</span> <span class="kn">import</span> <span class="n">ElevationHandler</span><span class="p">,</span> <span class="n">visual_impact_assesment</span><span class="p">,</span> <span class="n">calc_extent</span><span class="p">,</span> <span class="n">import_point_source_data</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;src.utils&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<section id="test-of-function">
+<h2>Test of function<a class="headerlink" href="#test-of-function" title="Permalink to this heading">#</a></h2>
+<p>Here are three instances showcasing the code in action. It is versatile enough to accommodate either pre-existing .json files or directly utilize pandas dataframes as input.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">point_source_data</span> <span class="o">=</span> <span class="n">import_point_source_data</span><span class="p">(</span><span class="s2">&quot;Prøvestenen.json&quot;</span><span class="p">)</span> <span class="c1"># load wind park data</span>
+<span class="n">map_shape</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">]</span> <span class="c1"># resolution of map data (in pixels)</span>
+<span class="n">dist</span> <span class="o">=</span> <span class="mi">3000</span> <span class="c1"># distance from turbines to the edge of the map (in meters)</span>
+<span class="n">map_boundaries</span> <span class="o">=</span> <span class="n">calc_extent</span><span class="p">(</span><span class="n">point_source_data</span><span class="p">,</span> <span class="n">dist</span><span class="p">)</span> <span class="c1"># calculate map boundaries (min/max longitude and latitude)</span>
+<span class="n">elevation_handler</span> <span class="o">=</span> <span class="n">ElevationHandler</span><span class="p">(</span><span class="n">map_boundaries</span><span class="p">,</span> <span class="n">map_shape</span><span class="p">)</span> <span class="c1"># Initiate Elevation Handler (Takes care of the map downloads)</span>
+<span class="n">camera_coord</span> <span class="o">=</span> <span class="p">[</span><span class="mf">12.633587898367413</span><span class="p">,</span> <span class="mf">55.6716853762531</span><span class="p">]</span> <span class="c1"># 55., 12.</span>
+<span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">90</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">60</span><span class="p">])</span> <span class="c1"># roll, tilt and yaw (tilt should be 0)</span>
+
+<span class="n">visual_impact_assesment</span><span class="p">(</span><span class="n">elevation_handler</span><span class="p">,</span> <span class="n">point_source_data</span><span class="p">,</span> <span class="n">camera_coord</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">fov</span> <span class="o">=</span> <span class="p">[</span><span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../../../_images/b5faea4ef1a9a41e7608569b66499be64536d9bb8e0052e230834804fc873113.png" src="../../../../../_images/b5faea4ef1a9a41e7608569b66499be64536d9bb8e0052e230834804fc873113.png" />
+</div>
+</div>
+<p>The figure above illustrates that, owing to minor inaccuracies in the calculation method—likely stemming from slight discrepancies in the Coordinate Reference Systems employed—the turbine positions do not precisely align with their real-world counterparts. Nevertheless, the scaling of the turbines is notably accurate, and their positions deviate by no more than a few meters, as evident in the depiction.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">point_source_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;latitude&quot;</span><span class="p">:</span> <span class="mf">55.66533363371845</span><span class="p">,</span>
+        <span class="s2">&quot;longitude&quot;</span><span class="p">:</span> <span class="mf">12.533636688214754</span><span class="p">,</span>
+        <span class="s2">&quot;h&quot;</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span>
+        <span class="s2">&quot;d&quot;</span> <span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="s2">&quot;wind_dir&quot;</span> <span class="p">:</span> <span class="mi">220</span><span class="p">}])</span>
+<span class="n">map_shape</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">]</span>
+<span class="n">dist</span> <span class="o">=</span> <span class="mi">1000</span> 
+<span class="n">map_boundaries</span> <span class="o">=</span> <span class="n">calc_extent</span><span class="p">(</span><span class="n">point_source_data</span><span class="p">,</span> <span class="n">dist</span><span class="p">)</span> 
+<span class="n">elevation_handler</span> <span class="o">=</span> <span class="n">ElevationHandler</span><span class="p">(</span><span class="n">map_boundaries</span><span class="p">,</span> <span class="n">map_shape</span><span class="p">)</span> 
+<span class="n">camera_coord</span> <span class="o">=</span> <span class="p">[</span><span class="mf">12.5321515</span><span class="p">,</span> <span class="mf">55.666176</span><span class="p">]</span> 
+<span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">70</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">])</span> <span class="c1"># roll, tilt and yaw (tilt should be 0)</span>
+
+<span class="n">visual_impact_assesment</span><span class="p">(</span><span class="n">elevation_handler</span><span class="p">,</span> <span class="n">point_source_data</span><span class="p">,</span> <span class="n">camera_coord</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">fov</span> <span class="o">=</span> <span class="p">[</span><span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../../../_images/5bbf12e5117bf7b7e2466b42329e6766c930a78176da91a2d54ad1d0d8ab4808.png" src="../../../../../_images/5bbf12e5117bf7b7e2466b42329e6766c930a78176da91a2d54ad1d0d8ab4808.png" />
+</div>
+</div>
+<p>In the depicted image, a single turbine is positioned within Pasteurs Tårn in Copenhagen, as an illustration of the program’s capability to handle the warping of the turbine object. As the turbine approaches the image border, a subtle stretching effect is expected. Additionally, observe the alignment of the turbine’s height (130 meters), which is nearly equivalent to that of Pasteurs Tårn (128 meters).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">point_source_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;latitude&quot;</span><span class="p">:</span> <span class="mf">46.569692885046436</span><span class="p">,</span>
+        <span class="s2">&quot;longitude&quot;</span><span class="p">:</span> <span class="mf">9.965257138033463</span><span class="p">,</span>
+        <span class="s2">&quot;h&quot;</span><span class="p">:</span> <span class="mi">500</span><span class="p">,</span>
+        <span class="s2">&quot;d&quot;</span> <span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+        <span class="s2">&quot;wind_dir&quot;</span> <span class="p">:</span> <span class="mi">220</span><span class="p">}])</span>
+<span class="n">map_shape</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">]</span>
+<span class="n">dist</span> <span class="o">=</span> <span class="mi">5000</span> 
+<span class="n">map_boundaries</span> <span class="o">=</span> <span class="n">calc_extent</span><span class="p">(</span><span class="n">point_source_data</span><span class="p">,</span> <span class="n">dist</span><span class="p">)</span> 
+<span class="n">elevation_handler</span> <span class="o">=</span> <span class="n">ElevationHandler</span><span class="p">(</span><span class="n">map_boundaries</span><span class="p">,</span> <span class="n">map_shape</span><span class="p">)</span> 
+<span class="n">camera_coord</span> <span class="o">=</span> <span class="p">[</span><span class="mf">9.923683012770276</span><span class="p">,</span> <span class="mf">46.57725126807395</span><span class="p">]</span> 
+<span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">70</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">])</span> <span class="c1"># roll, tilt and yaw (tilt should be 0)</span>
+
+<span class="n">visual_impact_assesment</span><span class="p">(</span><span class="n">elevation_handler</span><span class="p">,</span> <span class="n">point_source_data</span><span class="p">,</span> <span class="n">camera_coord</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">fov</span> <span class="o">=</span> <span class="p">[</span><span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../../../_images/df6519f82387a356e2d596836a4beb4c7f3ccfdcb2060a649006b0a51b702f11.png" src="../../../../../_images/df6519f82387a356e2d596836a4beb4c7f3ccfdcb2060a649006b0a51b702f11.png" />
+</div>
+</div>
+<p>In the example above, the program demonstrates its elevation handling capabilities. The individual heights of both the camera and turbine are considered during the placement of the turbine within the image. Consequently, it is crucial that the <code class="docutils literal notranslate"><span class="pre">map_boundaries</span></code> of the <code class="docutils literal notranslate"><span class="pre">ElevationHandler</span></code> encompasses both the camera and turbine coordinates.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "FPWRasmussen/DTU-Special-Course",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./jupyter-book/_build/jupyter_execute/src/visual"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#test-of-function">Test of function</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Frederik P. W. Rasmussen
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794"></script>
+<script src="../../../../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
