@@ -25,8 +25,11 @@ repository:
   branch: main 
 
 parse:
+  myst_url_schemes: [http, https]
   myst_enable_extensions:  # default extensions to enable in the myst parser. See https://myst-parser.readthedocs.io/en/latest/using/syntax-optional.html
      - html_image
+     - dollarmath
+
 
 # Add GitHub buttons to your book
 # See https://jupyterbook.org/customize/config.html#add-a-link-to-your-repository
@@ -39,3 +42,7 @@ launch_buttons:
   binderhub_url: "https://mybinder.org"  # The URL for your BinderHub (e.g., https://mybinder.org)
   notebook_interface: "jupyterlab"  # or "classic"
   thebe: true
+
+sphinx:
+  config:
+    mathjax_path: https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js

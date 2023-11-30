@@ -65,7 +65,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'src/bibliography';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="Atmospheric Attenuation" href="noise/atmospheric_attenuation.html" />
+    <link rel="prev" title="Convert OBJ file to PNG" href="visual/3d_object_to_image.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -161,16 +161,18 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="introduction.html">
-                    Welcome to my program
+                    <no title>
                 </a>
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="noise/noise_map.html">Noise Map</a></li>
 <li class="toctree-l1"><a class="reference internal" href="map/elevation_handler.html">Elevation Handler</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="visual/visual_impact.html">Visual Impact</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="visual/3d_object_to_image.html">3D Object to Image</a></li>
-<li class="toctree-l2"><a class="reference internal" href="visual/camera_calibration.html">Camera Calibration</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="noise/noise_map.html">Noise Map</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="noise/geometrical_spreading_of_sound.html">Geometrical Spreading of Sound</a></li>
+<li class="toctree-l2"><a class="reference internal" href="noise/atmospheric_attenuation.html">Atmospheric Attenuation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="noise/ground_effect.html">Ground Effect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="noise/barrier_attenuation.html">Barrier Attenuation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="noise/verification.html">Barrier Verification</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="shadow/shadow_map.html">Shadow Map</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -180,7 +182,12 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="shadow/multiprocessing.html">Multiprocessing</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="noise/atmospheric_attenuation.html">Atmospheric Attenuation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="visual/visual_impact.html">Visual Impact</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="visual/google_street_view.html">Google Street View</a></li>
+<li class="toctree-l2"><a class="reference internal" href="visual/camera_calibration.html">Camera Calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="visual/3d_object_to_image.html">3D Object to Image</a></li>
+</ul>
+</li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Bibliography</a></li>
 </ul>
 
@@ -377,24 +384,64 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section id="bibliography">
+  <section class="tex2jax_ignore mathjax_ignore" id="bibliography">
 <h1>Bibliography<a class="headerlink" href="#bibliography" title="Permalink to this heading">#</a></h1>
 <div class="docutils container" id="id1">
-<div class="citation" id="id3" role="doc-biblioentry">
+<div class="citation" id="id2" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
 <p>John Amanatides and Andrew Woo. A fast voxel traversal algorithm for ray tracing. <em>Proceedings of EuroGraphics</em>, 1987.</p>
 </div>
-<div class="citation" id="id5" role="doc-biblioentry">
+<div class="citation" id="id7" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
+<p>Mihai Bugaru, Ovidiu Vasile, and Marian Neagoe. Recent Developments of Noise Attenuation Using Acoustic Barriers for a Specific Edge Geometry. <em>Computation</em>, 9(12):129, Dec 2021. Number: 12. URL: <a class="reference external" href="https://www.mdpi.com/2079-3197/9/12/129">https://www.mdpi.com/2079-3197/9/12/129</a> (visited on 2023-11-16), <a class="reference external" href="https://doi.org/10.3390/computation9120129">doi:10.3390/computation9120129</a>.</p>
+</div>
+<div class="citation" id="id8" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></span>
+<p>R. I. Hartley and A. Zisserman. <em>Multiple View Geometry in Computer Vision</em>. Cambridge University Press, ISBN: 0521540518, second edition, 2004.</p>
+</div>
+<div class="citation" id="id10" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></span>
 <p>NASA. Icesat - srtm30 documentation. 2000. URL: <a class="reference external" href="https://icesat.gsfc.nasa.gov/icesat/tools/SRTM30_Documentation.html">https://icesat.gsfc.nasa.gov/icesat/tools/SRTM30_Documentation.html</a> (visited on 2023-11-27).</p>
 </div>
-<div class="citation" id="id4" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></span>
+<div class="citation" id="id9" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></span>
 <p>Quae.nl. Astronomy answers: position of the sun. 2021. URL: <a class="reference external" href="https://www.aa.quae.nl/en/reken/zonpositie.html">https://www.aa.quae.nl/en/reken/zonpositie.html</a> (visited on 2023-11-27).</p>
 </div>
 <div class="citation" id="id6" role="doc-biblioentry">
-<span class="label"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></span>
+<span class="label"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></span>
+<p>WindPro. Introduction to environmental calculations. 2002. URL: <a class="reference external" href="https://help.emd.dk/knowledgebase/content/windPRO3.6/c6-UK_WindPRO3.6-Environment.pdf">https://help.emd.dk/knowledgebase/content/windPRO3.6/c6-UK_WindPRO3.6-Environment.pdf</a> (visited on 2023-11-29).</p>
+</div>
+<div class="citation" id="id4" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></span>
+<p>Blazing Star Wind Farm, LLC. Docket no. 16-686, blazing star i, technology change attachment b, 20189-146376-01. 2018. URL: <a class="reference external" href="https://www.edockets.state.mn.us/edockets/searchDocuments.do?method=showPoup&amp;documentId={409ED365-0000-CD11-8777-FBD4CC5B94A3}&amp;documentTitle=20189-146376-01">https://www.edockets.state.mn.us/edockets/searchDocuments.do?method=showPoup&amp;documentId={409ED365-0000-CD11-8777-FBD4CC5B94A3}&amp;documentTitle=20189-146376-01</a> (visited on 2023-11-29).</p>
+</div>
+<div class="citation" id="id5" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></span>
+<p>Etha Wind Oy. Noise study wind farm juurakko. 2014. URL: <a class="reference external" href="https://kalajoki.fi/wp-content/uploads/2020/11/Liite4_Juurakko_Noise_Study_CG200603-1AM.pdf">https://kalajoki.fi/wp-content/uploads/2020/11/Liite4_Juurakko_Noise_Study_CG200603-1AM.pdf</a> (visited on 2023-11-29).</p>
+</div>
+<div class="citation" id="id14" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>9<span class="fn-bracket">]</span></span>
+<p>Indenrigs og Boligministeriet. Bekendtgørelse om støj fra vindmøller. <em>Indenrigs og Boligmin. Bolig og planstyrelsen j.nr</em>, 2019. URL: <a class="reference external" href="https://www.retsinformation.dk/eli/lta/2019/135">https://www.retsinformation.dk/eli/lta/2019/135</a> (visited on 2023-08-06).</p>
+</div>
+<div class="citation" id="id15" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>10<span class="fn-bracket">]</span></span>
+<p>Københavns Kommune. Vindmøller på prøvestenen. 2011. URL: <a class="reference external" href="https://www.kk.dk/sites/default/files/agenda/90ae9f00-a1e1-469e-bbd5-018f54baa076/491190df-8954-4ca4-b787-131c4a2ed031-bilag-6.pdf">https://www.kk.dk/sites/default/files/agenda/90ae9f00-a1e1-469e-bbd5-018f54baa076/491190df-8954-4ca4-b787-131c4a2ed031-bilag-6.pdf</a> (visited on 2023-08-06).</p>
+</div>
+<div class="citation" id="id3" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>11<span class="fn-bracket">]</span></span>
+<p>MAS Environmental Ltd. dBmap.net Noise Mapping Tool. URL: <a class="reference external" href="https://noisetools.net/dbmap/">https://noisetools.net/dbmap/</a> (visited on 2023-11-29).</p>
+</div>
+<div class="citation" id="id12" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>12<span class="fn-bracket">]</span></span>
+<p>Technical Committee ISO/TC 43/SC 1. ISO 9613-2:1996, Acoustics — Attenuation of sound during propagation outdoors — Part 1: Calculation of the absorption of Sound by the atmosphere. Technical Report, International Organization for Standardization, Geneva, Switzerland, 1993. URL: <a class="reference external" href="https://www.iso.org/standard/17426.html">https://www.iso.org/standard/17426.html</a> (visited on 2023-08-06).</p>
+</div>
+<div class="citation" id="id11" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>13<span class="fn-bracket">]</span></span>
 <p>Technical Committee ISO/TC 43/SC 1. ISO 9613-2:1996, Acoustics — Attenuation of sound during propagation outdoors — Part 2: General method of calculation. Technical Report, International Organization for Standardization, Geneva, Switzerland, 1996. URL: <a class="reference external" href="https://www.iso.org/standard/20649.html">https://www.iso.org/standard/20649.html</a> (visited on 2023-08-06).</p>
+</div>
+<div class="citation" id="id13" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>14<span class="fn-bracket">]</span></span>
+<p>Technical Committee ISO/TC 43/SC 1. ISO 17534-3:2015, Acoustics — Software for the calculation of sound outdoors — Part 3: Recommendations for quality assured implementation of ISO 9613-2 in software according to ISO 17534-1. Technical Report, International Organization for Standardization, Geneva, Switzerland, 2015. URL: <a class="reference external" href="https://www.iso.org/standard/66128.html">https://www.iso.org/standard/66128.html</a> (visited on 2023-08-06).</p>
 </div>
 </div>
 </div>
@@ -431,12 +478,12 @@ document.write(`
                   <!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="noise/atmospheric_attenuation.html"
+       href="visual/3d_object_to_image.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Atmospheric Attenuation</p>
+        <p class="prev-next-title">Convert OBJ file to PNG</p>
       </div>
     </a>
 </div>

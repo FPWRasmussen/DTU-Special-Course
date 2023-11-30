@@ -37,4 +37,4 @@ chapters:
     - file: src/visual/3d_object_to_image
       title: 3D Object to Image
 - file: src/bibliography
-- title: Bibliography
+  title: Bibliography

@@ -160,16 +160,18 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="src/introduction.html">
-                    Welcome to my program
+                    <no title>
                 </a>
             </li>
         </ul>
         <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="src/noise/noise_map.html">Noise Map</a></li>
 <li class="toctree-l1"><a class="reference internal" href="src/map/elevation_handler.html">Elevation Handler</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="src/visual/visual_impact.html">Visual Impact</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="src/visual/3d_object_to_image.html">3D Object to Image</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src/visual/camera_calibration.html">Camera Calibration</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="src/noise/noise_map.html">Noise Map</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="src/noise/geometrical_spreading_of_sound.html">Geometrical Spreading of Sound</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/noise/atmospheric_attenuation.html">Atmospheric Attenuation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/noise/ground_effect.html">Ground Effect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/noise/barrier_attenuation.html">Barrier Attenuation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/noise/verification.html">Barrier Verification</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="src/shadow/shadow_map.html">Shadow Map</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -179,7 +181,12 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="src/shadow/multiprocessing.html">Multiprocessing</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="src/noise/atmospheric_attenuation.html">Atmospheric Attenuation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="src/visual/visual_impact.html">Visual Impact</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="src/visual/google_street_view.html">Google Street View</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/visual/camera_calibration.html">Camera Calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/visual/3d_object_to_image.html">3D Object to Image</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="src/bibliography.html">Bibliography</a></li>
 </ul>
 
@@ -377,8 +384,6 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#disclaimer">Disclaimer</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#acknowledgments">Acknowledgments</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tasks">Tasks</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notes">Notes:</a></li>
 </ul>
             </nav>
         </div>
@@ -391,7 +396,7 @@ document.write(`
                 <article class="bd-article" role="main">
                   
   <p><a class="reference external" href="https://mybinder.org/v2/gh/FPWRasmussen/DTU-Special-Course/main"><img alt="Binder" src="https://mybinder.org/badge_logo.svg" /></a></p>
-<section id="wind-energy-analysis-tools">
+<section class="tex2jax_ignore mathjax_ignore" id="wind-energy-analysis-tools">
 <h1>Wind Energy Analysis Tools<a class="headerlink" href="#wind-energy-analysis-tools" title="Permalink to this heading">#</a></h1>
 <p>This repository contains a collection of Jupyter notebooks developed as a part of the special course “Noise and Visual Impact Analysis in Wind Energy” at DTU (Technical University of Denmark). The notebooks are designed to assist in wind turbine impact assessments, specifically addressing shadow flickering, noise calculations (ISO 9613-2), and generating visual impact assessments using the Google Street View API.</p>
 <section id="disclaimer">
@@ -400,29 +405,22 @@ document.write(`
 </section>
 <section id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">#</a></h2>
-<p>To use the notebooks, follow the steps outlined below: (TODO)</p>
+<p>To utilize the notebooks, follow the steps outlined below:</p>
+<ol class="arabic">
+<li><p>Clone the repository using the following command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">FPWRasmussen</span><span class="o">/</span><span class="n">DTU</span><span class="o">-</span><span class="n">Special</span><span class="o">-</span><span class="n">Course</span><span class="o">.</span><span class="n">git</span>
+</pre></div>
+</div>
+</li>
+<li><p>Execute each individual Jupyter Notebook as needed. You can find the notebooks in the <code class="docutils literal notranslate"><span class="pre">src</span></code> directory.</p></li>
+<li><p>Alternatively, you can access the deployed GitHub page for direct access to the Jupyter Notebooks:</p>
+<p><a class="reference external" href="https://fpwrasmussen.github.io/DTU-Special-Course/">https://fpwrasmussen.github.io/DTU-Special-Course/</a></p>
+</li>
+</ol>
 </section>
 <section id="acknowledgments">
 <h2>Acknowledgments<a class="headerlink" href="#acknowledgments" title="Permalink to this heading">#</a></h2>
 <p>Special thanks to the course instructors at the DTU Wind department for their guidance and support during the development of these tools.</p>
-</section>
-<section id="tasks">
-<h2>Tasks<a class="headerlink" href="#tasks" title="Permalink to this heading">#</a></h2>
-<ul class="simple">
-<li><p>Python inspect to import functions into jupyter</p></li>
-<li><p>Jupyter book (https://jupyterbook.org/en/stable/publish/gh-pages.html)</p></li>
-<li><p>pytest (https://docs.pytest.org/en/7.4.x/)</p></li>
-</ul>
-</section>
-<section id="notes">
-<h2>Notes:<a class="headerlink" href="#notes" title="Permalink to this heading">#</a></h2>
-<p><em>- To build the Jupyter book use:</em> jupyter-book build DTU\ Special\ Course/ –path-output DTU\ Special\ Course/jupyter-book/ –config DTU\ Special\ Course/jupyter-book/_config.yml (–builder pdfhtml) (DROPBOX)</p>
-<p><em>- To push the changes to Github:</em> ghp-import -n -p -f _build/html (jupyter-book)</p>
-<ul class="simple">
-<li><p>Use scoped-style</p></li>
-<li><p>pyproject.toml (dependencies)</p></li>
-</ul>
-<p>python setup.py build_ext –inplace</p>
 </section>
 </section>
 
@@ -474,8 +472,6 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#disclaimer">Disclaimer</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#acknowledgments">Acknowledgments</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tasks">Tasks</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#notes">Notes:</a></li>
 </ul>
   </nav></div>
 

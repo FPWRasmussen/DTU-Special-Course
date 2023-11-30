@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>&lt;no title&gt; &#8212; DTU Special Course</title>
+    <title>Ground Effect &#8212; DTU Special Course</title>
   
   
   
@@ -62,9 +62,13 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'src/noise/ground_effect';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Barrier Attenuation" href="barrier_attenuation.html" />
+    <link rel="prev" title="Atmospheric Attenuation" href="atmospheric_attenuation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -160,16 +164,18 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="../introduction.html">
-                    Welcome to my program
+                    <no title>
                 </a>
             </li>
         </ul>
-        <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="noise_map.html">Noise Map</a></li>
+        <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../map/elevation_handler.html">Elevation Handler</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../visual/visual_impact.html">Visual Impact</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../visual/3d_object_to_image.html">3D Object to Image</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../visual/camera_calibration.html">Camera Calibration</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="noise_map.html">Noise Map</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="geometrical_spreading_of_sound.html">Geometrical Spreading of Sound</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atmospheric_attenuation.html">Atmospheric Attenuation</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Ground Effect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="barrier_attenuation.html">Barrier Attenuation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verification.html">Barrier Verification</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../shadow/shadow_map.html">Shadow Map</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -179,7 +185,12 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="../shadow/multiprocessing.html">Multiprocessing</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="atmospheric_attenuation.html">Atmospheric Attenuation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../visual/visual_impact.html">Visual Impact</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../visual/google_street_view.html">Google Street View</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../visual/camera_calibration.html">Camera Calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../visual/3d_object_to_image.html">3D Object to Image</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
 </ul>
 
@@ -431,7 +442,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1><no title></h1>
+    <h1>Ground Effect</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -440,9 +451,12 @@ document.write(`
                 <h2> Contents </h2>
             </div>
             <nav aria-label="Page">
-                <ul class="simple visible nav section-nav flex-column">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calculation-of-ground-attenuation">Calculation of ground attenuation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#octave-band-125-hz-to-1000-hz">Octave band 125 Hz to 1000 Hz</a></li>
 </ul>
-
+</li>
+</ul>
             </nav>
         </div>
     </div>
@@ -453,75 +467,97 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> widget
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="p">))</span>
-<span class="kn">from</span> <span class="nn">src.utils</span> <span class="kn">import</span> <span class="n">ElevationHandler</span><span class="p">,</span> <span class="n">transform_coordinates</span><span class="p">,</span> <span class="n">Line</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tempeature</span> <span class="o">=</span> <span class="mi">20</span> <span class="c1"># [deg C]</span>
-<span class="n">c</span> <span class="o">=</span> <span class="mf">331.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">tempeature</span> <span class="o">/</span> <span class="mf">273.15</span><span class="p">)</span> <span class="c1"># speed of sound in air [m/s]</span>
-<span class="n">f</span> <span class="o">=</span> <span class="mi">1000</span> <span class="c1"># frequency [Hz]</span>
-<span class="n">wavelength</span> <span class="o">=</span> <span class="n">c</span><span class="o">/</span><span class="n">f</span> <span class="c1"># [m]</span>
-<span class="n">d</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="n">dp</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1"># source-to-receiver distance, in metres, projected onto the ground planes [m]</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Gr</span> <span class="o">=</span> <span class="n">Gs</span> <span class="o">=</span> <span class="n">Gm</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="c1"># for Porous ground (Implement mixed ground)</span>
-<span class="n">startPoint</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-<span class="n">endPoint</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
-<span class="n">SR_line</span> <span class="o">=</span> <span class="n">Line</span><span class="p">(</span><span class="n">startPoint</span><span class="p">,</span> <span class="n">endPoint</span><span class="p">)</span>
-<span class="n">d</span> <span class="o">=</span> <span class="n">SR_line</span><span class="o">.</span><span class="n">length_3d</span><span class="p">()</span>
-<span class="n">dp</span> <span class="o">=</span> <span class="n">SR_line</span><span class="o">.</span><span class="n">length_2d</span><span class="p">()</span>
-<span class="n">hs</span> <span class="o">=</span> <span class="mi">100</span> <span class="c1"># height source [m]</span>
-<span class="n">hr</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># height receiver [m]</span>
-<span class="n">As</span> <span class="o">=</span> <span class="n">calcA</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">hs</span><span class="p">,</span> <span class="n">Gs</span><span class="p">)</span>
-<span class="n">Ar</span> <span class="o">=</span> <span class="n">calcA</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">hr</span><span class="p">,</span> <span class="n">Gr</span><span class="p">)</span>
-<span class="n">Am</span> <span class="o">=</span> <span class="n">calcAm</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">dp</span><span class="p">,</span> <span class="n">hs</span><span class="p">,</span> <span class="n">hr</span><span class="p">,</span> <span class="n">Gm</span><span class="p">)</span>
-<span class="n">Agr</span> <span class="o">=</span> <span class="n">As</span> <span class="o">+</span> <span class="n">Ar</span> <span class="o">+</span> <span class="n">Am</span>
-
-<span class="n">hm</span> <span class="o">=</span> <span class="p">(</span><span class="n">hs</span> <span class="o">+</span> <span class="n">hr</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
-<span class="n">Agr</span> <span class="o">=</span> <span class="mf">4.8</span> <span class="o">-</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">hm</span> <span class="o">/</span> <span class="n">d</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">17</span> <span class="o">+</span> <span class="p">(</span><span class="mi">300</span> <span class="o">/</span> <span class="n">d</span><span class="p">))</span>
-<span class="k">if</span> <span class="n">Agr</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="n">Agr</span> <span class="o">=</span> <span class="mi">0</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">line</span> <span class="mi">9</span>
-<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="n">hs</span> <span class="o">=</span> <span class="mi">100</span> <span class="c1"># height source [m]</span>
-<span class="g g-Whitespace">      </span><span class="mi">8</span> <span class="n">hr</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># height receiver [m]</span>
-<span class="ne">----&gt; </span><span class="mi">9</span> <span class="n">As</span> <span class="o">=</span> <span class="n">calcA</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">hs</span><span class="p">,</span> <span class="n">Gs</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">10</span> <span class="n">Ar</span> <span class="o">=</span> <span class="n">calcA</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">hr</span><span class="p">,</span> <span class="n">Gr</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">11</span> <span class="n">Am</span> <span class="o">=</span> <span class="n">calcAm</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">dp</span><span class="p">,</span> <span class="n">hs</span><span class="p">,</span> <span class="n">hr</span><span class="p">,</span> <span class="n">Gm</span><span class="p">)</span>
-
-<span class="ne">NameError</span>: name &#39;calcA&#39; is not defined
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
+  <section class="tex2jax_ignore mathjax_ignore" id="ground-effect">
+<h1>Ground Effect<a class="headerlink" href="#ground-effect" title="Permalink to this heading">#</a></h1>
+<p>The total ground attenuation is calcuated as the sum of the attenuation in the source, receiver and middle region.</p>
+<div class="math notranslate nohighlight">
+\[
+A_{gr} = A_s + A_r + A_m
+\]</div>
+<p>The ground factor is determined by the type of ground in the specified region. A ground factor of <span class="math notranslate nohighlight">\(G = 0\)</span> indicates hard ground, suggesting an amplifying effect on the sound power level. When <span class="math notranslate nohighlight">\(G = 1\)</span>, the ground is considered porous, indicating noise absorption. For values of <span class="math notranslate nohighlight">\(G\)</span> between 0 and 1, the ground is deemed mixed. The precise ground factor for wind turbine noise simulations is somewhat controversial, as a higher ground factor results in lower noise emission levels in simulations. Consequently, wind parks can be built closer to residential areas. However, typical values used generally fall between <span class="math notranslate nohighlight">\(G = 0.7 \)</span><span id="id1">[<a class="reference internal" href="../bibliography.html#id4" title="Blazing Star Wind Farm, LLC. Docket no. 16-686, blazing star i, technology change attachment b, 20189-146376-01. 2018. URL: https://www.edockets.state.mn.us/edockets/searchDocuments.do?method=showPoup&amp;documentId={409ED365-0000-CD11-8777-FBD4CC5B94A3}&amp;documentTitle=20189-146376-01 (visited on 2023-11-29).">7</a>]</span> and <span class="math notranslate nohighlight">\(G = 0.4\)</span> <span id="id2">[<a class="reference internal" href="../bibliography.html#id5" title="Etha Wind Oy. Noise study wind farm juurakko. 2014. URL: https://kalajoki.fi/wp-content/uploads/2020/11/Liite4_Juurakko_Noise_Study_CG200603-1AM.pdf (visited on 2023-11-29).">8</a>]</span>.</p>
+<div class="cell tag_hide-input tag_thebe-init docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-
-<span class="n">fs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">150</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<section id="calculation-of-ground-attenuation">
+<h2>Calculation of ground attenuation<a class="headerlink" href="#calculation-of-ground-attenuation" title="Permalink to this heading">#</a></h2>
+<p>The source and receiver attenuation <span class="math notranslate nohighlight">\(A_s\)</span> and <span class="math notranslate nohighlight">\(A_r\)</span> are generally only dependent on the ground factor <span class="math notranslate nohighlight">\(G\)</span> (except for f = 63 Hz where the attenuation is just equal to -1.5). However, for the 125, 250, 500, 1000 Hz octave bands, the attenuation is also dependant on the height <span class="math notranslate nohighlight">\(h\)</span> of the source or receiver above ground. <span class="math notranslate nohighlight">\(d_p\)</span> is the source-to-receiver distance, in metres, projected onto the ground planes.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+a' = 1.5 + 3.0 \cdot e^{-0.12 \cdot \left(h - 5\right)^2} \cdot \left(1 - e^{-\frac{d_p}{50}}\right) + 5.7 \cdot e^{-0.09 \cdot h^2} \cdot \left(1 - e^{-2.8 \cdot 10^{-6} \cdot d_p^2}\right) \\
+b' = 1.5 + 8.6 \cdot e^{-0.09 \cdot h^2} \cdot \left(1 - e^{-\frac{d_p}{50}}\right) \\
+c' = 1.5 + 14.0 \cdot e^{-0.46 \cdot h^2} \cdot \left(1 - e^{-\frac{d_p}{50}}\right) \\
+d' = 1.5 + 5.0 \cdot e^{-0.9 \cdot h^2} \cdot \left(1 - e^{-\frac{d_p}{50}}\right)
+\end{split}\]</div>
+<p>The full calculatation for the attenuation in the source, receiver and middle region can be found in the table below.</p>
+<table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Nominal midband frequency [Hz]</strong></p></th>
+<th class="head"><p><strong><span class="math notranslate nohighlight">\(A_s\)</span> or <span class="math notranslate nohighlight">\(A_r\)</span> [dB]</strong></p></th>
+<th class="head"><p><strong><span class="math notranslate nohighlight">\(A_m\)</span> [dB]</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>63</p></td>
+<td><p><span class="math notranslate nohighlight">\(-1.5\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(-3q\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>125</p></td>
+<td><p><span class="math notranslate nohighlight">\(-1.5 + G\cdot a'(h)\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(-3q(1-G)\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>250</p></td>
+<td><p><span class="math notranslate nohighlight">\(-1.5 + G\cdot b'(h)\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(-3q(1-G)\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>500</p></td>
+<td><p><span class="math notranslate nohighlight">\(-1.5 + G\cdot c'(h)\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(-3q(1-G)\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>1000</p></td>
+<td><p><span class="math notranslate nohighlight">\(-1.5 + G\cdot d'(h)\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(-3q(1-G)\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>2000</p></td>
+<td><p><span class="math notranslate nohighlight">\(-1.5(1-G)\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(-3q(1-G)\)</span></p></td>
+</tr>
+<tr class="row-even"><td><p>4000</p></td>
+<td><p><span class="math notranslate nohighlight">\(-1.5(1-G)\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(-3q(1-G)\)</span></p></td>
+</tr>
+<tr class="row-odd"><td><p>8000</p></td>
+<td><p><span class="math notranslate nohighlight">\(-1.5(1-G)\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(-3q(1-G)\)</span></p></td>
+</tr>
+</tbody>
+</table>
+<p><em>Tab 1: Formulas for computing ground attenuation contributions in the octave bands, denoted as <span class="math notranslate nohighlight">\(A_s\)</span>, <span class="math notranslate nohighlight">\(A_r\)</span>, and <span class="math notranslate nohighlight">\(A_m\)</span> (Source: <span id="id3">[<a class="reference internal" href="../bibliography.html#id11" title="Technical Committee ISO/TC 43/SC 1. ISO 9613-2:1996, Acoustics — Attenuation of sound during propagation outdoors — Part 2: General method of calculation. Technical Report, International Organization for Standardization, Geneva, Switzerland, 1996. URL: https://www.iso.org/standard/20649.html (visited on 2023-08-06).">13</a>]</span>).</em></p>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+q = \begin{cases}
+1 - \frac{30(h_s + h_r)}{d_p} &amp; \text{if } d_p &gt; 30(h_s + h_r)\\
+0 &amp; \text{if } d_p \leq 30(h_s + h_r)
+\end{cases}
+\end{split}\]</div>
+<p>As it can be seen from the table above, when the ground factor <span class="math notranslate nohighlight">\(G=0\)</span>, indicating a hard and reflecting ground, the attenuation at both the source and receiver is -1.5 dB. This implies that the sound power level measured at the receiver is estimated to be 3 dB higher due to the ground effect.</p>
+<section id="octave-band-125-hz-to-1000-hz">
+<h3>Octave band 125 Hz to 1000 Hz<a class="headerlink" href="#octave-band-125-hz-to-1000-hz" title="Permalink to this heading">#</a></h3>
+<p>As previously noted, the ground attenuation at the source and receiver for the octave bands 125 Hz, 250 Hz, 500 Hz, and 1000 Hz is determined using the prime functions defined earlier. These functions are dependent on the height of the source or receiver above the ground. The impact of height on the prime factor is illustrated below.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">125</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">]</span>
 <span class="n">dp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mi">2000</span><span class="p">),</span> <span class="mi">100</span><span class="p">)</span>
 <span class="n">hs</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.75</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">]]</span>
 
@@ -554,8 +590,13 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "db81375512834b379f4a7c115984900e", "version_major": 2, "version_minor": 0}</script></div>
+<img alt="../../_images/98cadd3374df541c18866cc9fa058577aea1fd7a9cc284c10995ad4de27f4d80.png" src="../../_images/98cadd3374df541c18866cc9fa058577aea1fd7a9cc284c10995ad4de27f4d80.png" />
 </div>
+</div>
+<p>As observed earlier, the functions <span class="math notranslate nohighlight">\(a'\)</span>, <span class="math notranslate nohighlight">\(b'\)</span>, <span class="math notranslate nohighlight">\(c'\)</span> and <span class="math notranslate nohighlight">\(d'\)</span> all share a minimum limit of 1.5 dB. However, their overall values are dependent on the height of the source/receiver and the projected distance between them. Notably, the prime functions enable attenuations <span class="math notranslate nohighlight">\(A_s\)</span> and <span class="math notranslate nohighlight">\(A_r\)</span> to surpass those of other octave bands, particularly in more porous terrains characterized by a higher ground factor. In such cases, these octave bands possess the capacity to absorb a substantial amount of noise.</p>
+</section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {
@@ -587,6 +628,24 @@ document.write(`
                 <footer class="prev-next-footer">
                   <!-- Previous / next buttons -->
 <div class="prev-next-area">
+    <a class="left-prev"
+       href="atmospheric_attenuation.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Atmospheric Attenuation</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="barrier_attenuation.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Barrier Attenuation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               
@@ -601,9 +660,12 @@ document.write(`
     <i class="fa-solid fa-list"></i> Contents
   </div>
   <nav class="bd-toc-nav page-toc">
-    <ul class="simple visible nav section-nav flex-column">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calculation-of-ground-attenuation">Calculation of ground attenuation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#octave-band-125-hz-to-1000-hz">Octave band 125 Hz to 1000 Hz</a></li>
 </ul>
-
+</li>
+</ul>
   </nav></div>
 
 </div></div>

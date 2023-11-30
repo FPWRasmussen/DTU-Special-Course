@@ -26,7 +26,8 @@ if __name__ == "__main__":
     file_path = Path(os.path.abspath(__file__)).parent/"cython"
     sys.path.append(file_path)
     from cython import solve_shadow_map
-
+else:
+    from src.cython import solve_shadow_map
 np.seterr(divide='ignore', invalid='ignore')
 ROOT_DIR = Path(os.path.abspath(__file__)).parent.parent
 
