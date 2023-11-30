@@ -27,7 +27,6 @@ if __name__ == "__main__":
     sys.path.append(file_path)
     from cython import solve_shadow_map
 
-
 np.seterr(divide='ignore', invalid='ignore')
 ROOT_DIR = Path(os.path.abspath(__file__)).parent.parent
 
@@ -1328,18 +1327,3 @@ class Line():
     
 def test_dir():
     return os.path.dirname(os.path.abspath(__file__))
-
-if __name__ == "__main__":
-    # map_boundaries = [10.0, 10.5, 55.0, 55.5] 56.105203790189, 9.684975881254704
-    map_boundaries = [9.0, 10, 56.00, 57.0]
-    CUR_DIR = os.getcwd()
-    map_size = [1000, 1000]
-    elevation_handler = ElevationHandler(map_boundaries, map_size)
-
-    plt.figure()
-    plt.contourf(elevation_handler.map_array, cmap = "terrain")
-    plt.show(block = False)
-
-    plt.figure()
-    plt.contourf(elevation_handler.full_map, cmap = "terrain")
-    plt.show(block = True)
