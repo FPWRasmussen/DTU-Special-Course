@@ -812,7 +812,7 @@ def calcAgr(f, dp, G, hs, hr):
 
     return As + Ar + Am
 
-def solve_noise_map(elevation_handler, point_source_data, ground_factor = 0, temp = 15, rh = 70):
+def solve_noise_map(elevation_handler, point_source_data, ground_factor = 0, temp = 15, rh = 70, receiver_height = 0):
 
     LDW = np.full_like(elevation_handler.map_array, -np.inf) # init res
 
@@ -821,7 +821,7 @@ def solve_noise_map(elevation_handler, point_source_data, ground_factor = 0, tem
         # Lf = np.ones_like(elevation_handler.map_array)*-9999999 # init res
         Lf = np.full_like(elevation_handler.map_array, -np.inf)
 
-        dp, d, dss, dsr, e = calc_diffraction_path(elevation_handler, point_source)
+        dp, d, dss, dsr, e = calc_diffraction_path(elevation_handler, point_source, receiver_height=receiver_height)
         
         z = (dss + e + dsr) - d
 
@@ -831,7 +831,7 @@ def solve_noise_map(elevation_handler, point_source_data, ground_factor = 0, tem
         Kmet[mask_direct] = np.exp(-(1/2000) * np.sqrt(dss[mask_direct] * dsr[mask_direct] * d[mask_direct] / (2 * z[mask_direct]))) # Calculate Kmet only where the mask is True
 
         hs = point_source.h
-        hr = 0
+        hr = receiver_height
 
         for f, LW in point_source.octave_band.items(): # iterate over each octave-band sound power level
             f = int(f)
@@ -851,12 +851,12 @@ def solve_noise_map(elevation_handler, point_source_data, ground_factor = 0, tem
 
             Adiv = 20 * np.log10(d) + 11
 
-            Abar = Dz
-            mask_Agr = Agr < 0
+            Abar = Dz.copy()
+            mask_Agr = Agr > 0
             Abar[mask_Agr] = Dz[mask_Agr] - Agr[mask_Agr]
             Abar = np.maximum(0, Abar)
             
-            A =  Adiv + Aatm  + Abar + Agr
+            A = Adiv + Aatm  + Abar + Agr
             
             Lf = 10*np.log10(10**(0.1 * Lf) + 10**(0.1 * (LW - A + A_weighting(f))))
         LDW = 10*np.log10(10**(0.1 * LDW) + 10**(0.1 * Lf))
@@ -961,7 +961,7 @@ def calc_extent(point_source_data, dist):
     
     return extent
 
-def calc_diffraction_path(elevation_handler, point_source_data):
+def calc_diffraction_path(elevation_handler, point_source_data, receiver_height = 0):
     """
     Input:
     - elevation_handler (ElevationHandler): An object containing elevation map and coordinate ranges.
@@ -1018,7 +1018,7 @@ def calc_diffraction_path(elevation_handler, point_source_data):
         dp[i] = dist_list[-1]
         # Set source height and receiver height
         hs = source_height
-        hr = 0
+        hr = receiver_height
 
         # Calculate diffraction path indices
         diffraction_index = calc_diffraction(hs, hr, dist_list, terrain_elevation)
