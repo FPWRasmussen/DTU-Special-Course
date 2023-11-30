@@ -31,7 +31,6 @@ import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 from cartopy.io.img_tiles import GoogleTiles
 from matplotlib.colors import LogNorm
-import numpy as np
 ------------------
 
 [0;31m---------------------------------------------------------------------------[0m

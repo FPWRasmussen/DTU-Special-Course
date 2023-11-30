@@ -25,12 +25,10 @@ import os
 from pathlib import Path
 import sys
 sys.path.append(str(Path(os.getcwd()).parent.parent))
-from src.utils import ElevationHandler, ElevationHandlerTest, import_point_source_data, calc_extent, solve_noise_map
+from src.utils import ElevationHandlerTest, solve_noise_map
 import numpy as np
 import matplotlib.pyplot as plt
-from cartopy.io.img_tiles import GoogleTiles
-import cartopy.crs as ccrs
-from scipy.interpolate import RectBivariateSpline, griddata
+from scipy.interpolate import RectBivariateSpline
 import pandas as pd
 ------------------
 
@@ -39,7 +37,7 @@ import pandas as pd
 Cell [0;32mIn[1], line 5[0m
 [1;32m      3[0m [38;5;28;01mimport[39;00m [38;5;21;01msys[39;00m
 [1;32m      4[0m sys[38;5;241m.[39mpath[38;5;241m.[39mappend([38;5;28mstr[39m(Path(os[38;5;241m.[39mgetcwd())[38;5;241m.[39mparent[38;5;241m.[39mparent))
-[0;32m----> 5[0m [38;5;28;01mfrom[39;00m [38;5;21;01msrc[39;00m[38;5;21;01m.[39;00m[38;5;21;01mutils[39;00m [38;5;28;01mimport[39;00m ElevationHandler, ElevationHandlerTest, import_point_source_data, calc_extent, solve_noise_map
+[0;32m----> 5[0m [38;5;28;01mfrom[39;00m [38;5;21;01msrc[39;00m[38;5;21;01m.[39;00m[38;5;21;01mutils[39;00m [38;5;28;01mimport[39;00m ElevationHandlerTest, solve_noise_map
 [1;32m      6[0m [38;5;28;01mimport[39;00m [38;5;21;01mnumpy[39;00m [38;5;28;01mas[39;00m [38;5;21;01mnp[39;00m
 [1;32m      7[0m [38;5;28;01mimport[39;00m [38;5;21;01mmatplotlib[39;00m[38;5;21;01m.[39;00m[38;5;21;01mpyplot[39;00m [38;5;28;01mas[39;00m [38;5;21;01mplt[39;00m
 
