@@ -1,0 +1,813 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Barrier Attenuation &#8212; DTU Special Course</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../../../../../../../../../../../../../../_static/styles/theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../../../../../../../../../../../../../../../../../_static/styles/bootstrap.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+<link href="../../../../../../../../../../../../../../../../../_static/styles/pydata-sphinx-theme.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+
+  
+  <link href="../../../../../../../../../../../../../../../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=ac02cc09edc035673794" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../../../../../../../../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../../../../../../../../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../../../../../../../../../../../../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../../../../../../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../../../../../../../../../../../../../../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../../../../../../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../../../../../../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../../../../../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../../../../../../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../../../../../../../../../../../../../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../../../../../../../../../../../../../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794" />
+<link rel="preload" as="script" href="../../../../../../../../../../../../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794" />
+  <script src="../../../../../../../../../../../../../../../../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=ac02cc09edc035673794"></script>
+
+    <script data-url_root="../../../../../../../../../../../../../../../../../" id="documentation_options" src="../../../../../../../../../../../../../../../../../_static/documentation_options.js"></script>
+    <script src="../../../../../../../../../../../../../../../../../_static/jquery.js"></script>
+    <script src="../../../../../../../../../../../../../../../../../_static/underscore.js"></script>
+    <script src="../../../../../../../../../../../../../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../../../../../../../../../../../../../../../_static/doctools.js"></script>
+    <script src="../../../../../../../../../../../../../../../../../_static/clipboard.min.js"></script>
+    <script src="../../../../../../../../../../../../../../../../../_static/copybutton.js"></script>
+    <script src="../../../../../../../../../../../../../../../../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../../../../../../../../../../../../../../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../../../../../../../../../../../../../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../../../../../../../../../../../../../../../../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/src/noise/barrier_attenuation';</script>
+    <link rel="index" title="Index" href="../../../../../../../../../../../../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../../../../../../../../../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../../../../../../../../../../../../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../../../../../../../../../../../../../../../../../src/introduction.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../../../../../../../../../../../../../../../../_static/logo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../../../../../../../../../../../../../../../../../_static/logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../../../../../../../../../../../../../../../../../src/introduction.html">
+                    Wind Energy Analysis Tools
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/map/elevation_handler.html">Elevation Handler</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/noise/noise_map.html">Noise Map</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/noise/geometrical_spreading_of_sound.html">Geometrical Spreading of Sound</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/noise/atmospheric_attenuation.html">Atmospheric Attenuation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/noise/ground_effect.html">Ground Effect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/noise/barrier_attenuation.html">Barrier Attenuation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/noise/verification.html">Barrier Verification</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/shadow/shadow_map.html">Shadow Map</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/shadow/fast_voxel_traversal.html">Fast Voxel Traversal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/shadow/sun_calc.html">Solar Calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/shadow/rotor_point_cloud.html">Rotor Point Cloud</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/shadow/multiprocessing.html">Multiprocessing</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/visual/visual_impact.html">Visual Impact</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/visual/google_street_view.html">Google Street View</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/visual/camera_calibration.html">Camera Calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/visual/3d_object_to_image.html">3D Object to Image</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../../../../../../../../../../../../src/bibliography.html">Bibliography</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/FPWRasmussen/DTU-Special-Course/main?urlpath=lab/tree/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/src/noise/barrier_attenuation.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../../../../../../../../../../../../../../../../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/FPWRasmussen/DTU-Special-Course" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/FPWRasmussen/DTU-Special-Course/issues/new?title=Issue%20on%20page%20%2Fjupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/src/noise/barrier_attenuation.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../../../../../../../../../../../../../../../../_sources/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/src/noise/barrier_attenuation.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Barrier Attenuation</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calculating-the-diffraction-path">Calculating the diffraction path</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#demonstration-of-code">Demonstration of code</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calculation-of-barrier-attenuation">Calculation of barrier attenuation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization-of-diffraction-length">Visualization of Diffraction Length</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meteorological-conditions">Meteorological conditions</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="barrier-attenuation">
+<h1>Barrier Attenuation<a class="headerlink" href="#barrier-attenuation" title="Permalink to this heading">#</a></h1>
+<p>When obstacles are positioned between the point source and the receiver in the line-of-sight, these barriers exert a damping effect on the noise perceived by the receiver. As noise rays encounter a barrier, diffraction occurs in the direction of the shortest path around the barrier. The ISO 9613-2 standard provides methods for calculating both lateral and vertical diffraction around barriers. However, since this model specifically incorporates terrain barriers (excluding barrier attenuation from screens or buildings), ISO 17534-3 suggests ignoring lateral diffractions <span id="id1">[<a class="reference internal" href="../../../../../../../../../../../../../../../../../src/bibliography.html#id13" title="Technical Committee ISO/TC 43/SC 1. ISO 17534-3:2015, Acoustics — Software for the calculation of sound outdoors — Part 3: Recommendations for quality assured implementation of ISO 9613-2 in software according to ISO 17534-1. Technical Report, International Organization for Standardization, Geneva, Switzerland, 2015. URL: https://www.iso.org/standard/66128.html (visited on 2023-08-06).">14</a>]</span>. Additionally, ISO 17534 outlines how higher-order diffractions should be handled, and this approach is integrated into the model. ISO 17534 specifies that the diffraction path should be treated like a tight ribbon extending from the source to the receiver.</p>
+<a class="bg-primary reference internal image-reference" href="jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/images/diffraction_path.png"><img alt="diffraction_path" class="bg-primary" src="jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/images/diffraction_path.png" style="width: 400px;" /></a>
+<p><em>Fig 1: Diffraction path from the source to the receiver over multiple barriers (Source: <span id="id2">[<a class="reference internal" href="../../../../../../../../../../../../../../../../../src/bibliography.html#id13" title="Technical Committee ISO/TC 43/SC 1. ISO 17534-3:2015, Acoustics — Software for the calculation of sound outdoors — Part 3: Recommendations for quality assured implementation of ISO 9613-2 in software according to ISO 17534-1. Technical Report, International Organization for Standardization, Geneva, Switzerland, 2015. URL: https://www.iso.org/standard/66128.html (visited on 2023-08-06).">14</a>]</span>).</em></p>
+<div class="cell tag_hide-input tag_thebe-init docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="p">))</span>
+<span class="kn">from</span> <span class="nn">src.utils</span> <span class="kn">import</span> <span class="n">ElevationHandler</span><span class="p">,</span> <span class="n">calc_diffraction</span><span class="p">,</span> <span class="n">calc_diffraction_path</span><span class="p">,</span> <span class="n">print_code</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">IPython.core.display</span> <span class="kn">import</span> <span class="n">HTML</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">5</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">import</span> <span class="nn">sys</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="p">))</span>
+<span class="ne">----&gt; </span><span class="mi">5</span> <span class="kn">from</span> <span class="nn">src.utils</span> <span class="kn">import</span> <span class="n">ElevationHandler</span><span class="p">,</span> <span class="n">calc_diffraction</span><span class="p">,</span> <span class="n">calc_diffraction_path</span><span class="p">,</span> <span class="n">print_code</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;src.utils&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<section id="calculating-the-diffraction-path">
+<h2>Calculating the diffraction path<a class="headerlink" href="#calculating-the-diffraction-path" title="Permalink to this heading">#</a></h2>
+<p>The calculation of the diffraction path utilizes a recursive function called <code class="docutils literal notranslate"><span class="pre">diffraction_recursion</span></code>. The process begins with initiating the function using a straight line from the source to the receiver. Subsequently, the algorithm checks if any point along the terrain intersects with this line, indicating a collision between the line-of-sight and the terrain. In case of such a collision, the algorithm identifies the highest elevation difference between the line-of-sight and the terrain, designating the peak of the terrain at this point as a diffraction point. The original line is then split into two segments—one extending from the source to the diffraction point and the other from the diffraction point to the receiver. This recursive process continues until a path is defined from the source to the receiver without any terrain collisions.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">HTML</span><span class="p">(</span><span class="n">print_code</span><span class="p">(</span><span class="n">calc_diffraction</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class="highlight" style="background: #202020"><pre style="line-height: 125%;"><span></span><a id="True-1" name="True-1" href="#True-1"></a><span style="color: #6ebf26; font-weight: bold">def</span> <span style="color: #71adff">calc_diffraction</span><span style="color: #d0d0d0">(source_height,</span> <span style="color: #d0d0d0">receiver_height,</span> <span style="color: #d0d0d0">terrain_x,</span> <span style="color: #d0d0d0">terrain_y):</span>
+<a id="True-2" name="True-2" href="#True-2"></a>    <span style="color: #6ebf26; font-weight: bold">def</span> <span style="color: #71adff">diffraction_recursion</span><span style="color: #d0d0d0">(terrain_x,</span> <span style="color: #d0d0d0">terrain_y,</span> <span style="color: #d0d0d0">xt_new,</span> <span style="color: #d0d0d0">yt_new,</span> <span style="color: #d0d0d0">start_i,</span> <span style="color: #d0d0d0">ylp,</span> <span style="color: #d0d0d0">diffraction_index):</span>
+<a id="True-3" name="True-3" href="#True-3"></a>        <span style="color: #6ebf26; font-weight: bold">def</span> <span style="color: #71adff">calculate_line</span><span style="color: #d0d0d0">(xt,</span> <span style="color: #d0d0d0">ylp):</span>
+<a id="True-4" name="True-4" href="#True-4"></a>            <span style="color: #d0d0d0">slope</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">(ylp[-</span><span style="color: #51b2fd">1</span><span style="color: #d0d0d0">]</span> <span style="color: #d0d0d0">-</span> <span style="color: #d0d0d0">ylp[</span><span style="color: #51b2fd">0</span><span style="color: #d0d0d0">])</span> <span style="color: #d0d0d0">/</span> <span style="color: #d0d0d0">(xt[-</span><span style="color: #51b2fd">1</span><span style="color: #d0d0d0">]</span> <span style="color: #d0d0d0">-</span> <span style="color: #d0d0d0">xt[</span><span style="color: #51b2fd">0</span><span style="color: #d0d0d0">])</span>
+<a id="True-5" name="True-5" href="#True-5"></a>            <span style="color: #d0d0d0">intercept</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">ylp[</span><span style="color: #51b2fd">0</span><span style="color: #d0d0d0">]</span> <span style="color: #d0d0d0">-</span> <span style="color: #d0d0d0">slope</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">xt[</span><span style="color: #51b2fd">0</span><span style="color: #d0d0d0">]</span>
+<a id="True-6" name="True-6" href="#True-6"></a>            <span style="color: #d0d0d0">yl</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">slope</span> <span style="color: #d0d0d0">*</span> <span style="color: #d0d0d0">xt</span> <span style="color: #d0d0d0">+</span> <span style="color: #d0d0d0">intercept</span>
+<a id="True-7" name="True-7" href="#True-7"></a>            <span style="color: #6ebf26; font-weight: bold">return</span> <span style="color: #d0d0d0">yl</span>
+<a id="True-8" name="True-8" href="#True-8"></a>
+<a id="True-9" name="True-9" href="#True-9"></a>        <span style="color: #ababab; font-style: italic"># Calculate line profile</span>
+<a id="True-10" name="True-10" href="#True-10"></a>        <span style="color: #d0d0d0">yl</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">calculate_line(xt_new,</span> <span style="color: #d0d0d0">ylp)</span>
+<a id="True-11" name="True-11" href="#True-11"></a>        <span style="color: #d0d0d0">diff</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">(yl</span> <span style="color: #d0d0d0">-</span> <span style="color: #d0d0d0">yt_new)</span>
+<a id="True-12" name="True-12" href="#True-12"></a>
+<a id="True-13" name="True-13" href="#True-13"></a>        <span style="color: #ababab; font-style: italic"># Check if the line collides with terrain</span>
+<a id="True-14" name="True-14" href="#True-14"></a>        <span style="color: #6ebf26; font-weight: bold">if</span> <span style="color: #d0d0d0">np.any(diff</span> <span style="color: #d0d0d0">&lt;</span> <span style="color: #d0d0d0">-</span><span style="color: #51b2fd">1e-5</span><span style="color: #d0d0d0">):</span>
+<a id="True-15" name="True-15" href="#True-15"></a>            <span style="color: #d0d0d0">yi_peak</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">np.argmin(diff)</span> <span style="color: #d0d0d0">+</span> <span style="color: #d0d0d0">start_i</span>
+<a id="True-16" name="True-16" href="#True-16"></a>            <span style="color: #d0d0d0">yimax</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">np.argmin(diff)</span>  <span style="color: #ababab; font-style: italic"># Splitting index</span>
+<a id="True-17" name="True-17" href="#True-17"></a>            <span style="color: #d0d0d0">diffraction_index.append([terrain_x[yi_peak],</span> <span style="color: #d0d0d0">terrain_y[yi_peak]])</span>
+<a id="True-18" name="True-18" href="#True-18"></a>
+<a id="True-19" name="True-19" href="#True-19"></a>            <span style="color: #ababab; font-style: italic"># Recursively process the left side of the splitting point</span>
+<a id="True-20" name="True-20" href="#True-20"></a>            <span style="color: #d0d0d0">xt0,</span> <span style="color: #d0d0d0">yt0</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">xt_new[:yimax],</span> <span style="color: #d0d0d0">yt_new[:yimax]</span>
+<a id="True-21" name="True-21" href="#True-21"></a>            <span style="color: #6ebf26; font-weight: bold">if</span> <span style="color: #2fbccd">len</span><span style="color: #d0d0d0">(xt0)</span> <span style="color: #d0d0d0">&gt;</span> <span style="color: #51b2fd">2</span><span style="color: #d0d0d0">:</span>
+<a id="True-22" name="True-22" href="#True-22"></a>                <span style="color: #d0d0d0">ylp0</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">calculate_line(xt0,</span> <span style="color: #d0d0d0">[yl[</span><span style="color: #51b2fd">0</span><span style="color: #d0d0d0">],</span> <span style="color: #d0d0d0">yt_new[yimax]])</span>
+<a id="True-23" name="True-23" href="#True-23"></a>                <span style="color: #d0d0d0">diffraction_recursion(terrain_x,</span> <span style="color: #d0d0d0">terrain_y,</span> <span style="color: #d0d0d0">xt0,</span> <span style="color: #d0d0d0">yt0,</span> <span style="color: #d0d0d0">start_i,</span> <span style="color: #d0d0d0">ylp0,</span> <span style="color: #d0d0d0">diffraction_index)</span>
+<a id="True-24" name="True-24" href="#True-24"></a>
+<a id="True-25" name="True-25" href="#True-25"></a>            <span style="color: #ababab; font-style: italic"># Recursively process the right side of the splitting point</span>
+<a id="True-26" name="True-26" href="#True-26"></a>            <span style="color: #d0d0d0">xt1,</span> <span style="color: #d0d0d0">yt1</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">xt_new[yimax</span> <span style="color: #d0d0d0">+</span> <span style="color: #51b2fd">1</span><span style="color: #d0d0d0">:],</span> <span style="color: #d0d0d0">yt_new[yimax</span> <span style="color: #d0d0d0">+</span> <span style="color: #51b2fd">1</span><span style="color: #d0d0d0">:]</span>
+<a id="True-27" name="True-27" href="#True-27"></a>            <span style="color: #6ebf26; font-weight: bold">if</span> <span style="color: #2fbccd">len</span><span style="color: #d0d0d0">(xt1)</span> <span style="color: #d0d0d0">&gt;</span> <span style="color: #51b2fd">2</span><span style="color: #d0d0d0">:</span>
+<a id="True-28" name="True-28" href="#True-28"></a>                <span style="color: #d0d0d0">start_i</span> <span style="color: #d0d0d0">+=</span> <span style="color: #d0d0d0">yimax</span> <span style="color: #d0d0d0">+</span> <span style="color: #51b2fd">1</span>
+<a id="True-29" name="True-29" href="#True-29"></a>                <span style="color: #d0d0d0">ylp1</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">calculate_line(xt1,</span> <span style="color: #d0d0d0">[yt_new[yimax],</span> <span style="color: #d0d0d0">yl[-</span><span style="color: #51b2fd">1</span><span style="color: #d0d0d0">]])</span>
+<a id="True-30" name="True-30" href="#True-30"></a>                <span style="color: #d0d0d0">diffraction_recursion(terrain_x,</span> <span style="color: #d0d0d0">terrain_y,</span> <span style="color: #d0d0d0">xt1,</span> <span style="color: #d0d0d0">yt1,</span> <span style="color: #d0d0d0">start_i,</span> <span style="color: #d0d0d0">ylp1,</span> <span style="color: #d0d0d0">diffraction_index)</span>
+<a id="True-31" name="True-31" href="#True-31"></a>
+<a id="True-32" name="True-32" href="#True-32"></a>    <span style="color: #ababab; font-style: italic"># Initialize variables</span>
+<a id="True-33" name="True-33" href="#True-33"></a>    <span style="color: #d0d0d0">diffraction_index</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">[[</span><span style="color: #51b2fd">0</span><span style="color: #d0d0d0">,</span> <span style="color: #d0d0d0">terrain_y[</span><span style="color: #51b2fd">0</span><span style="color: #d0d0d0">]</span> <span style="color: #d0d0d0">+</span> <span style="color: #d0d0d0">source_height]]</span>
+<a id="True-34" name="True-34" href="#True-34"></a>    <span style="color: #d0d0d0">ylp</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">[terrain_y[</span><span style="color: #51b2fd">0</span><span style="color: #d0d0d0">]</span> <span style="color: #d0d0d0">+</span> <span style="color: #d0d0d0">source_height,</span> <span style="color: #d0d0d0">terrain_y[-</span><span style="color: #51b2fd">1</span><span style="color: #d0d0d0">]</span> <span style="color: #d0d0d0">+</span> <span style="color: #d0d0d0">receiver_height]</span>
+<a id="True-35" name="True-35" href="#True-35"></a>    <span style="color: #d0d0d0">xt_new,</span> <span style="color: #d0d0d0">yt_new</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">terrain_x,</span> <span style="color: #d0d0d0">terrain_y</span>
+<a id="True-36" name="True-36" href="#True-36"></a>    <span style="color: #d0d0d0">start_i</span> <span style="color: #d0d0d0">=</span> <span style="color: #51b2fd">0</span>
+<a id="True-37" name="True-37" href="#True-37"></a>
+<a id="True-38" name="True-38" href="#True-38"></a>    <span style="color: #ababab; font-style: italic"># Perform recursion to identify diffraction points</span>
+<a id="True-39" name="True-39" href="#True-39"></a>    <span style="color: #d0d0d0">diffraction_recursion(terrain_x,</span> <span style="color: #d0d0d0">terrain_y,</span> <span style="color: #d0d0d0">xt_new,</span> <span style="color: #d0d0d0">yt_new,</span> <span style="color: #d0d0d0">start_i,</span> <span style="color: #d0d0d0">ylp,</span> <span style="color: #d0d0d0">diffraction_index)</span>
+<a id="True-40" name="True-40" href="#True-40"></a>
+<a id="True-41" name="True-41" href="#True-41"></a>    <span style="color: #ababab; font-style: italic"># Sort and append the final point</span>
+<a id="True-42" name="True-42" href="#True-42"></a>    <span style="color: #d0d0d0">diffraction_index</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">np.array(diffraction_index)</span>
+<a id="True-43" name="True-43" href="#True-43"></a>    <span style="color: #d0d0d0">diffraction_index</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">diffraction_index[np.argsort(diffraction_index[:,</span> <span style="color: #51b2fd">0</span><span style="color: #d0d0d0">])]</span>
+<a id="True-44" name="True-44" href="#True-44"></a>    <span style="color: #d0d0d0">diffraction_index</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">np.vstack((diffraction_index,</span> <span style="color: #d0d0d0">np.array([terrain_x[-</span><span style="color: #51b2fd">1</span><span style="color: #d0d0d0">],</span> <span style="color: #d0d0d0">terrain_y[-</span><span style="color: #51b2fd">1</span><span style="color: #d0d0d0">]</span> <span style="color: #d0d0d0">+</span> <span style="color: #d0d0d0">receiver_height])))</span>
+<a id="True-45" name="True-45" href="#True-45"></a>
+<a id="True-46" name="True-46" href="#True-46"></a>    <span style="color: #6ebf26; font-weight: bold">return</span> <span style="color: #d0d0d0">diffraction_index</span>
+</pre></div>
+</div></div>
+</div>
+<section id="demonstration-of-code">
+<h3>Demonstration of code<a class="headerlink" href="#demonstration-of-code" title="Permalink to this heading">#</a></h3>
+<p>Here’s an example illustrating the calculation of the diffraction path between two points in the terrain.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">terrain_data</span> <span class="o">=</span> <span class="n">ElevationHandler</span><span class="p">([</span><span class="mf">11.9</span><span class="p">,</span> <span class="mf">12.1</span><span class="p">,</span> <span class="mf">54.9</span><span class="p">,</span> <span class="mf">55.1</span><span class="p">],</span> <span class="p">[</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">])</span><span class="o">.</span><span class="n">map_array</span>
+
+<span class="n">start_pixel</span> <span class="o">=</span> <span class="p">(</span><span class="mi">55</span><span class="p">,</span> <span class="mi">55</span><span class="p">)</span>
+<span class="n">end_pixel</span> <span class="o">=</span> <span class="p">(</span><span class="mi">170</span><span class="p">,</span> <span class="mi">155</span><span class="p">)</span>
+<span class="n">source_height</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">receiver_height</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="n">length</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">end_pixel</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">start_pixel</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">end_pixel</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">start_pixel</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+<span class="n">x_coords</span><span class="p">,</span> <span class="n">y_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">start_pixel</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">end_pixel</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">length</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">start_pixel</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">end_pixel</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">length</span><span class="p">)</span>
+<span class="n">distance_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">length</span><span class="p">)</span>
+<span class="n">elevation_values</span> <span class="o">=</span> <span class="n">terrain_data</span><span class="o">.</span><span class="n">T</span><span class="p">[</span><span class="n">x_coords</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span> <span class="n">y_coords</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)]</span>
+<span class="n">diffraction_path</span> <span class="o">=</span> <span class="n">calc_diffraction</span><span class="p">(</span><span class="n">source_height</span><span class="p">,</span> <span class="n">receiver_height</span><span class="p">,</span> <span class="n">distance_points</span><span class="p">,</span> <span class="n">elevation_values</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">gridspec_kw</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;height_ratios&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">]},</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">terrain_plot</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">terrain_data</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">start_pixel</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">end_pixel</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="n">start_pixel</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">end_pixel</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="s1">&#39;ro:&#39;</span><span class="p">)</span>
+<span class="n">colorbar</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">terrain_plot</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;vertical&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Terrain Elevation [m]&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">distance_points</span><span class="p">,</span> <span class="n">elevation_values</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Terrain Elevation&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">diffraction_path</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Diffraction Path&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">diffraction_path</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;orange&quot;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span>
+             <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Diffraction Point(s) = </span><span class="si">{</span><span class="n">diffraction_path</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;None&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">length</span><span class="p">],</span> <span class="p">[</span><span class="n">elevation_values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">source_height</span><span class="p">,</span> <span class="n">elevation_values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">receiver_height</span><span class="p">],</span> <span class="s1">&#39;ro:&#39;</span><span class="p">,</span>
+             <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Direct Line-of-Sight&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span> <span class="o">=</span> <span class="s2">&quot;dp [m]&quot;</span><span class="p">,</span>
+            <span class="n">ylabel</span> <span class="o">=</span> <span class="s2">&quot;h [m]&quot;</span><span class="p">)</span>
+<span class="n">legend</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper center&#39;</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.25</span><span class="p">),</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../../../../../../../../../../../../../../../_images/9bff9bc8d4ef861644cd1463ea534b23ca26b0cdabfdcd8e01973c0bc1e779fc.png" src="../../../../../../../../../../../../../../../../../_images/9bff9bc8d4ef861644cd1463ea534b23ca26b0cdabfdcd8e01973c0bc1e779fc.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="calculation-of-barrier-attenuation">
+<h2>Calculation of barrier attenuation<a class="headerlink" href="#calculation-of-barrier-attenuation" title="Permalink to this heading">#</a></h2>
+<p>The total attenuation caused by a barrier, denoted as <span class="math notranslate nohighlight">\(D_z\)</span>, can be computed using the formula:</p>
+<div class="math notranslate nohighlight">
+\[D_z = 10 \log_{10}\left(3 + \left(\frac{C_2}{\lambda}\right) C_3 z K_{met}\right)\]</div>
+<p><span class="math notranslate nohighlight">\(\lambda\)</span> represents the sound wavelength, <span class="math notranslate nohighlight">\(C_2 = 20\)</span> and is a reflection constant, <span class="math notranslate nohighlight">\(C_3\)</span> is a diffraction constant, <span class="math notranslate nohighlight">\(z\)</span> is the difference between the path lengths of diffracted and direct sound, calculated as <span class="math notranslate nohighlight">\(z = (d_{ss} + e + d_{sr}) - d\)</span>, where <span class="math notranslate nohighlight">\(e\)</span> represents the distance between the diffraction edges in the case of multiple diffractions. The correction factor for meteorological conditions, <span class="math notranslate nohighlight">\(K_{met}\)</span>, is defined as:</p>
+<div class="math notranslate nohighlight">
+\[
+K_{met} = \exp\left(-\frac{1}{2000} \sqrt{\frac{d_{ss} \cdot d_{sr} \cdot d}{2 z}}\right)
+\]</div>
+<p>The diffraction constant <span class="math notranslate nohighlight">\(C_3\)</span> is defined as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+C_3 = \begin{cases}
+1 &amp; \text{if } e \leq 0\\
+\frac{1 + \left(\frac{5 \cdot \lambda}{e}\right)^2}{\frac{1}{3} + \left(\frac{5 \cdot \lambda}{e}\right)^2} &amp; \text{if } e &gt; 0
+\end{cases}
+\end{split}\]</div>
+<section id="visualization-of-diffraction-length">
+<h3>Visualization of Diffraction Length<a class="headerlink" href="#visualization-of-diffraction-length" title="Permalink to this heading">#</a></h3>
+<p>Presented below is a concise visualization illustrating the disparity between the direct path and the diffraction path. It’s crucial to observe that when these two distances diverge, the noise is anticipated to intersect with the terrain, and barrier attenuation is factored into the calculation for the sound pressure level at that location. Conversely, if the diffraction path and direct path align, indicating no collision with the terrain, the barrier attenuation is disregarded.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">map_boundaries</span> <span class="o">=</span> <span class="p">[</span><span class="mf">11.9</span><span class="p">,</span> <span class="mf">12.1</span><span class="p">,</span> <span class="mf">54.9</span><span class="p">,</span> <span class="mf">55.1</span><span class="p">]</span>
+<span class="n">map_shape</span> <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
+<span class="n">elevation_handler</span> <span class="o">=</span> <span class="n">ElevationHandler</span><span class="p">(</span><span class="n">map_boundaries</span><span class="p">,</span> <span class="n">map_shape</span><span class="p">)</span>
+
+<span class="n">point_source_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">[{</span>
+        <span class="s2">&quot;latitude&quot;</span><span class="p">:</span> <span class="mi">55</span><span class="p">,</span>
+        <span class="s2">&quot;longitude&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+        <span class="s2">&quot;h&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">}])</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">map_shape</span> <span class="o">=</span> <span class="p">[</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">]</span>
+
+<span class="n">dp</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">dss</span><span class="p">,</span> <span class="n">dsr</span><span class="p">,</span> <span class="n">e</span> <span class="o">=</span> <span class="n">calc_diffraction_path</span><span class="p">(</span><span class="n">elevation_handler</span><span class="p">,</span> <span class="n">point_source_data</span><span class="p">)</span>
+
+<span class="n">diff_path</span> <span class="o">=</span> <span class="n">dsr</span><span class="o">+</span><span class="n">dss</span><span class="o">+</span><span class="n">e</span>
+<span class="n">diff_path</span><span class="p">[</span><span class="n">diff_path</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">diff_path</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">pcm1</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">elevation_handler</span><span class="o">.</span><span class="n">long_range</span><span class="p">,</span> <span class="n">elevation_handler</span><span class="o">.</span><span class="n">lat_range</span><span class="p">,</span> <span class="n">elevation_handler</span><span class="o">.</span><span class="n">map_array</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s2">&quot;terrain&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">pcm1</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;Elevation [m]&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">point_source_data</span><span class="o">.</span><span class="n">longitude</span><span class="p">,</span> <span class="n">point_source_data</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span> <span class="n">marker</span> <span class="o">=</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span>
+
+<span class="n">pcm2</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">elevation_handler</span><span class="o">.</span><span class="n">long_range</span><span class="p">,</span> <span class="n">elevation_handler</span><span class="o">.</span><span class="n">lat_range</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s2">&quot;terrain&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">pcm2</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;Direct path to receiver, d [m]&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">point_source_data</span><span class="o">.</span><span class="n">longitude</span><span class="p">,</span> <span class="n">point_source_data</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span> <span class="n">marker</span> <span class="o">=</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span>
+
+<span class="n">pcm3</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">elevation_handler</span><span class="o">.</span><span class="n">long_range</span><span class="p">,</span> <span class="n">elevation_handler</span><span class="o">.</span><span class="n">lat_range</span><span class="p">,</span> <span class="n">diff_path</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s2">&quot;terrain&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">pcm3</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">label</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;Diffraction path to receiver, ($d_</span><span class="si">{sr}</span><span class="s2"> + e + d_</span><span class="si">{ss}</span><span class="s2">$) [m]&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">point_source_data</span><span class="o">.</span><span class="n">longitude</span><span class="p">,</span> <span class="n">point_source_data</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span> <span class="n">marker</span> <span class="o">=</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span>
+
+<span class="n">pcm4</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">elevation_handler</span><span class="o">.</span><span class="n">long_range</span><span class="p">,</span> <span class="n">elevation_handler</span><span class="o">.</span><span class="n">lat_range</span><span class="p">,</span> <span class="p">(</span><span class="n">diff_path</span><span class="o">-</span><span class="n">d</span><span class="p">),</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s2">&quot;terrain&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">pcm4</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;Difference between direct and diffraction path [m]&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">point_source_data</span><span class="o">.</span><span class="n">longitude</span><span class="p">,</span> <span class="n">point_source_data</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span> <span class="n">marker</span> <span class="o">=</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span>
+
+
+<span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span><span class="o">.</span><span class="n">flatten</span><span class="p">():</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span> <span class="o">=</span> <span class="s2">&quot;Longitude&quot;</span><span class="p">,</span>
+           <span class="n">ylabel</span> <span class="o">=</span> <span class="s2">&quot;Latitude&quot;</span><span class="p">)</span>
+    
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../../../../../../../../../../../../../../../_images/bec3e3e509478e10593dedf226507f01773d1ba6d4e41798e918285b33cadd46.png" src="../../../../../../../../../../../../../../../../../_images/bec3e3e509478e10593dedf226507f01773d1ba6d4e41798e918285b33cadd46.png" />
+</div>
+</div>
+</section>
+<section id="meteorological-conditions">
+<h3>Meteorological conditions<a class="headerlink" href="#meteorological-conditions" title="Permalink to this heading">#</a></h3>
+<p>Here is a brief illustration showcasing the impact of meteorological conditions through the correction factor <span class="math notranslate nohighlight">\(K_{met}\)</span> for various barrier heights (<span class="math notranslate nohighlight">\(h\)</span>) positioned between the sound source and the receiver. When the diffraction path and the direct path are equal (<span class="math notranslate nohighlight">\(z \leq 0\)</span>), the correction factor is equal to <span class="math notranslate nohighlight">\(K_{met} = 1\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># height barrier relative to source and receiver</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mi">1000</span><span class="p">),</span> <span class="mi">100</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">h</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">hb</span><span class="p">):</span>
+    <span class="n">dss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">d</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
+    <span class="n">dsr</span> <span class="o">=</span> <span class="n">dss</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">dsr</span> <span class="o">+</span> <span class="n">dss</span><span class="p">)</span> <span class="o">-</span> <span class="n">d</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">z</span> <span class="o">&lt;=</span> <span class="mi">0</span>
+    <span class="n">Kmet</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">2000</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">dss</span> <span class="o">*</span> <span class="n">dsr</span> <span class="o">*</span> <span class="n">d</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">z</span><span class="p">)))</span>
+    <span class="n">Kmet</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">Kmet</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;h = </span><span class="si">{</span><span class="n">h</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span> <span class="o">=</span> <span class="s2">&quot;Distance Source - Receiver [m]&quot;</span><span class="p">,</span>
+       <span class="n">ylabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;$K_</span><span class="si">{met}</span><span class="s2">$&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../../../../../../../../../../../../../../../_images/3033be4e95851a11025fb0a6b433ec6dfad756d6c10ea433c66a0cf12c74d5f6.png" src="../../../../../../../../../../../../../../../../../_images/3033be4e95851a11025fb0a6b433ec6dfad756d6c10ea433c66a0cf12c74d5f6.png" />
+</div>
+</div>
+<p>As evident from the above plot, the meteorological correction factor significantly decreases at longer distances <span class="math notranslate nohighlight">\(d\)</span> between the source and the receiver. This results in a notable limitation of the barrier attenuation to <span class="math notranslate nohighlight">\(D_z = 10 \log_{10}(3)\)</span> for distances exceeding 1000 meters between the source and the receiver.</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "FPWRasmussen/DTU-Special-Course",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/jupyter-book/_build/jupyter_execute/src/noise"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  <!-- Previous / next buttons -->
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calculating-the-diffraction-path">Calculating the diffraction path</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#demonstration-of-code">Demonstration of code</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calculation-of-barrier-attenuation">Calculation of barrier attenuation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization-of-diffraction-length">Visualization of Diffraction Length</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#meteorological-conditions">Meteorological conditions</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Frederik P. W. Rasmussen
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../../../../../../../../../../../../../../../_static/scripts/bootstrap.js?digest=ac02cc09edc035673794"></script>
+<script src="../../../../../../../../../../../../../../../../../_static/scripts/pydata-sphinx-theme.js?digest=ac02cc09edc035673794"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
