@@ -162,16 +162,18 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="../introduction.html">
-                    Welcome to my program
+                    <no title>
                 </a>
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../noise/noise_map.html">Noise Map</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../map/elevation_handler.html">Elevation Handler</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../visual/visual_impact.html">Visual Impact</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../visual/3d_object_to_image.html">3D Object to Image</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../visual/camera_calibration.html">Camera Calibration</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../noise/noise_map.html">Noise Map</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../noise/geometrical_spreading_of_sound.html">Geometrical Spreading of Sound</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../noise/atmospheric_attenuation.html">Atmospheric Attenuation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../noise/ground_effect.html">Ground Effect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../noise/barrier_attenuation.html">Barrier Attenuation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../noise/verification.html">Barrier Verification</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="shadow_map.html">Shadow Map</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
@@ -181,7 +183,12 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="multiprocessing.html">Multiprocessing</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../noise/atmospheric_attenuation.html">Atmospheric Attenuation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../visual/visual_impact.html">Visual Impact</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../visual/google_street_view.html">Google Street View</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../visual/camera_calibration.html">Camera Calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../visual/3d_object_to_image.html">3D Object to Image</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
 </ul>
 
@@ -469,7 +476,7 @@ document.write(`
 <h1>Solar Calculations<a class="headerlink" href="#solar-calculations" title="Permalink to this heading">#</a></h1>
 <p>In shadow flickering calculations, determining the sun’s path for a specified longitude and latitude is important for precise simulation of the shadow dynamics induced by wind turbines.</p>
 <p>The altitude and azimuth positions of the sun fluctuate throughout the day and across seasons. Computing the sun’s path for a particular longitude and latitude allows us to model the dynamic sun positions over time, thereby capturing the temporal variations in shadow patterns.</p>
-<p>The calculations presented in this chapter are based on the principles outlined in <span id="id1">Quae.nl [<a class="reference internal" href="../bibliography.html#id4" title="Quae.nl. Astronomy answers: position of the sun. 2021. URL: https://www.aa.quae.nl/en/reken/zonpositie.html (visited on 2023-11-27).">3</a>]</span>.</p>
+<p>The calculations presented in this chapter are based on the principles outlined in <span id="id1">Quae.nl [<a class="reference internal" href="../bibliography.html#id9" title="Quae.nl. Astronomy answers: position of the sun. 2021. URL: https://www.aa.quae.nl/en/reken/zonpositie.html (visited on 2023-11-27).">5</a>]</span>.</p>
 <div class="cell tag_hide-input tag_thebe-init docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -499,18 +506,12 @@ document.write(`
 <section id="calculate-azimuth-and-altitude-of-sun">
 <h2>Calculate Azimuth and Altitude of Sun<a class="headerlink" href="#calculate-azimuth-and-altitude-of-sun" title="Permalink to this heading">#</a></h2>
 <p>The key objective of solar calculations is to estimate the azimuth and altitude of the sun at a specified longitude, latitude, date, and time. The following code snippet achieves excactly this:</p>
-<div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
-</summary>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">HTML</span><span class="p">(</span><span class="n">print_code</span><span class="p">(</span><span class="n">solar_position</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
-</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div class="highlight" style="background: #202020"><pre style="line-height: 125%;"><span></span><a id="True-1" name="True-1" href="#True-1"></a><span style="color: #6ebf26; font-weight: bold">def</span> <span style="color: #71adff">solar_position</span><span style="color: #d0d0d0">(date,</span> <span style="color: #d0d0d0">lat,</span> <span style="color: #d0d0d0">lng):</span>
 <a id="True-2" name="True-2" href="#True-2"></a><span style="color: #666666">    </span><span style="color: #ed9d13">&quot;&quot;&quot;</span>
@@ -586,18 +587,12 @@ Altitude: 56.33 degrees
 <section id="convertion-to-unit-vector">
 <h2>Convertion to Unit Vector<a class="headerlink" href="#convertion-to-unit-vector" title="Permalink to this heading">#</a></h2>
 <p>Thereafter, the altitude and azimuth position of the sun is converted into a unit vector, such that it can be used by the ray tracing algorithm.</p>
-<div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
-</summary>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">HTML</span><span class="p">(</span><span class="n">print_code</span><span class="p">(</span><span class="n">solar_angles_to_vector</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
-</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div class="highlight" style="background: #202020"><pre style="line-height: 125%;"><span></span><a id="True-1" name="True-1" href="#True-1"></a><span style="color: #6ebf26; font-weight: bold">def</span> <span style="color: #71adff">solar_angles_to_vector</span><span style="color: #d0d0d0">(azimuth,</span> <span style="color: #d0d0d0">altitude):</span>
 <a id="True-2" name="True-2" href="#True-2"></a><span style="color: #666666">    </span><span style="color: #ed9d13">&quot;&quot;&quot;</span>
@@ -803,7 +798,7 @@ Z: 0.07
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/a080399f8264b014a147479991f2b29b30898ae913aee1f201421cabfd409310.png" src="../../_images/a080399f8264b014a147479991f2b29b30898ae913aee1f201421cabfd409310.png" />
+<img alt="../../_images/c33ffcbef002a6b4de512b426cd4d979f8f3ea245525b3a2fbef476498d944f9.png" src="../../_images/c33ffcbef002a6b4de512b426cd4d979f8f3ea245525b3a2fbef476498d944f9.png" />
 </div>
 </div>
 </section>

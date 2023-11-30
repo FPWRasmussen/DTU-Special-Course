@@ -162,16 +162,18 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="../introduction.html">
-                    Welcome to my program
+                    <no title>
                 </a>
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../noise/noise_map.html">Noise Map</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../map/elevation_handler.html">Elevation Handler</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../visual/visual_impact.html">Visual Impact</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../visual/3d_object_to_image.html">3D Object to Image</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../visual/camera_calibration.html">Camera Calibration</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../noise/noise_map.html">Noise Map</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../noise/geometrical_spreading_of_sound.html">Geometrical Spreading of Sound</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../noise/atmospheric_attenuation.html">Atmospheric Attenuation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../noise/ground_effect.html">Ground Effect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../noise/barrier_attenuation.html">Barrier Attenuation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../noise/verification.html">Barrier Verification</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="shadow_map.html">Shadow Map</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
@@ -181,7 +183,12 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="multiprocessing.html">Multiprocessing</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../noise/atmospheric_attenuation.html">Atmospheric Attenuation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../visual/visual_impact.html">Visual Impact</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../visual/google_street_view.html">Google Street View</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../visual/camera_calibration.html">Camera Calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../visual/3d_object_to_image.html">3D Object to Image</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
 </ul>
 
@@ -447,7 +454,7 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="fast-voxel-traversal-algorithm-for-ray-tracing">
 <h1>Fast Voxel Traversal Algorithm for Ray Tracing<a class="headerlink" href="#fast-voxel-traversal-algorithm-for-ray-tracing" title="Permalink to this heading">#</a></h1>
-<p>The calculate the ray tracing path through the voxel enviroment, the Fast Voxel Traversal Algorithm for Ray Tracing by <span id="id1">Amanatides and Woo [<a class="reference internal" href="../bibliography.html#id3" title="John Amanatides and Andrew Woo. A fast voxel traversal algorithm for ray tracing. Proceedings of EuroGraphics, 1987.">1</a>]</span> was used. This important paper presents an efficient algorithm for traversing voxels (3D pixels) in a grid during the ray tracing process. Ray tracing is a rendering technique widely used in computer graphics to simulate the way light interacts with objects in a scene. For the shadow flickering calculations, it is used to predict, where the induvidual rays will intersect with the terrain, and thus estimating which area will be affected by the shadow cast by the turbines.</p>
+<p>The calculate the ray tracing path through the voxel enviroment, the Fast Voxel Traversal Algorithm for Ray Tracing by <span id="id1">Amanatides and Woo [<a class="reference internal" href="../bibliography.html#id2" title="John Amanatides and Andrew Woo. A fast voxel traversal algorithm for ray tracing. Proceedings of EuroGraphics, 1987.">1</a>]</span> was used. This important paper presents an efficient algorithm for traversing voxels (3D pixels) in a grid during the ray tracing process. Ray tracing is a rendering technique widely used in computer graphics to simulate the way light interacts with objects in a scene. For the shadow flickering calculations, it is used to predict, where the induvidual rays will intersect with the terrain, and thus estimating which area will be affected by the shadow cast by the turbines.</p>
 <div class="cell tag_hide-input tag_thebe-init docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -471,18 +478,12 @@ document.write(`
 <p>The traversal algorithm is divided into two phases: initialization and incremental traversal. In the initialization phase, the algorithm begins by locating the voxel containing the ray’s origin. If the ray’s origin is outside the grid, the entry point where the ray intersects the grid is determined, and that voxel becomes the starting point. The current voxel index is then set to the coordinates of the starting voxel. Additionally, the “step” variable is initialized to either 1 or -1, indicating whether the ray increments or decrements as it crosses voxel boundaries. This determination is made based on the sign of the x, y, and z components of the ray direction.</p>
 <p>Next, the algorithm calculates the value of t at which the ray crosses the first vertical voxel boundary and stores it in the variable tMax. The minimum of these three values (x, y, and z) indicates the maximum distance the ray can travel while remaining in the current voxel. Finally, the algorithm computes tDelta, representing how far along the ray it must move (in units of t) for the horizontal component of the movement to equal the width of a voxel.</p>
 <p>In the incremental phase of the traversal algorithm, the process is straightforward. The algorithm loops until it encounters a voxel with a boolean value equal to True (indicating a terrain collision) or until it falls out of the end of the grid.</p>
-<div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
-</summary>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">HTML</span><span class="p">(</span><span class="n">print_code</span><span class="p">(</span><span class="n">voxel_traversal</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
-</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div class="highlight" style="background: #202020"><pre style="line-height: 125%;"><span></span><a id="True-1" name="True-1" href="#True-1"></a><span style="color: #6ebf26; font-weight: bold">def</span> <span style="color: #71adff">voxel_traversal</span><span style="color: #d0d0d0">(origin,</span> <span style="color: #d0d0d0">direction,</span> <span style="color: #d0d0d0">grid3D,</span> <span style="color: #d0d0d0">verbose=</span><span style="color: #6ebf26; font-weight: bold">False</span><span style="color: #d0d0d0">):</span>
 <a id="True-2" name="True-2" href="#True-2"></a>    <span style="color: #d0d0d0">boxSize</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">grid3D[</span><span style="color: #ed9d13">&#39;maxBound&#39;</span><span style="color: #d0d0d0">]</span> <span style="color: #d0d0d0">-</span> <span style="color: #d0d0d0">grid3D[</span><span style="color: #ed9d13">&#39;minBound&#39;</span><span style="color: #d0d0d0">]</span>

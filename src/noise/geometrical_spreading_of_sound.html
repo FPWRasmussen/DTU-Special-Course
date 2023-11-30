@@ -67,6 +67,8 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'src/noise/geometrical_spreading_of_sound';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Atmospheric Attenuation" href="atmospheric_attenuation.html" />
+    <link rel="prev" title="Noise Map" href="noise_map.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -162,16 +164,18 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="../introduction.html">
-                    Welcome to my program
+                    <no title>
                 </a>
             </li>
         </ul>
-        <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="noise_map.html">Noise Map</a></li>
+        <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../map/elevation_handler.html">Elevation Handler</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../visual/visual_impact.html">Visual Impact</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../visual/3d_object_to_image.html">3D Object to Image</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../visual/camera_calibration.html">Camera Calibration</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="noise_map.html">Noise Map</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Geometrical Spreading of Sound</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atmospheric_attenuation.html">Atmospheric Attenuation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ground_effect.html">Ground Effect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="barrier_attenuation.html">Barrier Attenuation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verification.html">Barrier Verification</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../shadow/shadow_map.html">Shadow Map</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -181,7 +185,12 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="../shadow/multiprocessing.html">Multiprocessing</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="atmospheric_attenuation.html">Atmospheric Attenuation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../visual/visual_impact.html">Visual Impact</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../visual/google_street_view.html">Google Street View</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../visual/camera_calibration.html">Camera Calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../visual/3d_object_to_image.html">3D Object to Image</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
 </ul>
 
@@ -420,7 +429,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
 </div></div>
       
     </div>
@@ -436,6 +447,17 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#derivation">Derivation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#application-of-function">Application of function</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -447,56 +469,56 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="geometrical-spreading-of-sound">
 <h1>Geometrical spreading of sound<a class="headerlink" href="#geometrical-spreading-of-sound" title="Permalink to this heading">#</a></h1>
-<p>The unit for intensity, <span class="math notranslate nohighlight">\(I\)</span>, is watts per square meter [<span class="math notranslate nohighlight">\(W/m^2\)</span>]</p>
-<p>W is the sound power of the source</p>
-<p><span class="math notranslate nohighlight">\(
-\begin{equation}
-I = \dfrac{W}{4 \pi r^2} = \dfrac{p^2}{\rho c} = \dfrac{p^2}{z_0}
-\end{equation}
-\)</span></p>
-<p><span class="math notranslate nohighlight">\(z_0\)</span> : characteristic specific acoustic impedance</p>
-<p>Rearranging the equation:</p>
-<p><span class="math notranslate nohighlight">\(
-\begin{equation}
-W = \dfrac{p^2}{z_0} (4 \pi r^2)
-\end{equation}
-\)</span></p>
-<p><span class="math notranslate nohighlight">\(
-\begin{equation}
-\dfrac{W}{W_0} = \dfrac{p_0^2}{W_0} \dfrac{p^2}{p_0^2} \dfrac{1}{z_0} (4 \pi r^2)
-\end{equation}
-\)</span></p>
-<p><span class="math notranslate nohighlight">\(
-\begin{equation}
-10\log(\dfrac{W}{W_0}) = 10\log(\dfrac{p_0^2}{W_0} \dfrac{p^2}{p_0^2} \dfrac{1}{z_0} (4 \pi r^2))
-\end{equation}
-\)</span></p>
-<p><span class="math notranslate nohighlight">\(
-\begin{equation}
-L_W = L_P + 10\log(\dfrac{p_0^2}{W_0 z_0}(4 \pi r^2))
-\end{equation}
-\)</span></p>
-<p><span class="math notranslate nohighlight">\( \dfrac{p_0^2}{W_0 z_0} = 1 \)</span></p>
-<p><span class="math notranslate nohighlight">\(
-\begin{equation}
-L_W = L_P + 20\log(r) = 10\log(4 \pi)
-\end{equation}
-\)</span></p>
-<p>By applying the formula to an oscillating</p>
-<div class="cell docutils container">
+<p>As a point source extends from its origin, the intensity diminishes inversely proportional to the distance traveled, following the Inverse-square law. In the context of noise propagation, this phenomenon significantly influences the attenuation of turbine noise levels.</p>
+<a class="bg-primary reference internal image-reference" href="../../_images/inverse_square_law.png"><img alt="inverse_square_law" class="bg-primary" src="../../_images/inverse_square_law.png" style="width: 600px;" /></a>
+<p><em>Fig 1: S denotes the noise source, and r represents the measured points. The lines illustrate noise propagation from the sources. The total noise lines, linked to source strength, remain constant, but denser lines indicate a louder noise field. The line density is inversely proportional to distance from the source squared, reflecting increased surface area on a sphere. Consequently, noise intensity inversely scales with the square of the distance from the source (<a class="reference external" href="https://en.wikipedia.org/wiki/Inverse-square_law">Source</a>).</em></p>
+<div class="cell tag_hide-input tag_thebe-init docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="p">))</span>
-<span class="kn">from</span> <span class="nn">src.utils</span> <span class="kn">import</span> <span class="n">print_code</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">matplotlib.animation</span> <span class="kn">import</span> <span class="n">FuncAnimation</span><span class="p">,</span> <span class="n">PillowWriter</span>
-<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">HTML</span><span class="p">,</span> <span class="n">display</span><span class="p">,</span> <span class="n">Image</span>
-
-<span class="c1"># Constants</span>
-<span class="n">width</span> <span class="o">=</span> <span class="mi">3000</span>  <span class="c1"># Width of the simulation grid</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">Image</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<section id="derivation">
+<h2>Derivation<a class="headerlink" href="#derivation" title="Permalink to this heading">#</a></h2>
+<p>The intensity, <span class="math notranslate nohighlight">\(I\)</span>, measured in watts per square meter (<span class="math notranslate nohighlight">\(W/m^2\)</span>), is a fundamental quantity in acoustics. The sound power of a source, denoted as <span class="math notranslate nohighlight">\(P\)</span>, can be related to intensity through the formula:</p>
+<div class="math notranslate nohighlight">
+\[ I = \dfrac{P}{4 \pi r^2} = \dfrac{p^2}{\rho c} = \dfrac{p^2}{z_0} \]</div>
+<p>Here, <span class="math notranslate nohighlight">\(z_0\)</span> represents the characteristic specific acoustic impedance as is equal to <span class="math notranslate nohighlight">\(z_0 = 400 \text{Pa} \cdot \text{s}/\text{m}\)</span>.</p>
+<p>Rearranging the equation in terms of sound power <span class="math notranslate nohighlight">\(P\)</span>, we get:</p>
+<div class="math notranslate nohighlight">
+\[ P = \dfrac{p^2}{z_0}4 \pi r^2 \]</div>
+<p>In the context of a reference sound power <span class="math notranslate nohighlight">\(P_0 = 10^{-12} \text{W}\)</span>, the ratio <span class="math notranslate nohighlight">\(\dfrac{P}{P_0}\)</span> can be expressed as:</p>
+<div class="math notranslate nohighlight">
+\[ \dfrac{P}{P_0} = \dfrac{p_0^2}{P_0} \dfrac{p^2}{p_0^2} \dfrac{1}{z_0} 4 \pi r^2\]</div>
+<p>Where the reference sound pressure is <span class="math notranslate nohighlight">\(p_0 = 2\cdot 10^{-5} \text{Pa}\)</span>. Taking the logarithm of both sides, we arrive at:</p>
+<div class="math notranslate nohighlight">
+\[ 10\log\left(\dfrac{P}{P_0}\right) = 10\log\left(\dfrac{p_0^2}{P_0} \dfrac{p^2}{p_0^2} \dfrac{1}{z_0} 4 \pi r^2\right) \]</div>
+<p>This expression can be further simplified to represent the sound power level as <span class="math notranslate nohighlight">\(L_W = 10\log\left(\dfrac{P}{P_0}\right)\)</span> and the sound pressure level as <span class="math notranslate nohighlight">\(L_P = 10\log\left(\dfrac{p^2}{p_0^2}\right)\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[ L_W = L_P + 10\log\left(\dfrac{p_0^2}{P_0 z_0}4 \pi r^2\right) \]</div>
+<p>With the used reference values <span class="math notranslate nohighlight">\(\dfrac{p_0^2}{P_0 z_0} = 1\)</span>, and the equation simplifies to:</p>
+<div class="math notranslate nohighlight">
+\[ L_W = L_P + 20\log(r) + 10\log(4 \pi) \]</div>
+<p>Lastly, be rearranging the equation, the final expression for the sound pressure level can be found:</p>
+<div class="math notranslate nohighlight">
+\[ L_P = L_W - 20\log(r) - 10\log(4 \pi) \approx  L_W - 20\log(r) - 11 \]</div>
+<p>This derivation provides insights into the relationship between sound power, intensity, and their representation in logarithmic scales.</p>
+<section id="application-of-function">
+<h3>Application of function<a class="headerlink" href="#application-of-function" title="Permalink to this heading">#</a></h3>
+<p>Utilizing the formula on a fluctuating noise signal, oscillating between 0 dB and 100 dB, reveals the impact of geometrical spreading on the noise amplitude. It’s worth mentioning that this effect is not exclusive to oscillating values; I chose to create the plot simply because of its visually interesting representation.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">width</span> <span class="o">=</span> <span class="mi">3000</span>  <span class="c1"># Width of the simulation grid</span>
 <span class="n">height</span> <span class="o">=</span> <span class="n">width</span>  <span class="c1"># Height of the simulation grid</span>
 <span class="n">center_x</span> <span class="o">=</span><span class="mi">0</span> <span class="c1"># # X-coordinate of the point source</span>
 <span class="n">center_y</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#  # Y-coordinate of the point source</span>
@@ -539,6 +561,8 @@ L_W = L_P + 20\log(r) = 10\log(4 \pi)
 </div>
 </div>
 </section>
+</section>
+</section>
 
     <script type="text/x-thebe-config">
     {
@@ -570,12 +594,47 @@ L_W = L_P + 20\log(r) = 10\log(4 \pi)
                 <footer class="prev-next-footer">
                   <!-- Previous / next buttons -->
 <div class="prev-next-area">
+    <a class="left-prev"
+       href="noise_map.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Noise Map</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="atmospheric_attenuation.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Atmospheric Attenuation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#derivation">Derivation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#application-of-function">Application of function</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

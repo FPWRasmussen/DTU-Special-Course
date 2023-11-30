@@ -65,7 +65,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'src/shadow/multiprocessing';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Atmospheric Attenuation" href="../noise/atmospheric_attenuation.html" />
+    <link rel="next" title="Visual Impact Assesment" href="../visual/visual_impact.html" />
     <link rel="prev" title="Rotor Point Cloud" href="rotor_point_cloud.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -162,16 +162,18 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="../introduction.html">
-                    Welcome to my program
+                    <no title>
                 </a>
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../noise/noise_map.html">Noise Map</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../map/elevation_handler.html">Elevation Handler</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../visual/visual_impact.html">Visual Impact</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../visual/3d_object_to_image.html">3D Object to Image</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../visual/camera_calibration.html">Camera Calibration</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../noise/noise_map.html">Noise Map</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../noise/geometrical_spreading_of_sound.html">Geometrical Spreading of Sound</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../noise/atmospheric_attenuation.html">Atmospheric Attenuation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../noise/ground_effect.html">Ground Effect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../noise/barrier_attenuation.html">Barrier Attenuation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../noise/verification.html">Barrier Verification</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="shadow_map.html">Shadow Map</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
@@ -181,7 +183,12 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Multiprocessing</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../noise/atmospheric_attenuation.html">Atmospheric Attenuation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../visual/visual_impact.html">Visual Impact</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../visual/google_street_view.html">Google Street View</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../visual/camera_calibration.html">Camera Calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../visual/3d_object_to_image.html">3D Object to Image</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
 </ul>
 
@@ -483,18 +490,12 @@ document.write(`
 </details>
 </div>
 <p>The code operates by dividing the sun rays into n processes using <code class="docutils literal notranslate"><span class="pre">rays</span> <span class="pre">=</span> <span class="pre">sun_vec[process::processes]</span></code>. These processes are executed in parallel, and their results are subsequently combined to calculate the cumulative shadow flickering time.</p>
-<div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
-</summary>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">HTML</span><span class="p">(</span><span class="n">print_code</span><span class="p">(</span><span class="n">multiprocessing</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
-</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div class="highlight" style="background: #202020"><pre style="line-height: 125%;"><span></span><a id="True-1" name="True-1" href="#True-1"></a><span style="color: #6ebf26; font-weight: bold">def</span> <span style="color: #71adff">multiprocessing</span><span style="color: #d0d0d0">(func,</span> <span style="color: #d0d0d0">points,</span> <span style="color: #d0d0d0">sun_vec,</span> <span style="color: #d0d0d0">minBound,</span> <span style="color: #d0d0d0">maxBound,</span> <span style="color: #d0d0d0">voxel_map,</span> <span style="color: #d0d0d0">processes):</span>
 <a id="True-2" name="True-2" href="#True-2"></a>    <span style="color: #d0d0d0">pool</span> <span style="color: #d0d0d0">=</span> <span style="color: #d0d0d0">mp.Pool(processes=processes)</span>
@@ -637,11 +638,11 @@ document.write(`
       </div>
     </a>
     <a class="right-next"
-       href="../noise/atmospheric_attenuation.html"
+       href="../visual/visual_impact.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Atmospheric Attenuation</p>
+        <p class="prev-next-title">Visual Impact Assesment</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

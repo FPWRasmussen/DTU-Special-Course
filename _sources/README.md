@@ -9,25 +9,20 @@ This project is a student initiative, and as such, the author does not assume an
 
 ## Usage
 
-To use the notebooks, follow the steps outlined below: (TODO)
+To utilize the notebooks, follow the steps outlined below:
+
+1. Clone the repository using the following command:
+
+   ```
+   git clone https://github.com/FPWRasmussen/DTU-Special-Course.git
+   ```
+
+2. Execute each individual Jupyter Notebook as needed. You can find the notebooks in the `src` directory.
+
+3. Alternatively, you can access the deployed GitHub page for direct access to the Jupyter Notebooks:
+
+   [https://fpwrasmussen.github.io/DTU-Special-Course/](https://fpwrasmussen.github.io/DTU-Special-Course/)
 
 ## Acknowledgments
 
 Special thanks to the course instructors at the DTU Wind department for their guidance and support during the development of these tools.
-
-
-## Tasks
-- Python inspect to import functions into jupyter
-- Jupyter book (https://jupyterbook.org/en/stable/publish/gh-pages.html)
-- pytest (https://docs.pytest.org/en/7.4.x/)
-
-
-## Notes:
-*- To build the Jupyter book use:* jupyter-book build DTU\ Special\ Course/ --path-output DTU\ Special\ Course/jupyter-book/ --config DTU\ Special\ Course/jupyter-book/_config.yml (--builder pdfhtml) (DROPBOX)
-
-*- To push the changes to Github:* ghp-import -n -p -f _build/html (DTU SPECIAL COURSE)
-
-- Use scoped-style
-- pyproject.toml (dependencies)
-
-python setup.py build_ext --inplace

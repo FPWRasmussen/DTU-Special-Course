@@ -67,8 +67,8 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'src/noise/atmospheric_attenuation';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Bibliography" href="../bibliography.html" />
-    <link rel="prev" title="Multiprocessing" href="../shadow/multiprocessing.html" />
+    <link rel="next" title="Ground Effect" href="ground_effect.html" />
+    <link rel="prev" title="Geometrical spreading of sound" href="geometrical_spreading_of_sound.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -164,16 +164,18 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="../introduction.html">
-                    Welcome to my program
+                    <no title>
                 </a>
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="noise_map.html">Noise Map</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../map/elevation_handler.html">Elevation Handler</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../visual/visual_impact.html">Visual Impact</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../visual/3d_object_to_image.html">3D Object to Image</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../visual/camera_calibration.html">Camera Calibration</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="noise_map.html">Noise Map</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="geometrical_spreading_of_sound.html">Geometrical Spreading of Sound</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Atmospheric Attenuation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ground_effect.html">Ground Effect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="barrier_attenuation.html">Barrier Attenuation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verification.html">Barrier Verification</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../shadow/shadow_map.html">Shadow Map</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -183,7 +185,12 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="../shadow/multiprocessing.html">Multiprocessing</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Atmospheric Attenuation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../visual/visual_impact.html">Visual Impact</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../visual/google_street_view.html">Google Street View</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../visual/camera_calibration.html">Camera Calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../visual/3d_object_to_image.html">3D Object to Image</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
 </ul>
 
@@ -422,7 +429,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
 </div></div>
       
     </div>
@@ -438,6 +447,19 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sound-attenuation-coefficient">Sound attenuation coefficient</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#frequency-influence">Frequency influence</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#relative-humidity-influence">Relative humidity influence</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#temperature-influence">Temperature influence</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -449,10 +471,15 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="atmospheric-attenuation">
 <h1>Atmospheric Attenuation<a class="headerlink" href="#atmospheric-attenuation" title="Permalink to this heading">#</a></h1>
-<div class="cell docutils container">
+<p>Atmospheric attenuation of sound is the decrease in sound intensity as it travels through the Earth’s atmosphere. Various factors contribute to this attenuation, such as absorption and scattering. Sound absorption occurs when sound energy is converted into heat energy as it interacts with atmospheric molecules. This process is frequency-dependent, as it can be seen below, with higher frequencies experiencing greater attenuation. The calculations in this section is based on <span id="id1">Bugaru <em>et al.</em> [<a class="reference internal" href="../bibliography.html#id7" title="Mihai Bugaru, Ovidiu Vasile, and Marian Neagoe. Recent Developments of Noise Attenuation Using Acoustic Barriers for a Specific Edge Geometry. Computation, 9(12):129, Dec 2021. Number: 12. URL: https://www.mdpi.com/2079-3197/9/12/129 (visited on 2023-11-16), doi:10.3390/computation9120129.">2</a>]</span> and <span id="id2">Technical Committee ISO/TC 43/SC 1 [<a class="reference internal" href="../bibliography.html#id12" title="Technical Committee ISO/TC 43/SC 1. ISO 9613-2:1996, Acoustics — Attenuation of sound during propagation outdoors — Part 1: Calculation of the absorption of Sound by the atmosphere. Technical Report, International Organization for Standardization, Geneva, Switzerland, 1993. URL: https://www.iso.org/standard/17426.html (visited on 2023-08-06).">12</a>]</span>.</p>
+<div class="cell tag_hide-input tag_thebe-init docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
-<span class="kn">import</span> <span class="nn">os</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="p">))</span>
@@ -463,8 +490,11 @@ document.write(`
 </pre></div>
 </div>
 </div>
+</details>
 </div>
-<p>As the noise is propogated through the air, the noise is reduced</p>
+<section id="sound-attenuation-coefficient">
+<h2>Sound attenuation coefficient<a class="headerlink" href="#sound-attenuation-coefficient" title="Permalink to this heading">#</a></h2>
+<p>To calculate atmospheric attenuation, it is necessary to determine the sound attenuation coefficient, <span class="math notranslate nohighlight">\(\alpha\)</span>. This coefficient quantifies the amount of sound absorbed by the air per meter traveled from the sound source. The sound attenuation coefficient is determined by considering factors such as frequency, temperature, relative humidity, and ambient atmospheric pressure. By incorporating these variables into the calculation, the attenuation of sound in the atmosphere can be accurately estimated. The power level of the noise decreases in a linear manner with distance, and it can be calculated using the formula <span class="math notranslate nohighlight">\(A_{atm} = \alpha \cdot d\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">HTML</span><span class="p">(</span><span class="n">print_code</span><span class="p">(</span><span class="n">atmospheric_absorption</span><span class="p">))</span>
@@ -519,11 +549,13 @@ document.write(`
 </pre></div>
 </div></div>
 </div>
+<section id="frequency-influence">
+<h3>Frequency influence<a class="headerlink" href="#frequency-influence" title="Permalink to this heading">#</a></h3>
 <p>Lets visualize the atmospheric absorption for different relative humidities and frequencies.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="mi">10</span> <span class="c1"># temperature</span>
-<span class="n">fs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span> <span class="c1"># frequency range</span>
+<span class="n">fs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">endpoint</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span> <span class="c1"># frequency range</span>
 <span class="n">alphas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">fs</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="c1"># initiate alpha</span>
 <span class="n">rhs</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span> <span class="c1"># relative humidity range</span>
 
@@ -531,7 +563,7 @@ document.write(`
 <span class="k">for</span> <span class="n">rh</span> <span class="ow">in</span> <span class="n">rhs</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fs</span><span class="p">):</span>
         <span class="n">alphas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">atmospheric_absorption</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">rh</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">alphas</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;rh:</span><span class="si">%d</span><span class="s1">&#39;</span><span class="o">%</span><span class="k">rh</span>)
+    <span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">fs</span><span class="p">,</span> <span class="n">alphas</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;rh: </span><span class="si">%d</span><span class="s1">&#39;</span><span class="o">%</span><span class="k">rh</span>)
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Absorption coefficient at </span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s1"> degrees&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Frequency[Hz]&#39;</span><span class="p">)</span>
@@ -543,32 +575,64 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/85ed88ef13cb371faa48767df238c8a2f0404a4b42d6f60eaea54b23160d4e75.png" src="../../_images/85ed88ef13cb371faa48767df238c8a2f0404a4b42d6f60eaea54b23160d4e75.png" />
+<img alt="../../_images/37c481e3bfaa2eaf16a7dafd54011824913afcf308181f902f7f8bdaf9cfe5a5.png" src="../../_images/37c481e3bfaa2eaf16a7dafd54011824913afcf308181f902f7f8bdaf9cfe5a5.png" />
 </div>
 </div>
-<p>The noise power level thus decreases linearly with distance and can be calculated as <span class="math notranslate nohighlight">\(A_{atm} = \alpha \cdot d\)</span>.</p>
+<p>As shown in the graph above, the frequency of the noise significantly influences the level of atmospheric absorption. Higher frequencies experience greater absorption, resulting in reduced sound levels. Generally, with a few exceptions, higher relative humidity contributes to lower levels of absorption.</p>
+</section>
+<section id="relative-humidity-influence">
+<h3>Relative humidity influence<a class="headerlink" href="#relative-humidity-influence" title="Permalink to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1300</span><span class="p">)</span>
-<span class="n">A0</span> <span class="o">=</span> <span class="mi">100</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rh_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">f_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">63</span><span class="p">,</span> <span class="mi">125</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span> <span class="mi">8000</span><span class="p">]</span>
 
-<span class="n">A</span> <span class="o">=</span> <span class="n">A0</span> <span class="o">-</span> <span class="n">atmospheric_absorption</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">80</span><span class="p">)</span> <span class="o">*</span> <span class="n">d</span>
-
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">A</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Distance [m]&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Power Level [dB]&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">f_list</span><span class="p">:</span>
+    <span class="n">Aatm</span> <span class="o">=</span> <span class="n">atmospheric_absorption</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="n">rh_list</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rh_list</span><span class="p">,</span> <span class="n">Aatm</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;f: </span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s2"> Hz&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span> <span class="o">=</span> <span class="s2">&quot;Relative Humidity (%)&quot;</span><span class="p">,</span>
+       <span class="n">ylabel</span> <span class="o">=</span> <span class="s1">&#39;Absorption coefficient [dB/m]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/1f0b1cfbbf4fadc53133f1116845cfa9624a40e21fa05c9da00b710486c96b40.png" src="../../_images/1f0b1cfbbf4fadc53133f1116845cfa9624a40e21fa05c9da00b710486c96b40.png" />
+<img alt="../../_images/58790b9ebc7ea16e9dd5c011aea49505f8d41cc84112db56e8eda5c4f74b4aef.png" src="../../_images/58790b9ebc7ea16e9dd5c011aea49505f8d41cc84112db56e8eda5c4f74b4aef.png" />
 </div>
 </div>
-<p>From the plot it can be seen the the effect is minimal.</p>
+<p>As observed above, relative humidity also exerts a significant influence on atmospheric absorption. Particularly in the range of 10-30% relative humidity, there appears to be a notable increase in absorption.</p>
+</section>
+<section id="temperature-influence">
+<h3>Temperature influence<a class="headerlink" href="#temperature-influence" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">f_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">63</span><span class="p">,</span> <span class="mi">125</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span> <span class="mi">8000</span><span class="p">]</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">f_list</span><span class="p">:</span>
+    <span class="n">Aatm</span> <span class="o">=</span> <span class="n">atmospheric_absorption</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">t_list</span><span class="p">,</span> <span class="n">rh</span><span class="o">=</span><span class="mi">70</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t_list</span><span class="p">,</span> <span class="n">Aatm</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;f = </span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s2"> Hz&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span> <span class="o">=</span> <span class="s2">&quot;Temperature [°C]&quot;</span><span class="p">,</span>
+       <span class="n">ylabel</span> <span class="o">=</span> <span class="s1">&#39;Absorption coefficient [dB/m]&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/bddfcdf8495a2cdbe4fabc0f9bfc77b09dc32ff24dab66f4c6928d5a02a24414.png" src="../../_images/bddfcdf8495a2cdbe4fabc0f9bfc77b09dc32ff24dab66f4c6928d5a02a24414.png" />
+</div>
+</div>
+<p>As seen from the above graph, temperature has a relatively minor impact on the overall level of absorption. In general, higher absorption rates are observed at lower temperatures.</p>
+</section>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -602,20 +666,20 @@ document.write(`
                   <!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../shadow/multiprocessing.html"
+       href="geometrical_spreading_of_sound.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Multiprocessing</p>
+        <p class="prev-next-title">Geometrical spreading of sound</p>
       </div>
     </a>
     <a class="right-next"
-       href="../bibliography.html"
+       href="ground_effect.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Bibliography</p>
+        <p class="prev-next-title">Ground Effect</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -625,6 +689,25 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sound-attenuation-coefficient">Sound attenuation coefficient</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#frequency-influence">Frequency influence</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#relative-humidity-influence">Relative humidity influence</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#temperature-influence">Temperature influence</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

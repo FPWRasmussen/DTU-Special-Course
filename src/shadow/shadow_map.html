@@ -66,7 +66,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Fast Voxel Traversal Algorithm for Ray Tracing" href="fast_voxel_traversal.html" />
-    <link rel="prev" title="Camera Calibration" href="../visual/camera_calibration.html" />
+    <link rel="prev" title="Verification of Results" href="../noise/verification.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -162,16 +162,18 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="../introduction.html">
-                    Welcome to my program
+                    <no title>
                 </a>
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../noise/noise_map.html">Noise Map</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../map/elevation_handler.html">Elevation Handler</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../visual/visual_impact.html">Visual Impact</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../visual/3d_object_to_image.html">3D Object to Image</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../visual/camera_calibration.html">Camera Calibration</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../noise/noise_map.html">Noise Map</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../noise/geometrical_spreading_of_sound.html">Geometrical Spreading of Sound</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../noise/atmospheric_attenuation.html">Atmospheric Attenuation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../noise/ground_effect.html">Ground Effect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../noise/barrier_attenuation.html">Barrier Attenuation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../noise/verification.html">Barrier Verification</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Shadow Map</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
@@ -181,7 +183,12 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l2"><a class="reference internal" href="multiprocessing.html">Multiprocessing</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../noise/atmospheric_attenuation.html">Atmospheric Attenuation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../visual/visual_impact.html">Visual Impact</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../visual/google_street_view.html">Google Street View</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../visual/camera_calibration.html">Camera Calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../visual/3d_object_to_image.html">3D Object to Image</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
 </ul>
 
@@ -445,7 +452,12 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-shadow-flicker">What is Shadow Flicker?</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-script">Running the Script</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#displaying-to-results">Displaying to Results</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#displaying-to-results">Displaying to Results</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wind-park-juurakko">Wind Park Juurakko</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wind-park-provestenen">Wind Park Prøvestenen</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wind-park-ostrup-fictive">Wind Park Østrup (Fictive)</a></li>
+</ul>
+</li>
 </ul>
             </nav>
         </div>
@@ -464,7 +476,7 @@ document.write(`
 <h2>What is Shadow Flicker?<a class="headerlink" href="#what-is-shadow-flicker" title="Permalink to this heading">#</a></h2>
 <p>Shadow flicker occurs when the sun shines through the rotating blades of a wind turbine, creating a dynamic shadow. This phenomenon raises concerns within nearby communities when the intermittent shadow from the turbine’s rotating blades passes over buildings or homes, leading to the perception of a recurrent flicker with alternating light and dark periods through windows.</p>
 <p>Given the specific sun angle required for this effect, shadow flicker is relatively uncommon, manifesting in restricted areas and lasting only a few hours annually. Nevertheless, when it does occur, it has the potential to become a nuisance for homeowners situated in close proximity to the turbines. Therefore, the government imposes stringent regulations on wind park developers to ensure that the impact of shadow flickering remains below specified thresholds (e.g., Denmark’s limit of 10 hours per year) for neighboring residents. If instances arise where shadow flickering surpasses these defined limits, curtailment measures may become necessary.</p>
-<img src="../../jupyter-book/images/shadow-flicker.png" alt="shadow-flickering" width="400px" class="bg-primary">
+<a class="bg-primary reference internal image-reference" href="../../_images/shadow-flicker.png"><img alt="shadow-flickering" class="bg-primary" src="../../_images/shadow-flicker.png" style="width: 300px;" /></a>
 <p><em>Fig 1: Shadow flickering becomes more pronounced in the evening due to the lower altitude of the sun, resulting in longer shadows cast by the turbines. (<a class="reference external" href="https://energyfollower.com/wind-turbine-shadow-flicker/">Image Source</a>)</em></p>
 <div class="cell tag_hide-input tag_thebe-init docutils container">
 <details class="hide above-input">
@@ -477,11 +489,13 @@ document.write(`
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="p">))</span>
-<span class="kn">from</span> <span class="nn">src.utils</span> <span class="kn">import</span> <span class="n">ElevationHandler</span><span class="p">,</span> <span class="n">shadow_map_solver</span><span class="p">,</span>  <span class="n">import_point_source_data</span><span class="p">,</span> <span class="n">calc_extent</span>
+<span class="kn">from</span> <span class="nn">src.cython</span> <span class="kn">import</span> <span class="n">solve_shadow_map</span>
+<span class="kn">from</span> <span class="nn">src.utils</span> <span class="kn">import</span> <span class="n">ElevationHandler</span><span class="p">,</span> <span class="n">shadow_map_solver</span><span class="p">,</span> <span class="n">import_point_source_data</span><span class="p">,</span> <span class="n">calc_extent</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">cartopy.crs</span> <span class="k">as</span> <span class="nn">ccrs</span>
 <span class="kn">from</span> <span class="nn">cartopy.io.img_tiles</span> <span class="kn">import</span> <span class="n">GoogleTiles</span>
 <span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">LogNorm</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 </pre></div>
 </div>
 </div>
@@ -493,6 +507,13 @@ document.write(`
 <p>To execute the shadow flickering calculator, the <code class="docutils literal notranslate"><span class="pre">shadow_map_solver</span></code> function requires details about the terrain elevation of the target area and specifications of the wind park turbines. This essential information is acquired by utilizing the <code class="docutils literal notranslate"><span class="pre">ElevationHandler</span></code> and <code class="docutils literal notranslate"><span class="pre">import_point_source_data</span></code> functions. The time frame for the shadow mapping is determined by setting the start and end dates. The script then runs the shadow mapping solver, producing a cumulative shadow map that includes the entire wind park.</p>
 <p>To generate an accurate shadow map, it is crucial to minimize the time interval between iterations to avoid creating gaps in the map. A default interval of freq = “10min” is currently used. To encompass the entire wind turbine rotor disc in the simulation, the rotor disc is approximated as a collection of points, each representing the starting point of a ray from the sun to the ground. To optimize simulation time, the minimum point density of the rotor disc is calculated based on terrain resolution and solar altitude angle.</p>
 <p>To further expedite calculations, the main script has been converted to C using Cython. Despite these optimizations, the function remains computationally intensive, and the runtime can extend to several minutes depending on the number of turbines in the wind park and the terrain resolution.</p>
+</section>
+<section id="displaying-to-results">
+<h2>Displaying to Results<a class="headerlink" href="#displaying-to-results" title="Permalink to this heading">#</a></h2>
+<p>Once the script completes its iteration across individual wind turbines, the aggregated results can be visualized overlaid on an image from Google Maps.</p>
+<section id="wind-park-juurakko">
+<h3>Wind Park Juurakko<a class="headerlink" href="#wind-park-juurakko" title="Permalink to this heading">#</a></h3>
+<p>Juurakko Wind Park, situated in Kalajoki, Finland, is a wind facility boasting a capacity of 40 MW. Constructed in 2022, it comprises seven Nordex N163 turbines, each with a capacity of 5.7 MW and a hub height reaching 148 meters and a rotor diameter of 163 meters <span id="id1">[<a class="reference internal" href="../bibliography.html#id5" title="Etha Wind Oy. Noise study wind farm juurakko. 2014. URL: https://kalajoki.fi/wp-content/uploads/2020/11/Liite4_Juurakko_Noise_Study_CG200603-1AM.pdf (visited on 2023-11-29).">8</a>]</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">point_source_data</span> <span class="o">=</span> <span class="n">import_point_source_data</span><span class="p">(</span><span class="s2">&quot;Juurakko.json&quot;</span><span class="p">)</span> <span class="c1"># load wind park data</span>
@@ -509,10 +530,6 @@ document.write(`
 </div>
 </div>
 </div>
-</section>
-<section id="displaying-to-results">
-<h2>Displaying to Results<a class="headerlink" href="#displaying-to-results" title="Permalink to this heading">#</a></h2>
-<p>Once the script completes its iteration across individual wind turbines, the aggregated results can be visualized overlaid on an image from Google Maps.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
@@ -539,9 +556,113 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/6a465c8d1061ab5974a7bc0d43bdff0a7928e9de34b7271ea7863af709ff9b56.png" src="../../_images/6a465c8d1061ab5974a7bc0d43bdff0a7928e9de34b7271ea7863af709ff9b56.png" />
+<img alt="../../_images/7b8d145b683a484e27b9e32c451fcce5454d27e46cd2a15bb4dbcf4c79048917.png" src="../../_images/7b8d145b683a484e27b9e32c451fcce5454d27e46cd2a15bb4dbcf4c79048917.png" />
 </div>
 </div>
+</section>
+<section id="wind-park-provestenen">
+<h3>Wind Park Prøvestenen<a class="headerlink" href="#wind-park-provestenen" title="Permalink to this heading">#</a></h3>
+<p>The Prøvestenen Wind Park, located in Copenhagen, Denmark, comprises three turbines with a combined capacity of 6.0 MW. The turbines utilized in this facility are the Vestas V80-2.0 MW VCS Mark 7 models, boasting a hub height of 67 meters and a rotor diameter of 80 meters. This wind park was established in the year 2013.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">point_source_data</span> <span class="o">=</span> <span class="n">import_point_source_data</span><span class="p">(</span><span class="s2">&quot;Prøvestenen.json&quot;</span><span class="p">)</span> <span class="c1"># load wind park data</span>
+<span class="n">map_shape</span> <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span> <span class="c1"># resolution of map data (in pixels)</span>
+<span class="n">dist</span> <span class="o">=</span> <span class="mi">3000</span> <span class="c1"># distance from turbines to the edge of the map (in meters)</span>
+<span class="n">map_boundaries</span> <span class="o">=</span> <span class="n">calc_extent</span><span class="p">(</span><span class="n">point_source_data</span><span class="p">,</span> <span class="n">dist</span><span class="p">)</span> <span class="c1"># calculate map boundaries (min/max longitude and latitude)</span>
+<span class="n">elevation_handler</span> <span class="o">=</span> <span class="n">ElevationHandler</span><span class="p">(</span><span class="n">map_boundaries</span><span class="p">,</span> <span class="n">map_shape</span><span class="p">)</span> <span class="c1"># Initiate Elevation Handler (Takes care of the map downloads)</span>
+<span class="n">start_date</span> <span class="o">=</span> <span class="s1">&#39;2023-01-01 00:00:00&#39;</span> <span class="c1"># Start date</span>
+<span class="n">end_date</span> <span class="o">=</span> <span class="s1">&#39;2023-12-31 23:59:59&#39;</span> <span class="c1"># End date</span>
+<span class="n">processes</span> <span class="o">=</span> <span class="mi">4</span> <span class="c1"># Processes for multiprocessing</span>
+
+<span class="n">cum_shadow_map</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">shadow_map_solver</span><span class="p">(</span><span class="n">elevation_handler</span><span class="p">,</span> <span class="n">point_source_data</span><span class="p">,</span> <span class="n">start_date</span> <span class="o">=</span> <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span> <span class="o">=</span> <span class="n">end_date</span><span class="p">,</span> <span class="n">processes</span> <span class="o">=</span> <span class="n">processes</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+<span class="n">imagery</span> <span class="o">=</span> <span class="n">GoogleTiles</span><span class="p">(</span><span class="n">style</span> <span class="o">=</span> <span class="s2">&quot;satellite&quot;</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="n">imagery</span><span class="o">.</span><span class="n">crs</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_extent</span><span class="p">(</span><span class="n">map_boundaries</span><span class="p">)</span>
+
+<span class="n">cp</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">cum_shadow_map</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s2">&quot;jet&quot;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">(),</span> <span class="n">norm</span><span class="o">=</span><span class="n">LogNorm</span><span class="p">())</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">point_source_data</span><span class="o">.</span><span class="n">longitude</span><span class="p">,</span> <span class="n">point_source_data</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span> 
+           <span class="n">marker</span> <span class="o">=</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;Wind Turbines&quot;</span><span class="p">,</span>
+           <span class="n">transform</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cp</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Shadow Hour(s)&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">add_image</span><span class="p">(</span><span class="n">imagery</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span> <span class="c1"># Deterine Image Resolution</span>
+<span class="n">gl</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">gridlines</span><span class="p">(</span><span class="n">crs</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">(),</span> <span class="n">draw_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">gl</span><span class="o">.</span><span class="n">top_labels</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">gl</span><span class="o">.</span><span class="n">right_labels</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/74239f6fae32843f82c1a183f022d8960a14f9a0542754585f0eb0c735675d20.png" src="../../_images/74239f6fae32843f82c1a183f022d8960a14f9a0542754585f0eb0c735675d20.png" />
+</div>
+</div>
+</section>
+<section id="wind-park-ostrup-fictive">
+<h3>Wind Park Østrup (Fictive)<a class="headerlink" href="#wind-park-ostrup-fictive" title="Permalink to this heading">#</a></h3>
+<p>Due to lack of shadow flickering map to easily compare against, a fictive wind park in Østrup Denmark was used for a low level comparison. The park consists of two Vestas V136 3.45 MW wind turbines with a hub height of 82 meters and a rotor diameter of 136 meters.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">point_source_data</span> <span class="o">=</span> <span class="n">import_point_source_data</span><span class="p">(</span><span class="s2">&quot;Østrup.json&quot;</span><span class="p">)</span> <span class="c1"># load wind park data</span>
+<span class="n">map_shape</span> <span class="o">=</span> <span class="p">[</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">]</span> <span class="c1"># resolution of map data (in pixels)</span>
+<span class="n">dist</span> <span class="o">=</span> <span class="mi">2000</span> <span class="c1"># distance from turbines to the edge of the map (in meters)</span>
+<span class="n">map_boundaries</span> <span class="o">=</span> <span class="n">calc_extent</span><span class="p">(</span><span class="n">point_source_data</span><span class="p">,</span> <span class="n">dist</span><span class="p">)</span> <span class="c1"># calculate map boundaries (min/max longitude and latitude)</span>
+<span class="n">elevation_handler</span> <span class="o">=</span> <span class="n">ElevationHandler</span><span class="p">(</span><span class="n">map_boundaries</span><span class="p">,</span> <span class="n">map_shape</span><span class="p">)</span> <span class="c1"># Initiate Elevation Handler (Takes care of the map downloads)</span>
+<span class="n">start_date</span> <span class="o">=</span> <span class="s1">&#39;2023-01-01 00:00:00&#39;</span> <span class="c1"># Start date</span>
+<span class="n">end_date</span> <span class="o">=</span> <span class="s1">&#39;2023-12-31 23:59:59&#39;</span> <span class="c1"># End date</span>
+<span class="n">processes</span> <span class="o">=</span> <span class="mi">10</span> <span class="c1"># Processes for multiprocessing</span>
+
+<span class="n">cum_shadow_map</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">shadow_map_solver</span><span class="p">(</span><span class="n">elevation_handler</span><span class="p">,</span> <span class="n">point_source_data</span><span class="p">,</span> <span class="n">start_date</span> <span class="o">=</span> <span class="n">start_date</span><span class="p">,</span> <span class="n">end_date</span> <span class="o">=</span> <span class="n">end_date</span><span class="p">,</span> <span class="n">processes</span> <span class="o">=</span> <span class="n">processes</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s2">&quot;10min&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+<span class="n">imagery</span> <span class="o">=</span> <span class="n">GoogleTiles</span><span class="p">(</span><span class="n">style</span> <span class="o">=</span> <span class="s2">&quot;satellite&quot;</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="n">imagery</span><span class="o">.</span><span class="n">crs</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_extent</span><span class="p">(</span><span class="n">map_boundaries</span><span class="p">)</span>
+
+<span class="n">levels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">50</span><span class="p">]</span>
+
+<span class="n">cp</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">cum_shadow_map</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s2">&quot;jet&quot;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">(),</span><span class="n">levels</span> <span class="o">=</span> <span class="n">levels</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">point_source_data</span><span class="o">.</span><span class="n">longitude</span><span class="p">,</span> <span class="n">point_source_data</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span> 
+           <span class="n">marker</span> <span class="o">=</span> <span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;Wind Turbines&quot;</span><span class="p">,</span>
+           <span class="n">transform</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cp</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Shadow Hour(s)&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">add_image</span><span class="p">(</span><span class="n">imagery</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span> <span class="c1"># Deterine Image Resolution</span>
+<span class="n">gl</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">gridlines</span><span class="p">(</span><span class="n">crs</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">(),</span> <span class="n">draw_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+<span class="n">gl</span><span class="o">.</span><span class="n">top_labels</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">gl</span><span class="o">.</span><span class="n">right_labels</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/80ae3268e38bac0845f6d95691aef561dfcbc68ecb5fc175cb7cd326c4b195ce.png" src="../../_images/80ae3268e38bac0845f6d95691aef561dfcbc68ecb5fc175cb7cd326c4b195ce.png" />
+</div>
+</div>
+<a class="bg-primary reference internal image-reference" href="../../_images/shadow_flicker_ostrup.png"><img alt="shadow-flicker_ostrup" class="bg-primary" src="../../_images/shadow_flicker_ostrup.png" style="width: 700px;" /></a>
+<p><em>Fig 2: Shadow flickering from fictive wind park in Ørstrup, Denmark calculated using WindPro.</em></p>
+<p>As seen from the comparison, it is clear that the calculated annual hours of shadow flickering align quite well between the two models. Nevertheless, the WindPro model anticipates a higher occurrence of shadow flickering, attributing it to the elongated shadows cast during the early and late hours of the day. This is likely a result of the applied solar altitude limit set at 5 degrees, where calculations cease if the sun’s altitude falls below this threshold. This limit is in place to optimize computational efficiency. It may be beneficial to consider lowering this limit for enhanced accuracy in the results.</p>
+</section>
 </section>
 <div class="toctree-wrapper compound">
 </div>
@@ -578,12 +699,12 @@ document.write(`
                   <!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../visual/camera_calibration.html"
+       href="../noise/verification.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Camera Calibration</p>
+        <p class="prev-next-title">Verification of Results</p>
       </div>
     </a>
     <a class="right-next"
@@ -612,7 +733,12 @@ document.write(`
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-shadow-flicker">What is Shadow Flicker?</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-script">Running the Script</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#displaying-to-results">Displaying to Results</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#displaying-to-results">Displaying to Results</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wind-park-juurakko">Wind Park Juurakko</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wind-park-provestenen">Wind Park Prøvestenen</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#wind-park-ostrup-fictive">Wind Park Østrup (Fictive)</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 
